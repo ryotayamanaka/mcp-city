@@ -74,14 +74,14 @@ screen_data = {
     "imageUrl": None,
     "lastUpdate": datetime.now().isoformat(),
     "status": "ready",
-    "speed": 25,  # デフォルトスピードを25%に変更
+    "speed": 15,  # デフォルトスピードを15%に変更
     "paused": False,
     "location": "central"
 }
 
 vehicle_data = {
     "location": "Central Plaza",
-    "speed": 25,  # デフォルトスピードを25%に変更
+    "speed": 15,  # デフォルトスピードを15%に変更
     "paused": False,
     "view": "follow"
 }
@@ -162,126 +162,17 @@ def generate_random_sales():
     
     save_vending_data(data)
 
-# API Routes
-@app.post("/api/screen/update-text")
-async def update_screen_text(update: ScreenTextUpdate):
-    """Update the promotional screen with new text content"""
-    try:
-        screen_data["text"] = update.text
-        screen_data["subtext"] = update.subtext if update.subtext else ""
-        screen_data["imageUrl"] = None  # Clear image when showing text
-        screen_data["lastUpdate"] = datetime.now().isoformat()
-        screen_data["status"] = "updated"
-        
-        return {
-            "success": True,
-            "message": "Screen text updated successfully",
-            "data": screen_data
-        }
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to update screen: {str(e)}")
-
-@app.post("/api/screen/update-image")
-async def update_screen_image(update: ScreenImageUpdate):
-    """Update the promotional screen with new image content"""
-    try:
-        screen_data["imageUrl"] = update.image_url
-        screen_data["text"] = None  # Clear text when showing image
-        screen_data["lastUpdate"] = datetime.now().isoformat()
-        screen_data["status"] = "updated"
-        
-        return {
-            "success": True,
-            "message": "Screen image updated successfully",
-            "data": screen_data
-        }
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to update screen: {str(e)}")
-
-@app.get("/api/screen/status")
-async def get_screen_status():
-    """Get current screen status and content"""
-    return screen_data
-
-@app.get("/api/screen/clear")
-async def clear_screen():
-    """Clear the promotional screen"""
-    try:
-        screen_data["text"] = "Screen Cleared by AI Agent"
-        screen_data["subtext"] = ""
-        screen_data["imageUrl"] = None
-        screen_data["lastUpdate"] = datetime.now().isoformat()
-        screen_data["status"] = "cleared"
-        
-        return {
-            "success": True,
-            "message": "Screen cleared successfully",
-            "data": screen_data
-        }
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to clear screen: {str(e)}")
-
-# Vehicle control endpoints
-@app.post("/api/vehicle/control")
-async def control_vehicle(control: VehicleControl):
-    """Control the e-Palette vehicle movement"""
-    try:
-        if control.speed is not None:
-            screen_data["speed"] = max(0, min(200, control.speed))
-            vehicle_data["speed"] = screen_data["speed"]
-        
-        if control.paused is not None:
-            screen_data["paused"] = control.paused
-            vehicle_data["paused"] = control.paused
-        
-        if control.location is not None:
-            screen_data["location"] = control.location
-            # Map location codes to display names
-            location_map = {
-                "central": "Central Plaza",
-                "east": "East Commercial District",
-                "tech": "Tech Park",
-                "south": "South Residential",
-                "west": "West Park",
-                "north": "North School"
-            }
-            vehicle_data["location"] = location_map.get(control.location, "Unknown")
-        
-        screen_data["lastUpdate"] = datetime.now().isoformat()
-        
-        return {
-            "success": True,
-            "message": "Vehicle control updated successfully",
-            "data": {
-                "speed": screen_data.get("speed"),
-                "paused": screen_data.get("paused"),
-                "location": screen_data.get("location")
-            }
-        }
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to control vehicle: {str(e)}")
-
-@app.get("/api/vehicle/status")
-async def get_vehicle_status():
-    """Get current vehicle status"""
-    return vehicle_data
-
-@app.post("/api/vehicle/status")
-async def update_vehicle_status(status: VehicleStatus):
-    """Update vehicle status from the 3D simulation"""
-    try:
-        vehicle_data["location"] = status.location
-        vehicle_data["speed"] = status.speed
-        vehicle_data["paused"] = status.paused
-        vehicle_data["view"] = status.view
-        
-        return {
-            "success": True,
-            "message": "Vehicle status updated",
-            "data": vehicle_data
-        }
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to update vehicle status: {str(e)}")
+# =============================================================================
+# Legacy API Routes (REMOVED)
+# =============================================================================
+# The following legacy endpoints have been removed and replaced with the unified /api/epalette/ endpoints:
+# - POST /api/screen/update-text → POST /api/epalette/display/text
+# - POST /api/screen/update-image → POST /api/epalette/display/image
+# - GET /api/screen/status → GET /api/epalette/display/status
+# - GET /api/screen/clear → POST /api/epalette/display/clear
+# - POST /api/vehicle/control → POST /api/epalette/control
+# - GET /api/vehicle/status → GET /api/epalette/status
+# - POST /api/vehicle/status → POST /api/epalette/status
 
 # Image proxy endpoint to avoid CORS issues
 @app.get("/api/proxy/image")
@@ -313,7 +204,160 @@ async def proxy_image(url: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Internal error: {str(e)}")
 
+# =============================================================================
+# e-Palette API Endpoints (New Unified API)
+# =============================================================================
+
+# Display endpoints
+@app.post("/api/epalette/display/text")
+async def epalette_update_display_text(update: ScreenTextUpdate):
+    """Update e-Palette LED display text (unified API)"""
+    try:
+        screen_data["text"] = update.text
+        screen_data["subtext"] = update.subtext
+        screen_data["imageUrl"] = None  # Clear image when setting text
+        screen_data["lastUpdate"] = datetime.now().isoformat()
+        
+        return {
+            "success": True,
+            "message": "e-Palette display text updated successfully",
+            "data": {
+                "text": screen_data["text"],
+                "subtext": screen_data["subtext"],
+                "lastUpdate": screen_data["lastUpdate"]
+            }
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to update e-Palette display: {str(e)}")
+
+@app.post("/api/epalette/display/image")
+async def epalette_update_display_image(update: ScreenImageUpdate):
+    """Update e-Palette LED display image (unified API)"""
+    try:
+        screen_data["imageUrl"] = update.image_url
+        screen_data["text"] = None  # Clear text when setting image
+        screen_data["subtext"] = None
+        screen_data["lastUpdate"] = datetime.now().isoformat()
+        
+        return {
+            "success": True,
+            "message": "e-Palette display image updated successfully",
+            "data": {
+                "imageUrl": screen_data["imageUrl"],
+                "lastUpdate": screen_data["lastUpdate"]
+            }
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to update e-Palette display: {str(e)}")
+
+@app.get("/api/epalette/display/status")
+async def epalette_get_display_status():
+    """Get e-Palette display status (unified API)"""
+    return {
+        "text": screen_data.get("text"),
+        "subtext": screen_data.get("subtext"),
+        "imageUrl": screen_data.get("imageUrl"),
+        "lastUpdate": screen_data.get("lastUpdate"),
+        "status": screen_data.get("status")
+    }
+
+@app.post("/api/epalette/display/clear")
+async def epalette_clear_display():
+    """Clear e-Palette display (unified API)"""
+    try:
+        screen_data["text"] = "🍕 Mobile Food Service 🌮"
+        screen_data["subtext"] = "AI-Powered · Auto Delivery"
+        screen_data["imageUrl"] = None
+        screen_data["lastUpdate"] = datetime.now().isoformat()
+        screen_data["status"] = "ready"
+        
+        return {
+            "success": True,
+            "message": "e-Palette display cleared successfully",
+            "data": screen_data
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to clear e-Palette display: {str(e)}")
+
+# Control endpoints
+@app.post("/api/epalette/control")
+async def epalette_control_vehicle(control: VehicleControl):
+    """Control e-Palette vehicle movement (unified API)"""
+    try:
+        if control.speed is not None:
+            screen_data["speed"] = max(0, min(200, control.speed))
+            vehicle_data["speed"] = screen_data["speed"]
+        
+        if control.paused is not None:
+            screen_data["paused"] = control.paused
+            vehicle_data["paused"] = control.paused
+        
+        if control.location is not None:
+            screen_data["location"] = control.location
+            # Map location codes to display names
+            location_map = {
+                "central": "Central Plaza",
+                "east": "East Commercial District",
+                "tech": "Tech Park",
+                "south": "South Residential",
+                "west": "West Park",
+                "north": "North School"
+            }
+            vehicle_data["location"] = location_map.get(control.location, "Unknown")
+        
+        screen_data["lastUpdate"] = datetime.now().isoformat()
+        
+        return {
+            "success": True,
+            "message": "e-Palette vehicle control updated successfully",
+            "data": {
+                "speed": screen_data.get("speed"),
+                "paused": screen_data.get("paused"),
+                "location": screen_data.get("location")
+            }
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to control e-Palette vehicle: {str(e)}")
+
+@app.get("/api/epalette/status")
+async def epalette_get_status():
+    """Get comprehensive e-Palette status (unified API)"""
+    return {
+        "display": {
+            "text": screen_data.get("text"),
+            "subtext": screen_data.get("subtext"),
+            "imageUrl": screen_data.get("imageUrl"),
+            "lastUpdate": screen_data.get("lastUpdate"),
+            "status": screen_data.get("status")
+        },
+        "vehicle": {
+            "location": vehicle_data.get("location"),
+            "speed": vehicle_data.get("speed"),
+            "paused": vehicle_data.get("paused"),
+            "view": vehicle_data.get("view")
+        }
+    }
+
+@app.post("/api/epalette/status")
+async def epalette_update_status(status: VehicleStatus):
+    """Update e-Palette vehicle status from 3D simulation (unified API)"""
+    try:
+        vehicle_data["location"] = status.location
+        vehicle_data["speed"] = status.speed
+        vehicle_data["paused"] = status.paused
+        vehicle_data["view"] = status.view
+        
+        return {
+            "success": True,
+            "message": "e-Palette vehicle status updated successfully",
+            "data": vehicle_data
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to update e-Palette vehicle status: {str(e)}")
+
+# =============================================================================
 # Vending Machine API Endpoints
+# =============================================================================
 @app.get("/api/vending-machine/products")
 async def get_vending_products():
     """Get all products available in the vending machine"""
@@ -529,11 +573,16 @@ if __name__ == "__main__":
     print("📱 2D Demo available at: http://localhost:8000/2d")
     print("📚 API docs available at: http://localhost:8000/docs")
     print("\n📡 API Endpoints:")
-    print("  POST /api/screen/update-text - Update LED display text")
-    print("  POST /api/screen/update-image - Update LED display image")
-    print("  POST /api/vehicle/control - Control vehicle movement")
-    print("  GET  /api/screen/status - Get display status")
-    print("  GET  /api/vehicle/status - Get vehicle status")
+    print("🚗 e-Palette API (Unified):")
+    print("  📺 Display Control:")
+    print("    POST /api/epalette/display/text - Update LED display text")
+    print("    POST /api/epalette/display/image - Update LED display image")
+    print("    GET  /api/epalette/display/status - Get display status")
+    print("    POST /api/epalette/display/clear - Clear display")
+    print("  🎮 Vehicle Control:")
+    print("    POST /api/epalette/control - Control vehicle movement")
+    print("    GET  /api/epalette/status - Get comprehensive status")
+    print("    POST /api/epalette/status - Update vehicle status")
     print("\n🏪 Vending Machine API:")
     print("  GET  /api/vending-machine/products - Get product list")
     print("  GET  /api/vending-machine/inventory - Get inventory status")

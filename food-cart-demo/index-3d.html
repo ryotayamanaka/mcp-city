@@ -37,31 +37,6 @@
             backdrop-filter: blur(10px);
         }
 
-        .panel-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #e0e0e0;
-        }
-
-        .panel-header h2 {
-            color: #333;
-            font-size: 1.4em;
-            margin-left: 10px;
-        }
-
-        .logo {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.5em;
-        }
 
         .control-section {
             margin-bottom: 20px;
@@ -129,38 +104,6 @@
             color: #4caf50;
         }
 
-        /* API Status Indicator */
-        .api-status {
-            position: absolute;
-            top: 20px;
-            right: 320px;
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 10px 15px;
-            border-radius: 8px;
-            font-size: 0.85em;
-            z-index: 100;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .api-status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #ff4444;
-            animation: pulse 2s infinite;
-        }
-
-        .api-status-dot.connected {
-            background: #44ff44;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
 
         /* API Info Panel */
         .api-info-panel {
@@ -265,6 +208,103 @@
             font-size: 0.9em;
         }
 
+        /* Category Selector */
+        .category-selector {
+            margin-bottom: 20px;
+        }
+
+        .category-dropdown {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 0.9em;
+            font-weight: bold;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .category-dropdown option {
+            background: #333;
+            color: white;
+        }
+
+        /* Category Content */
+        .category-content {
+            display: none;
+        }
+
+        .category-content.active {
+            display: block;
+        }
+
+        /* Minimize Button */
+        .minimize-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(102, 126, 234, 0.8);
+            border: none;
+            border-radius: 6px;
+            width: 28px;
+            height: 28px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .minimize-btn:hover {
+            background: rgba(102, 126, 234, 1);
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+        }
+
+        /* Minimized State */
+        .control-panel.minimized {
+            width: 60px;
+            height: 60px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .control-panel.minimized .category-selector {
+            display: none !important;
+        }
+
+        .control-panel.minimized .category-content {
+            display: none !important;
+        }
+
+        .control-panel.minimized .minimize-btn {
+            position: static;
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 18px;
+            width: auto;
+            height: auto;
+            cursor: pointer;
+            box-shadow: none;
+        }
+
+        .control-panel.minimized .minimize-btn:hover {
+            color: #667eea;
+            transform: scale(1.2);
+            background: none;
+            box-shadow: none;
+        }
+
         /* Loading Screen */
         .loading-screen {
             position: fixed;
@@ -316,28 +356,6 @@
             opacity: 0.8;
         }
 
-        /* Control Hints */
-        .controls-hint {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 15px;
-            border-radius: 10px;
-            font-size: 0.9em;
-            z-index: 100;
-        }
-
-        .controls-hint h4 {
-            color: #00ff88;
-            margin-bottom: 8px;
-        }
-
-        .controls-hint p {
-            margin: 5px 0;
-            color: #ccc;
-        }
 
         /* Responsive Design */
         @media (max-width: 768px) {
@@ -346,9 +364,6 @@
                 padding: 15px;
             }
 
-            .controls-hint {
-                display: none;
-            }
 
             .info-panel {
                 right: 20px;
@@ -372,115 +387,115 @@
     <div id="canvas-container"></div>
 
     <!-- Control Panel -->
-    <div class="control-panel">
-        <div class="panel-header">
-            <div class="logo">🚗</div>
-            <h2>e-Palette Control Center</h2>
+    <div class="control-panel" id="controlPanel">
+        <!-- Minimize Button -->
+        <button class="minimize-btn" id="minimizeBtn" title="Minimize Panel">−</button>
+
+        <!-- Category Selector -->
+        <div class="category-selector">
+            <select class="category-dropdown" id="categoryDropdown">
+                <option value="display">🎮 Display & Scene</option>
+                <option value="vehicle">🚗 e-Palette Vehicle</option>
+                <option value="vending">🏪 Vending Machine</option>
+            </select>
         </div>
 
-        <div class="control-section">
-            <h3>View Control</h3>
-            <div class="button-group">
-                <button class="control-btn active" id="followView">Follow View</button>
-                <button class="control-btn" id="topView">Top View</button>
-                <button class="control-btn" id="freeView">Free View</button>
+        <!-- Display & Scene Category -->
+        <div class="category-content active" id="displayCategory">
+            <div class="control-section">
+                <h3>View Control</h3>
+                <div class="button-group">
+                    <button class="control-btn active" id="followView">Follow View</button>
+                    <button class="control-btn" id="topView">Top View</button>
+                    <button class="control-btn" id="freeView">Free View</button>
+                </div>
             </div>
-        </div>
 
-        <div class="control-section">
-            <h3>Scene Control</h3>
-            <div class="button-group">
-                <button class="control-btn" id="toggleBuildings">Buildings</button>
-                <button class="control-btn" id="togglePath">Path Display</button>
-                <button class="control-btn" id="dayNight">Day/Night</button>
+            <div class="control-section">
+                <h3>Scene Control</h3>
+                <div class="button-group">
+                    <button class="control-btn" id="toggleBuildings">Buildings</button>
+                    <button class="control-btn" id="togglePath">Path Display</button>
+                    <button class="control-btn" id="dayNight">Day/Night</button>
+                </div>
             </div>
-        </div>
 
-        <div class="control-section">
-            <h3>Speed Control</h3>
-            <div class="speed-control">
-                <input type="range" class="speed-slider" id="speedSlider" min="0" max="200" value="25">
-                <div class="speed-display">Speed: <span id="speedValue">25</span>%</div>
-            </div>
-        </div>
-
-        <div class="control-section">
-            <h3>System Status</h3>
-            <div class="status-item">
-                <span class="status-label">Vehicle Status:</span>
-                <span class="status-value online">Running</span>
-            </div>
-            <div class="status-item">
-                <span class="status-label">Current Location:</span>
-                <span class="status-value" id="currentLocation">Central Plaza</span>
-            </div>
-            <div class="status-item">
-                <span class="status-label">Battery:</span>
-                <span class="status-value">85%</span>
-            </div>
-            <div class="status-item">
-                <span class="status-label">Network:</span>
-                <span class="status-value online">5G Connected</span>
-            </div>
-            <div class="status-item">
-                <span class="status-label">API Status:</span>
-                <span class="status-value" id="apiStatus">Disconnected</span>
-            </div>
-            <div class="status-item">
-                <span class="status-label">Last API Update:</span>
-                <span class="status-value" id="lastApiUpdate">Never</span>
-            </div>
-        </div>
-        
-        <div class="control-section">
-            <h3>Vending Machine</h3>
-            <div id="vendingStats">
+            <div class="control-section">
+                <h3>API Status</h3>
                 <div class="status-item">
-                    <span class="status-label">Loading...</span>
+                    <span class="status-label">API Status:</span>
+                    <span class="status-value" id="apiStatus">Disconnected</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Last API Update:</span>
+                    <span class="status-value" id="lastApiUpdate">Never</span>
+                </div>
+            </div>
+
+            <div class="control-section">
+                <h3>🎮 Controls</h3>
+                <div class="status-item">
+                    <span class="status-label">Left Click & Drag:</span>
+                    <span class="status-value">Rotate View</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Right Click & Drag:</span>
+                    <span class="status-value">Pan View</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Scroll Wheel:</span>
+                    <span class="status-value">Zoom</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vehicle Category -->
+        <div class="category-content" id="vehicleCategory">
+            <div class="control-section">
+                <h3>Speed Control</h3>
+                <div class="speed-control">
+                    <input type="range" class="speed-slider" id="speedSlider" min="0" max="200" value="15">
+                    <div class="speed-display">Speed: <span id="speedValue">15</span>%</div>
+                </div>
+            </div>
+
+            <div class="control-section">
+                <h3>Vehicle Status</h3>
+                <div class="status-item">
+                    <span class="status-label">Vehicle Status:</span>
+                    <span class="status-value online">Running</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Current Location:</span>
+                    <span class="status-value" id="currentLocation">Central Plaza</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Battery:</span>
+                    <span class="status-value">85%</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Network:</span>
+                    <span class="status-value online">5G Connected</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vending Machine Category -->
+        <div class="category-content" id="vendingCategory">
+            <div class="control-section">
+                <h3>Vending Machine</h3>
+                <div id="vendingStats">
+                    <div class="status-item">
+                        <span class="status-label">Loading...</span>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Info Panel -->
-    <div class="info-panel">
-        <h3>📍 Woven City</h3>
-        <p>
-            Toyota's Woven City is a futuristic smart city experimental project located at the base of Mount Fuji in Japan.
-            e-Palette autonomous vehicles provide mobility services, logistics delivery, and mobile retail functions throughout the city.
-        </p>
-    </div>
 
-    <!-- Control Hints -->
-    <div class="controls-hint">
-        <h4>🎮 Controls</h4>
-        <p>🖱️ Left Click & Drag: Rotate View</p>
-        <p>🖱️ Right Click & Drag: Pan View</p>
-        <p>🖱️ Scroll Wheel: Zoom</p>
-    </div>
 
-    <!-- API Status Indicator -->
-    <div class="api-status">
-        <div class="api-status-dot" id="apiStatusDot"></div>
-        <span id="apiStatusText">API: Disconnected</span>
-    </div>
 
-    <!-- API Info Panel -->
-    <div class="api-info-panel">
-        <h3>🔌 API Endpoints</h3>
-        <div class="api-endpoint">POST /api/screen/update-text</div>
-        <div class="api-endpoint">POST /api/screen/update-image</div>
-        <div class="api-endpoint">POST /api/vehicle/control</div>
-        <div class="api-endpoint">GET /api/screen/status</div>
-        <div class="api-endpoint">GET /api/vehicle/status</div>
-        <div class="api-endpoint">GET /api/vending-machine/sales</div>
-        <div class="api-endpoint">GET /api/vending-machine/analytics</div>
-        <div class="api-endpoint">POST /api/vending-machine/purchase</div>
-        <p class="api-description">
-            Control the e-Palette and vending machine via REST API. 
-            Compatible with AI agents and IoT systems.
-        </p>
-    </div>
 
     <!-- Three.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -502,7 +517,7 @@
         
         // Control variables
         let currentView = 'follow';
-        let speed = 0.25;  // デフォルトスピードを25%に変更
+        let speed = 0.15;  // デフォルトスピードを15%に変更
         let pathProgress = 0;
         let showBuildings = true;
         let showPath = true;
@@ -1119,6 +1134,44 @@
         }
 
         function setupEventListeners() {
+            // Panel minimization
+            document.getElementById('minimizeBtn').addEventListener('click', function() {
+                const panel = document.getElementById('controlPanel');
+                const isMinimized = panel.classList.contains('minimized');
+
+                if (isMinimized) {
+                    // Expand panel
+                    panel.classList.remove('minimized');
+                    this.innerHTML = '−';
+                    this.title = 'Minimize Panel';
+
+                    // Show active category content
+                    const activeCategory = document.getElementById('categoryDropdown').value;
+                    document.getElementById(activeCategory + 'Category').classList.add('active');
+                } else {
+                    // Minimize panel - show simple settings icon
+                    panel.classList.add('minimized');
+                    this.innerHTML = '●●●';
+                    this.title = 'Expand Panel';
+                }
+            });
+
+            // Category switching
+            document.getElementById('categoryDropdown').addEventListener('change', function() {
+                const selectedCategory = this.value;
+
+                // Hide all category contents
+                document.getElementById('displayCategory').classList.remove('active');
+                document.getElementById('vehicleCategory').classList.remove('active');
+                document.getElementById('vendingCategory').classList.remove('active');
+
+                // Show selected category (only if panel is not minimized)
+                const panel = document.getElementById('controlPanel');
+                if (!panel.classList.contains('minimized')) {
+                    document.getElementById(selectedCategory + 'Category').classList.add('active');
+                }
+            });
+
             // View controls
             document.getElementById('followView').addEventListener('click', function() {
                 currentView = 'follow';
@@ -1437,7 +1490,7 @@
         // API Integration
         async function checkForAPIUpdates() {
             try {
-                const response = await fetch('/api/screen/status');
+                const response = await fetch('/api/epalette/display/status');
                 if (response.ok) {
                     const data = await response.json();
                     
@@ -1498,11 +1551,11 @@
             if (!apiConnected) return;
             
             try {
-                const response = await fetch('/api/vehicle/status');
+                const response = await fetch('/api/epalette/status');
                 if (response.ok) {
                     const data = await response.json();
                     // Send current vehicle status to server
-                    await fetch('/api/vehicle/status', {
+                    await fetch('/api/epalette/status', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
@@ -1519,18 +1572,12 @@
         }
 
         function updateAPIStatus(connected) {
-            const statusDot = document.getElementById('apiStatusDot');
-            const statusText = document.getElementById('apiStatusText');
             const apiStatus = document.getElementById('apiStatus');
-            
+
             if (connected) {
-                statusDot.classList.add('connected');
-                statusText.textContent = 'API: Connected';
                 apiStatus.textContent = 'Connected';
                 apiStatus.style.color = '#4caf50';
             } else {
-                statusDot.classList.remove('connected');
-                statusText.textContent = 'API: Disconnected';
                 apiStatus.textContent = 'Disconnected';
                 apiStatus.style.color = '#ff4444';
             }
@@ -1579,6 +1626,10 @@
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('toggleBuildings').classList.add('active');
             document.getElementById('togglePath').classList.add('active');
+
+            // Initialize speed slider and display
+            document.getElementById('speedSlider').value = 15;
+            document.getElementById('speedValue').textContent = '15';
         });
     </script>
 </body>

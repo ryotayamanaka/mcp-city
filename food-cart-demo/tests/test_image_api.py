@@ -38,7 +38,7 @@ def test_image_update():
         
         # 2. 获取当前屏幕状态
         print("\n2️⃣ 获取当前屏幕状态...")
-        response = requests.get(f"{BASE_URL}/api/screen/status")
+        response = requests.get(f"{BASE_URL}/api/epalette/display/status")
         if response.status_code == 200:
             data = response.json()
             print(f"当前状态: {data.get('status')}")
@@ -53,7 +53,7 @@ def test_image_update():
             "text": "🎯 图片测试准备中...",
             "subtext": "即将显示测试图片"
         }
-        response = requests.post(f"{BASE_URL}/api/screen/update-text", json=text_data)
+        response = requests.post(f"{BASE_URL}/api/epalette/display/text", json=text_data)
         if response.status_code == 200:
             print("✅ 文本更新成功")
         else:
@@ -71,14 +71,14 @@ def test_image_update():
             }
             
             try:
-                response = requests.post(f"{BASE_URL}/api/screen/update-image", json=image_data)
+                response = requests.post(f"{BASE_URL}/api/epalette/display/image", json=image_data)
                 if response.status_code == 200:
                     result = response.json()
                     if result.get("success"):
                         print(f"✅ 图片更新成功")
                         
                         # 验证更新
-                        status_response = requests.get(f"{BASE_URL}/api/screen/status")
+                        status_response = requests.get(f"{BASE_URL}/api/epalette/display/status")
                         if status_response.status_code == 200:
                             status_data = status_response.json()
                             if status_data.get("imageUrl") == image_url:
@@ -117,7 +117,7 @@ def test_image_update():
             "text": "🍕 Mobile Food Service 🌮",
             "subtext": "AI-Powered · Auto Delivery"
         }
-        response = requests.post(f"{BASE_URL}/api/screen/update-text", json=default_text)
+        response = requests.post(f"{BASE_URL}/api/epalette/display/text", json=default_text)
         if response.status_code == 200:
             print("✅ 已恢复默认显示")
         

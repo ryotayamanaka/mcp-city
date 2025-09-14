@@ -245,7 +245,7 @@
 
         async function checkForUpdates() {
             try {
-                const response = await fetch('/api/screen/status');
+                const response = await fetch('/api/epalette/display/status');
                 if (response.ok) {
                     const data = await response.json();
                     if (data.lastUpdate !== lastUpdateTime) {

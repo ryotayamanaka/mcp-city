@@ -36,7 +36,7 @@ class FoodCartScreenTools(Toolkit):
         """
         try:
             response = requests.post(
-                f"{self.base_url}/api/screen/update-text",
+                f"{self.base_url}/api/epalette/display/text",
                 json={"text": text},
                 timeout=10
             )
@@ -73,7 +73,7 @@ class FoodCartScreenTools(Toolkit):
                 return "❌ Invalid image URL. Please provide a valid HTTP or HTTPS URL."
             
             response = requests.post(
-                f"{self.base_url}/api/screen/update-image",
+                f"{self.base_url}/api/epalette/display/image",
                 json={"image_url": image_url},
                 timeout=10
             )
@@ -102,8 +102,8 @@ class FoodCartScreenTools(Toolkit):
             str: Success message confirming the screen has been cleared.
         """
         try:
-            response = requests.get(
-                f"{self.base_url}/api/screen/clear",
+            response = requests.post(
+                f"{self.base_url}/api/epalette/display/clear",
                 timeout=10
             )
             response.raise_for_status()
@@ -132,7 +132,7 @@ class FoodCartScreenTools(Toolkit):
         """
         try:
             response = requests.get(
-                f"{self.base_url}/api/screen/status",
+                f"{self.base_url}/api/epalette/display/status",
                 timeout=10
             )
             response.raise_for_status()
