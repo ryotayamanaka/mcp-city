@@ -1,0 +1,1585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D e-Palette - Woven City Smart Community</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            overflow: hidden;
+            background: #000;
+        }
+
+        #canvas-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        /* Control Panel */
+        .control-panel {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            width: 320px;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .panel-header h2 {
+            color: #333;
+            font-size: 1.4em;
+            margin-left: 10px;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5em;
+        }
+
+        .control-section {
+            margin-bottom: 20px;
+        }
+
+        .control-section h3 {
+            color: #555;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+            flex: 1;
+            min-width: 80px;
+        }
+
+        .control-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .control-btn.active {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .status-item:last-child {
+            border-bottom: none;
+        }
+
+        .status-label {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .status-value {
+            color: #333;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .status-value.online {
+            color: #4caf50;
+        }
+
+        /* API Status Indicator */
+        .api-status {
+            position: absolute;
+            top: 20px;
+            right: 320px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 0.85em;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .api-status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ff4444;
+            animation: pulse 2s infinite;
+        }
+
+        .api-status-dot.connected {
+            background: #44ff44;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* API Info Panel */
+        .api-info-panel {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            max-width: 350px;
+            z-index: 100;
+        }
+
+        .api-info-panel h3 {
+            color: #00ff88;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .api-endpoint {
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid #00ff88;
+            padding: 8px;
+            margin: 5px 0;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            color: #00ff88;
+        }
+
+        .api-description {
+            font-size: 0.8em;
+            color: #aaa;
+            margin-top: 10px;
+        }
+
+        /* Info Panel */
+        .info-panel {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            max-width: 400px;
+            z-index: 100;
+        }
+
+        .info-panel h3 {
+            color: #00ff88;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .info-panel p {
+            font-size: 0.9em;
+            line-height: 1.5;
+            color: #ccc;
+        }
+
+        /* Speed Control */
+        .speed-control {
+            margin-top: 10px;
+        }
+
+        .speed-slider {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #e0e0e0;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .speed-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            cursor: pointer;
+        }
+
+        .speed-slider::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            cursor: pointer;
+            border: none;
+        }
+
+        .speed-display {
+            text-align: center;
+            margin-top: 5px;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loading-content {
+            text-align: center;
+            color: white;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .loading-subtext {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        /* Control Hints */
+        .controls-hint {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 0.9em;
+            z-index: 100;
+        }
+
+        .controls-hint h4 {
+            color: #00ff88;
+            margin-bottom: 8px;
+        }
+
+        .controls-hint p {
+            margin: 5px 0;
+            color: #ccc;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .control-panel {
+                width: 280px;
+                padding: 15px;
+            }
+
+            .controls-hint {
+                display: none;
+            }
+
+            .info-panel {
+                right: 20px;
+                left: auto;
+                max-width: 280px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Loading Woven City...</div>
+            <div class="loading-subtext">Preparing 3D Scene</div>
+        </div>
+    </div>
+
+    <!-- 3D Canvas Container -->
+    <div id="canvas-container"></div>
+
+    <!-- Control Panel -->
+    <div class="control-panel">
+        <div class="panel-header">
+            <div class="logo">🚗</div>
+            <h2>e-Palette Control Center</h2>
+        </div>
+
+        <div class="control-section">
+            <h3>View Control</h3>
+            <div class="button-group">
+                <button class="control-btn active" id="followView">Follow View</button>
+                <button class="control-btn" id="topView">Top View</button>
+                <button class="control-btn" id="freeView">Free View</button>
+            </div>
+        </div>
+
+        <div class="control-section">
+            <h3>Scene Control</h3>
+            <div class="button-group">
+                <button class="control-btn" id="toggleBuildings">Buildings</button>
+                <button class="control-btn" id="togglePath">Path Display</button>
+                <button class="control-btn" id="dayNight">Day/Night</button>
+            </div>
+        </div>
+
+        <div class="control-section">
+            <h3>Speed Control</h3>
+            <div class="speed-control">
+                <input type="range" class="speed-slider" id="speedSlider" min="0" max="200" value="25">
+                <div class="speed-display">Speed: <span id="speedValue">25</span>%</div>
+            </div>
+        </div>
+
+        <div class="control-section">
+            <h3>System Status</h3>
+            <div class="status-item">
+                <span class="status-label">Vehicle Status:</span>
+                <span class="status-value online">Running</span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">Current Location:</span>
+                <span class="status-value" id="currentLocation">Central Plaza</span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">Battery:</span>
+                <span class="status-value">85%</span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">Network:</span>
+                <span class="status-value online">5G Connected</span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">API Status:</span>
+                <span class="status-value" id="apiStatus">Disconnected</span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">Last API Update:</span>
+                <span class="status-value" id="lastApiUpdate">Never</span>
+            </div>
+        </div>
+        
+        <div class="control-section">
+            <h3>Vending Machine</h3>
+            <div id="vendingStats">
+                <div class="status-item">
+                    <span class="status-label">Loading...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Info Panel -->
+    <div class="info-panel">
+        <h3>📍 Woven City</h3>
+        <p>
+            Toyota's Woven City is a futuristic smart city experimental project located at the base of Mount Fuji in Japan.
+            e-Palette autonomous vehicles provide mobility services, logistics delivery, and mobile retail functions throughout the city.
+        </p>
+    </div>
+
+    <!-- Control Hints -->
+    <div class="controls-hint">
+        <h4>🎮 Controls</h4>
+        <p>🖱️ Left Click & Drag: Rotate View</p>
+        <p>🖱️ Right Click & Drag: Pan View</p>
+        <p>🖱️ Scroll Wheel: Zoom</p>
+    </div>
+
+    <!-- API Status Indicator -->
+    <div class="api-status">
+        <div class="api-status-dot" id="apiStatusDot"></div>
+        <span id="apiStatusText">API: Disconnected</span>
+    </div>
+
+    <!-- API Info Panel -->
+    <div class="api-info-panel">
+        <h3>🔌 API Endpoints</h3>
+        <div class="api-endpoint">POST /api/screen/update-text</div>
+        <div class="api-endpoint">POST /api/screen/update-image</div>
+        <div class="api-endpoint">POST /api/vehicle/control</div>
+        <div class="api-endpoint">GET /api/screen/status</div>
+        <div class="api-endpoint">GET /api/vehicle/status</div>
+        <div class="api-endpoint">GET /api/vending-machine/sales</div>
+        <div class="api-endpoint">GET /api/vending-machine/analytics</div>
+        <div class="api-endpoint">POST /api/vending-machine/purchase</div>
+        <p class="api-description">
+            Control the e-Palette and vending machine via REST API. 
+            Compatible with AI agents and IoT systems.
+        </p>
+    </div>
+
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- OrbitControls -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    
+    <script>
+        // Scene initialization
+        let scene, camera, renderer, controls;
+        let ePalette, wheels = [];
+        let buildings = [];
+        let pathLine;
+        let clock = new THREE.Clock();
+        let mixer;
+        let ledScreen; // Reference to LED screen mesh
+        let ledCanvas, ledContext, ledTexture; // For dynamic text updates
+        let vendingMachine; // Reference to vending machine
+        let vendingScreen, vendingCanvas, vendingContext, vendingTexture; // For vending machine display
+        
+        // Control variables
+        let currentView = 'follow';
+        let speed = 0.25;  // デフォルトスピードを25%に変更
+        let pathProgress = 0;
+        let showBuildings = true;
+        let showPath = true;
+        let isDay = true;
+        let isPaused = false;
+        
+        // API variables
+        let apiConnected = false;
+        let lastApiUpdateTime = null;
+        let currentDisplayText = '🍕 Mobile Food Service 🌮';
+        let currentDisplaySubtext = 'AI-Powered · Auto Delivery';
+        let vendingData = null;
+        let vendingAnimationTime = 0;
+        
+        // Path points
+        const pathPoints = [
+            new THREE.Vector3(0, 0, 0),
+            new THREE.Vector3(30, 0, 0),
+            new THREE.Vector3(30, 0, -30),
+            new THREE.Vector3(0, 0, -30),
+            new THREE.Vector3(-30, 0, -30),
+            new THREE.Vector3(-30, 0, 0),
+            new THREE.Vector3(-30, 0, 30),
+            new THREE.Vector3(0, 0, 30),
+            new THREE.Vector3(0, 0, 0)
+        ];
+
+        function init() {
+            // Create scene
+            scene = new THREE.Scene();
+            scene.fog = new THREE.Fog(0xcccccc, 10, 500);
+
+            // Create camera
+            camera = new THREE.PerspectiveCamera(
+                75,
+                window.innerWidth / window.innerHeight,
+                0.1,
+                1000
+            );
+            camera.position.set(30, 20, 30);
+
+            // Create renderer
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+            // Create controls
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.maxPolarAngle = Math.PI / 2.1;
+
+            // Add lighting
+            setupLighting();
+
+            // Create ground
+            createGround();
+
+            // Create city environment
+            createCity();
+
+            // Create e-Palette
+            createEPalette();
+            
+            // Create vending machine
+            createVendingMachine();
+
+            // Create path
+            createPath();
+
+            // Add skybox
+            createSkybox();
+
+            // Bind events
+            setupEventListeners();
+
+            // Hide loading screen
+            setTimeout(() => {
+                document.getElementById('loadingScreen').classList.add('hidden');
+            }, 1000);
+
+            // Start animation loop
+            animate();
+        }
+
+        function setupLighting() {
+            // Ambient light
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            scene.add(ambientLight);
+
+            // Directional light (sunlight)
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(50, 100, 50);
+            directionalLight.castShadow = true;
+            directionalLight.shadow.camera.left = -100;
+            directionalLight.shadow.camera.right = 100;
+            directionalLight.shadow.camera.top = 100;
+            directionalLight.shadow.camera.bottom = -100;
+            directionalLight.shadow.camera.near = 0.1;
+            directionalLight.shadow.camera.far = 200;
+            directionalLight.shadow.mapSize.width = 2048;
+            directionalLight.shadow.mapSize.height = 2048;
+            scene.add(directionalLight);
+
+            // Hemisphere light
+            const hemisphereLight = new THREE.HemisphereLight(0x87CEEB, 0x545454, 0.4);
+            scene.add(hemisphereLight);
+        }
+
+        function createGround() {
+            // Main ground
+            const groundGeometry = new THREE.PlaneGeometry(200, 200);
+            const groundMaterial = new THREE.MeshLambertMaterial({ color: 0x3a3a3a });
+            const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+            ground.rotation.x = -Math.PI / 2;
+            ground.receiveShadow = true;
+            scene.add(ground);
+
+            // Road markings
+            const lineGeometry = new THREE.PlaneGeometry(2, 10);
+            const lineMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
+            
+            for (let i = -40; i <= 40; i += 20) {
+                for (let j = -40; j <= 40; j += 10) {
+                    if (Math.abs(i) <= 30 || Math.abs(j) <= 30) {
+                        const line = new THREE.Mesh(lineGeometry, lineMaterial);
+                        line.rotation.x = -Math.PI / 2;
+                        line.position.set(i, 0.01, j);
+                        scene.add(line);
+                    }
+                }
+            }
+
+            // Add grid helper
+            const gridHelper = new THREE.GridHelper(200, 40, 0x444444, 0x222222);
+            scene.add(gridHelper);
+        }
+
+        function createCity() {
+            // Building materials
+            const buildingMaterials = [
+                new THREE.MeshPhongMaterial({ color: 0x4a90e2, emissive: 0x111122, emissiveIntensity: 0.2 }),
+                new THREE.MeshPhongMaterial({ color: 0x7b68ee, emissive: 0x111122, emissiveIntensity: 0.2 }),
+                new THREE.MeshPhongMaterial({ color: 0x50c878, emissive: 0x111122, emissiveIntensity: 0.2 }),
+                new THREE.MeshPhongMaterial({ color: 0xff6b6b, emissive: 0x111122, emissiveIntensity: 0.2 })
+            ];
+
+            // Create buildings
+            const buildingPositions = [
+                { x: 50, z: 50, w: 15, h: 30, d: 15 },
+                { x: -50, z: 50, w: 20, h: 40, d: 20 },
+                { x: 50, z: -50, w: 18, h: 35, d: 18 },
+                { x: -50, z: -50, w: 15, h: 45, d: 15 },
+                { x: 70, z: 0, w: 12, h: 25, d: 12 },
+                { x: -70, z: 0, w: 16, h: 38, d: 16 },
+                { x: 0, z: 70, w: 14, h: 32, d: 14 },
+                { x: 0, z: -70, w: 17, h: 28, d: 17 },
+                // More small buildings
+                { x: 25, z: 60, w: 8, h: 20, d: 8 },
+                { x: -25, z: 60, w: 10, h: 18, d: 10 },
+                { x: 60, z: 25, w: 9, h: 22, d: 9 },
+                { x: -60, z: -25, w: 11, h: 24, d: 11 }
+            ];
+
+            buildingPositions.forEach((pos, index) => {
+                const geometry = new THREE.BoxGeometry(pos.w, pos.h, pos.d);
+                const material = buildingMaterials[index % buildingMaterials.length];
+                const building = new THREE.Mesh(geometry, material);
+                building.position.set(pos.x, pos.h / 2, pos.z);
+                building.castShadow = true;
+                building.receiveShadow = true;
+                
+                // Add window effect
+                const windowsGeometry = new THREE.BoxGeometry(pos.w + 0.1, pos.h, pos.d + 0.1);
+                const windowsMaterial = new THREE.MeshBasicMaterial({
+                    color: 0xffffaa,
+                    transparent: true,
+                    opacity: 0.3
+                });
+                const windows = new THREE.Mesh(windowsGeometry, windowsMaterial);
+                building.add(windows);
+                
+                buildings.push(building);
+                scene.add(building);
+            });
+
+            // Add trees
+            const treePositions = [
+                { x: 20, z: 20 },
+                { x: -20, z: 20 },
+                { x: 20, z: -20 },
+                { x: -20, z: -20 },
+                { x: 35, z: 35 },
+                { x: -35, z: 35 },
+                { x: 35, z: -35 },
+                { x: -35, z: -35 }
+            ];
+
+            treePositions.forEach(pos => {
+                // Tree trunk
+                const trunkGeometry = new THREE.CylinderGeometry(0.5, 0.7, 4);
+                const trunkMaterial = new THREE.MeshLambertMaterial({ color: 0x8b4513 });
+                const trunk = new THREE.Mesh(trunkGeometry, trunkMaterial);
+                trunk.position.set(pos.x, 2, pos.z);
+                trunk.castShadow = true;
+                scene.add(trunk);
+
+                // Tree crown
+                const leavesGeometry = new THREE.SphereGeometry(3, 8, 6);
+                const leavesMaterial = new THREE.MeshLambertMaterial({ color: 0x228b22 });
+                const leaves = new THREE.Mesh(leavesGeometry, leavesMaterial);
+                leaves.position.set(pos.x, 6, pos.z);
+                leaves.castShadow = true;
+                scene.add(leaves);
+            });
+        }
+
+        function createEPalette() {
+            // e-Palette group
+            ePalette = new THREE.Group();
+
+            // Vehicle body - adjusted proportions (longer)
+            const bodyGeometry = new THREE.BoxGeometry(6, 4.5, 11);
+            
+            // Simple white material for the body
+            const bodyMaterial = new THREE.MeshPhongMaterial({ 
+                color: 0xf0f0f0,
+                emissive: 0x222222,
+                emissiveIntensity: 0.1
+            });
+            
+            const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
+            body.position.y = 2.25;
+            body.castShadow = true;
+            ePalette.add(body);
+
+            // Windows - adjusted for new proportions
+            const windowGeometry = new THREE.BoxGeometry(5.8, 2, 10.8);
+            const windowMaterial = new THREE.MeshPhongMaterial({ 
+                color: 0x4488ff,
+                transparent: true,
+                opacity: 0.3,
+                emissive: 0x0044aa,
+                emissiveIntensity: 0.1
+            });
+            const windowMesh = new THREE.Mesh(windowGeometry, windowMaterial);
+            windowMesh.position.y = 3;
+            ePalette.add(windowMesh);
+
+            // Create display text (using Canvas texture)
+            ledCanvas = document.createElement('canvas');
+            ledCanvas.width = 512;
+            ledCanvas.height = 128;
+            ledContext = ledCanvas.getContext('2d');
+            
+            // LED display screens - positioned on both sides
+            const screenGeometry = new THREE.PlaneGeometry(8, 1.5);
+            
+            // Create initial texture
+            updateLEDDisplay(currentDisplayText, currentDisplaySubtext);
+            
+            // Create material with the texture
+            const screenMaterial = new THREE.MeshBasicMaterial({ 
+                map: ledTexture,
+                side: THREE.DoubleSide
+            });
+            
+            // Right side LED screen
+            const rightScreen = new THREE.Mesh(screenGeometry, screenMaterial.clone());
+            rightScreen.position.set(3.01, 3, 0);
+            rightScreen.rotation.y = Math.PI / 2;
+            ePalette.add(rightScreen);
+            
+            // Left side LED screen
+            ledScreen = new THREE.Mesh(screenGeometry, screenMaterial.clone());
+            ledScreen.position.set(-3.01, 3, 0);
+            ledScreen.rotation.y = -Math.PI / 2;
+            ePalette.add(ledScreen);
+            
+            // Store reference to both screens for updates
+            ePalette.userData.rightScreen = rightScreen;
+            ePalette.userData.leftScreen = ledScreen;
+
+            // Wheels - make them bigger and more visible
+            const wheelGeometry = new THREE.CylinderGeometry(1.2, 1.2, 1.0, 16);
+            const wheelMaterial = new THREE.MeshPhongMaterial({ 
+                color: 0x222222,
+                emissive: 0x111111,
+                emissiveIntensity: 0.2
+            });
+            
+            const wheelPositions = [
+                { x: 2.8, y: 0.5, z: 4 },   // Front right
+                { x: -2.8, y: 0.5, z: 4 },  // Front left
+                { x: 2.8, y: 0.5, z: -4 },  // Rear right
+                { x: -2.8, y: 0.5, z: -4 }  // Rear left
+            ];
+
+            wheelPositions.forEach(pos => {
+                const wheel = new THREE.Mesh(wheelGeometry, wheelMaterial);
+                wheel.position.set(pos.x, pos.y, pos.z);
+                wheel.rotation.z = Math.PI / 2;
+                wheel.castShadow = true;
+                wheels.push(wheel);
+                ePalette.add(wheel);
+            });
+
+            // Headlights - positioned at front of longer body
+            const headlightGeometry = new THREE.SphereGeometry(0.3, 8, 8);
+            const headlightMaterial = new THREE.MeshBasicMaterial({ 
+                color: 0xffff00,
+                emissive: 0xffff00,
+                emissiveIntensity: 1
+            });
+            
+            const headlight1 = new THREE.Mesh(headlightGeometry, headlightMaterial);
+            headlight1.position.set(1.8, 1.5, 5.6);
+            ePalette.add(headlight1);
+            
+            const headlight2 = new THREE.Mesh(headlightGeometry, headlightMaterial);
+            headlight2.position.set(-1.8, 1.5, 5.6);
+            ePalette.add(headlight2);
+
+            // Add light effects
+            const headlightLight1 = new THREE.SpotLight(0xffff00, 0.5, 20, Math.PI / 6);
+            headlightLight1.position.set(1.8, 1.5, 5.6);
+            headlightLight1.target.position.set(1.8, 0, 15);
+            ePalette.add(headlightLight1);
+            ePalette.add(headlightLight1.target);
+
+            const headlightLight2 = new THREE.SpotLight(0xffff00, 0.5, 20, Math.PI / 6);
+            headlightLight2.position.set(-1.8, 1.5, 5.6);
+            headlightLight2.target.position.set(-1.8, 0, 15);
+            ePalette.add(headlightLight2);
+            ePalette.add(headlightLight2.target);
+
+            // Add rear lights
+            const rearLightMaterial = new THREE.MeshBasicMaterial({ 
+                color: 0xff0000,
+                emissive: 0xff0000,
+                emissiveIntensity: 0.5
+            });
+            
+            const rearLight1 = new THREE.Mesh(headlightGeometry, rearLightMaterial);
+            rearLight1.position.set(1.8, 1.5, -5.6);
+            ePalette.add(rearLight1);
+            
+            const rearLight2 = new THREE.Mesh(headlightGeometry, rearLightMaterial);
+            rearLight2.position.set(-1.8, 1.5, -5.6);
+            ePalette.add(rearLight2);
+
+            ePalette.position.set(0, 0, 0);
+            scene.add(ePalette);
+        }
+
+        function createVendingMachine() {
+            // Vending machine group
+            vendingMachine = new THREE.Group();
+            
+            // Main body - modern design
+            const bodyGeometry = new THREE.BoxGeometry(4, 7, 3);
+            const bodyMaterial = new THREE.MeshPhongMaterial({ 
+                color: 0x2c3e50,
+                emissive: 0x1a1a2e,
+                emissiveIntensity: 0.1
+            });
+            const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
+            body.position.y = 3.5;
+            body.castShadow = true;
+            body.receiveShadow = true;
+            vendingMachine.add(body);
+            
+            // Glass front
+            const glassGeometry = new THREE.BoxGeometry(3.8, 5, 0.1);
+            const glassMaterial = new THREE.MeshPhongMaterial({ 
+                color: 0x88ccff,
+                transparent: true,
+                opacity: 0.3,
+                emissive: 0x4488ff,
+                emissiveIntensity: 0.05
+            });
+            const glass = new THREE.Mesh(glassGeometry, glassMaterial);
+            glass.position.set(0, 3.5, 1.5);
+            vendingMachine.add(glass);
+            
+            // LED Display Screen for vending machine
+            vendingCanvas = document.createElement('canvas');
+            vendingCanvas.width = 256;
+            vendingCanvas.height = 128;
+            vendingContext = vendingCanvas.getContext('2d');
+            
+            // Initial display
+            updateVendingDisplay();
+            
+            vendingTexture = new THREE.CanvasTexture(vendingCanvas);
+            const screenGeometry = new THREE.PlaneGeometry(3.5, 1.2);
+            const screenMaterial = new THREE.MeshBasicMaterial({ 
+                map: vendingTexture,
+                emissive: 0x00ff00,
+                emissiveIntensity: 0.5
+            });
+            
+            vendingScreen = new THREE.Mesh(screenGeometry, screenMaterial);
+            vendingScreen.position.set(0, 6, 1.51);
+            vendingMachine.add(vendingScreen);
+            
+            // Product shelves (visible through glass)
+            const shelfGeometry = new THREE.BoxGeometry(3.5, 0.1, 2.5);
+            const shelfMaterial = new THREE.MeshPhongMaterial({ color: 0x888888 });
+            
+            for (let i = 0; i < 4; i++) {
+                const shelf = new THREE.Mesh(shelfGeometry, shelfMaterial);
+                shelf.position.set(0, 1.5 + i * 1.2, 0);
+                vendingMachine.add(shelf);
+                
+                // Add product boxes on shelves
+                const productGeometry = new THREE.BoxGeometry(0.4, 0.8, 0.4);
+                const productColors = [0xff6b6b, 0x4ecdc4, 0xffe66d, 0x6a4c93];
+                
+                for (let j = 0; j < 6; j++) {
+                    const productMaterial = new THREE.MeshPhongMaterial({ 
+                        color: productColors[i % productColors.length]
+                    });
+                    const product = new THREE.Mesh(productGeometry, productMaterial);
+                    product.position.set(-1.5 + j * 0.6, 2 + i * 1.2, 0);
+                    vendingMachine.add(product);
+                }
+            }
+            
+            // Dispensing slot
+            const slotGeometry = new THREE.BoxGeometry(2, 0.5, 0.3);
+            const slotMaterial = new THREE.MeshPhongMaterial({ 
+                color: 0x333333,
+                emissive: 0x111111,
+                emissiveIntensity: 0.2
+            });
+            const slot = new THREE.Mesh(slotGeometry, slotMaterial);
+            slot.position.set(0, 0.5, 1.5);
+            vendingMachine.add(slot);
+            
+            // Payment panel
+            const panelGeometry = new THREE.BoxGeometry(0.8, 1.2, 0.1);
+            const panelMaterial = new THREE.MeshPhongMaterial({ 
+                color: 0x444444,
+                emissive: 0x00ff00,
+                emissiveIntensity: 0.1
+            });
+            const panel = new THREE.Mesh(panelGeometry, panelMaterial);
+            panel.position.set(2.2, 4, 1.51);
+            vendingMachine.add(panel);
+            
+            // Add buttons on payment panel
+            const buttonGeometry = new THREE.CylinderGeometry(0.08, 0.08, 0.05, 8);
+            const buttonMaterial = new THREE.MeshPhongMaterial({ 
+                color: 0x00ff00,
+                emissive: 0x00ff00,
+                emissiveIntensity: 0.5
+            });
+            
+            for (let i = 0; i < 3; i++) {
+                for (let j = 0; j < 3; j++) {
+                    const button = new THREE.Mesh(buttonGeometry, buttonMaterial);
+                    button.rotation.x = Math.PI / 2;
+                    button.position.set(2 + j * 0.2, 3.8 + i * 0.2, 1.55);
+                    vendingMachine.add(button);
+                }
+            }
+            
+            // Add glow light
+            const vendingLight = new THREE.PointLight(0x00ff88, 0.5, 10);
+            vendingLight.position.set(0, 6, 2);
+            vendingMachine.add(vendingLight);
+            
+            // Position vending machine in the scene
+            vendingMachine.position.set(15, 0, 15);
+            vendingMachine.rotation.y = -Math.PI / 4;
+            scene.add(vendingMachine);
+            
+            // Add a small sign
+            const signGeometry = new THREE.BoxGeometry(0.1, 2, 1);
+            const signMaterial = new THREE.MeshPhongMaterial({ color: 0x00aa00 });
+            const signPole = new THREE.Mesh(signGeometry, signMaterial);
+            signPole.position.set(17, 1, 17);
+            scene.add(signPole);
+            
+            const signBoardGeometry = new THREE.BoxGeometry(2, 1, 0.1);
+            const signBoardMaterial = new THREE.MeshPhongMaterial({ 
+                color: 0x00ff00,
+                emissive: 0x00aa00,
+                emissiveIntensity: 0.2
+            });
+            const signBoard = new THREE.Mesh(signBoardGeometry, signBoardMaterial);
+            signBoard.position.set(17, 2.5, 17);
+            signBoard.rotation.y = -Math.PI / 4;
+            scene.add(signBoard);
+        }
+
+        function updateVendingDisplay() {
+            // Clear canvas
+            vendingContext.fillStyle = '#000000';
+            vendingContext.fillRect(0, 0, vendingCanvas.width, vendingCanvas.height);
+            
+            // Display vending machine info
+            vendingContext.fillStyle = '#00ff00';
+            vendingContext.font = 'bold 20px Arial';
+            vendingContext.textAlign = 'center';
+            
+            if (vendingData && vendingData.daily_stats) {
+                vendingContext.fillText('🏪 Smart Vending', vendingCanvas.width / 2, 30);
+                vendingContext.font = '16px Arial';
+                vendingContext.fillText(`Sales: ${vendingData.daily_stats.total_sales || 0}`, vendingCanvas.width / 2, 55);
+                vendingContext.fillText(`Revenue: ¥${vendingData.daily_stats.total_revenue || 0}`, vendingCanvas.width / 2, 75);
+                
+                if (vendingData.daily_stats.best_seller) {
+                    vendingContext.font = '14px Arial';
+                    vendingContext.fillText(`Hot: ${vendingData.daily_stats.best_seller}`, vendingCanvas.width / 2, 95);
+                }
+            } else {
+                vendingContext.fillText('🏪 Smart Vending', vendingCanvas.width / 2, 40);
+                vendingContext.font = '16px Arial';
+                vendingContext.fillText('AI-Powered Sales', vendingCanvas.width / 2, 65);
+                vendingContext.fillText('24/7 Service', vendingCanvas.width / 2, 85);
+            }
+            
+            // Update texture
+            if (vendingTexture) {
+                vendingTexture.needsUpdate = true;
+            }
+        }
+
+        function animateVendingPurchase() {
+            // Create falling product animation
+            const productGeometry = new THREE.BoxGeometry(0.3, 0.5, 0.3);
+            const productMaterial = new THREE.MeshPhongMaterial({ 
+                color: 0xff6b6b,
+                emissive: 0xff0000,
+                emissiveIntensity: 0.2
+            });
+            const product = new THREE.Mesh(productGeometry, productMaterial);
+            product.position.set(15, 4, 16.5);
+            scene.add(product);
+            
+            // Animate falling
+            let fallSpeed = 0;
+            const animateFall = () => {
+                fallSpeed += 0.01;
+                product.position.y -= fallSpeed;
+                
+                if (product.position.y > 0.5) {
+                    requestAnimationFrame(animateFall);
+                } else {
+                    // Remove after animation
+                    setTimeout(() => {
+                        scene.remove(product);
+                    }, 1000);
+                }
+            };
+            animateFall();
+        }
+
+        function createPath() {
+            // Create path curve
+            const curve = new THREE.CatmullRomCurve3(pathPoints, true);
+            
+            // Create path line
+            const points = curve.getPoints(100);
+            const geometry = new THREE.BufferGeometry().setFromPoints(points);
+            const material = new THREE.LineBasicMaterial({ 
+                color: 0x00ff00,
+                linewidth: 2,
+                transparent: true,
+                opacity: 0.6
+            });
+            pathLine = new THREE.Line(geometry, material);
+            pathLine.position.y = 0.1;
+            scene.add(pathLine);
+        }
+
+        function createSkybox() {
+            // Create gradient sky
+            const skyGeometry = new THREE.SphereGeometry(400, 32, 32);
+            const skyMaterial = new THREE.ShaderMaterial({
+                uniforms: {
+                    topColor: { value: new THREE.Color(0x87CEEB) },
+                    bottomColor: { value: new THREE.Color(0xffffff) },
+                    offset: { value: 33 },
+                    exponent: { value: 0.6 }
+                },
+                vertexShader: `
+                    varying vec3 vWorldPosition;
+                    void main() {
+                        vec4 worldPosition = modelMatrix * vec4(position, 1.0);
+                        vWorldPosition = worldPosition.xyz;
+                        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                    }
+                `,
+                fragmentShader: `
+                    uniform vec3 topColor;
+                    uniform vec3 bottomColor;
+                    uniform float offset;
+                    uniform float exponent;
+                    varying vec3 vWorldPosition;
+                    void main() {
+                        float h = normalize(vWorldPosition + offset).y;
+                        gl_FragColor = vec4(mix(bottomColor, topColor, max(pow(max(h, 0.0), exponent), 0.0)), 1.0);
+                    }
+                `,
+                side: THREE.BackSide
+            });
+            const sky = new THREE.Mesh(skyGeometry, skyMaterial);
+            scene.add(sky);
+        }
+
+        function setupEventListeners() {
+            // View controls
+            document.getElementById('followView').addEventListener('click', function() {
+                currentView = 'follow';
+                updateButtonStates();
+            });
+
+            document.getElementById('topView').addEventListener('click', function() {
+                currentView = 'top';
+                updateButtonStates();
+            });
+
+            document.getElementById('freeView').addEventListener('click', function() {
+                currentView = 'free';
+                updateButtonStates();
+            });
+
+            // Scene controls
+            document.getElementById('toggleBuildings').addEventListener('click', function() {
+                showBuildings = !showBuildings;
+                buildings.forEach(building => {
+                    building.visible = showBuildings;
+                });
+                this.classList.toggle('active');
+            });
+
+            document.getElementById('togglePath').addEventListener('click', function() {
+                showPath = !showPath;
+                pathLine.visible = showPath;
+                this.classList.toggle('active');
+            });
+
+            document.getElementById('dayNight').addEventListener('click', function() {
+                isDay = !isDay;
+                if (isDay) {
+                    scene.fog.color = new THREE.Color(0xcccccc);
+                    renderer.setClearColor(0x87CEEB);
+                } else {
+                    scene.fog.color = new THREE.Color(0x111111);
+                    renderer.setClearColor(0x000033);
+                }
+                this.classList.toggle('active');
+            });
+
+            // Speed control
+            document.getElementById('speedSlider').addEventListener('input', function() {
+                speed = this.value / 100;
+                document.getElementById('speedValue').textContent = this.value;
+            });
+
+            // Window resize
+            window.addEventListener('resize', onWindowResize);
+        }
+
+        function updateButtonStates() {
+            document.querySelectorAll('.control-btn').forEach(btn => {
+                if (btn.id === 'followView' || btn.id === 'topView' || btn.id === 'freeView') {
+                    btn.classList.remove('active');
+                }
+            });
+            
+            if (currentView === 'follow') {
+                document.getElementById('followView').classList.add('active');
+            } else if (currentView === 'top') {
+                document.getElementById('topView').classList.add('active');
+            } else if (currentView === 'free') {
+                document.getElementById('freeView').classList.add('active');
+            }
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function updateLEDDisplay(mainText, subText, imageUrl = null) {
+            // Clear canvas with black background
+            ledContext.fillStyle = '#000000';
+            ledContext.fillRect(0, 0, ledCanvas.width, ledCanvas.height);
+            
+            if (imageUrl) {
+                // Load and display image through proxy to avoid CORS issues
+                const img = new Image();
+                
+                img.onload = function() {
+                    try {
+                        // Draw image to canvas
+                        ledContext.drawImage(img, 0, 0, ledCanvas.width, ledCanvas.height);
+                        
+                        // Update texture
+                        if (!ledTexture) {
+                            ledTexture = new THREE.CanvasTexture(ledCanvas);
+                        }
+                        ledTexture.needsUpdate = true;
+                        
+                        // Apply texture to both screens
+                        if (ledScreen && ledScreen.material) {
+                            ledScreen.material.map = ledTexture;
+                            ledScreen.material.needsUpdate = true;
+                        }
+                        if (ePalette && ePalette.userData && ePalette.userData.rightScreen) {
+                            ePalette.userData.rightScreen.material.map = ledTexture;
+                            ePalette.userData.rightScreen.material.needsUpdate = true;
+                        }
+                        
+                        console.log('Image successfully loaded and displayed:', imageUrl);
+                    } catch (e) {
+                        console.error('Failed to draw image:', e);
+                        // Fallback to error text
+                        updateLEDDisplay('⚠️ Image Load Failed', 'Check image URL');
+                    }
+                };
+                
+                img.onerror = function() {
+                    console.error('Failed to load image:', imageUrl);
+                    // Display error message
+                    updateLEDDisplay('❌ Image Error', 'Cannot load image');
+                };
+                
+                // Use proxy endpoint if it's an external URL
+                if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+                    // Use the proxy endpoint to avoid CORS issues
+                    img.src = `/api/proxy/image?url=${encodeURIComponent(imageUrl)}`;
+                } else {
+                    // Local image, use directly
+                    img.src = imageUrl;
+                }
+            } else if (mainText || subText) {
+                // Display text with green color
+                ledContext.fillStyle = '#00ff00';
+                ledContext.font = 'bold 30px Arial';
+                ledContext.textAlign = 'center';
+                
+                // Handle multi-line text
+                if (mainText) {
+                    const lines = mainText.split('\n');
+                    const lineHeight = 35;
+                    const startY = lines.length === 1 ? 50 : 40;
+                    
+                    lines.forEach((line, index) => {
+                        ledContext.fillText(line, ledCanvas.width / 2, startY + (index * lineHeight));
+                    });
+                }
+                
+                if (subText) {
+                    ledContext.font = '20px Arial';
+                    ledContext.fillText(subText, ledCanvas.width / 2, 90);
+                }
+                
+                // Update texture
+                if (!ledTexture) {
+                    ledTexture = new THREE.CanvasTexture(ledCanvas);
+                }
+                ledTexture.needsUpdate = true;
+                
+                // Apply texture to both screens
+                if (ledScreen && ledScreen.material) {
+                    ledScreen.material.map = ledTexture;
+                    ledScreen.material.needsUpdate = true;
+                }
+                if (ePalette && ePalette.userData && ePalette.userData.rightScreen) {
+                    ePalette.userData.rightScreen.material.map = ledTexture;
+                    ePalette.userData.rightScreen.material.needsUpdate = true;
+                }
+            }
+        }
+
+        function updateEPalettePosition() {
+            if (isPaused) return;
+            
+            // Update path progress
+            pathProgress += 0.002 * speed;
+            if (pathProgress > 1) pathProgress = 0;
+
+            // Create path curve
+            const curve = new THREE.CatmullRomCurve3(pathPoints, true);
+            
+            // Get current position
+            const position = curve.getPoint(pathProgress);
+            ePalette.position.copy(position);
+
+            // Get forward position for direction calculation
+            const lookAtProgress = (pathProgress + 0.01) % 1;
+            const lookAtPosition = curve.getPoint(lookAtProgress);
+            
+            // Calculate direction
+            const direction = new THREE.Vector3().subVectors(lookAtPosition, position).normalize();
+            const angle = Math.atan2(direction.x, direction.z);
+            ePalette.rotation.y = angle;
+
+            // Rotate wheels
+            wheels.forEach(wheel => {
+                wheel.rotation.x += 0.1 * speed;
+            });
+
+            // Update location display
+            updateLocationDisplay(pathProgress);
+        }
+
+        function updateLocationDisplay(progress) {
+            const locations = [
+                'Central Plaza',
+                'East Commercial District',
+                'Tech Park',
+                'South Residential',
+                'West Park',
+                'North School'
+            ];
+            const locationIndex = Math.floor(progress * locations.length);
+            document.getElementById('currentLocation').textContent = locations[locationIndex];
+        }
+
+        function updateCamera() {
+            if (currentView === 'follow') {
+                // Follow view
+                const offset = new THREE.Vector3(15, 10, 15);
+                const desiredPosition = ePalette.position.clone().add(offset);
+                camera.position.lerp(desiredPosition, 0.1);
+                camera.lookAt(ePalette.position);
+                controls.enabled = false;
+            } else if (currentView === 'top') {
+                // Top view
+                const topPosition = new THREE.Vector3(0, 80, 0);
+                camera.position.lerp(topPosition, 0.1);
+                camera.lookAt(new THREE.Vector3(0, 0, 0));
+                controls.enabled = false;
+            } else {
+                // Free view
+                controls.enabled = true;
+            }
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            const delta = clock.getDelta();
+
+            // Update e-Palette position
+            updateEPalettePosition();
+
+            // Update camera
+            updateCamera();
+
+            // Update controls
+            if (controls.enabled) {
+                controls.update();
+            }
+            
+            // Animate vending machine (subtle glow effect)
+            if (vendingMachine) {
+                vendingAnimationTime += delta;
+                const glowIntensity = 0.5 + Math.sin(vendingAnimationTime * 2) * 0.2;
+                if (vendingMachine.children[vendingMachine.children.length - 1].isLight) {
+                    vendingMachine.children[vendingMachine.children.length - 1].intensity = glowIntensity;
+                }
+            }
+
+            // Render scene
+            renderer.render(scene, camera);
+        }
+
+        // Vending Machine API Integration
+        async function fetchVendingData() {
+            try {
+                const response = await fetch('/api/vending-machine/sales');
+                if (response.ok) {
+                    vendingData = await response.json();
+                    updateVendingDisplay();
+                    
+                    // Update control panel with vending stats
+                    const vendingStatsElement = document.getElementById('vendingStats');
+                    if (vendingStatsElement && vendingData.daily_stats) {
+                        vendingStatsElement.innerHTML = `
+                            <div class="status-item">
+                                <span class="status-label">Vending Sales:</span>
+                                <span class="status-value">${vendingData.daily_stats.total_sales || 0}</span>
+                            </div>
+                            <div class="status-item">
+                                <span class="status-label">Vending Revenue:</span>
+                                <span class="status-value">¥${vendingData.daily_stats.total_revenue || 0}</span>
+                            </div>
+                        `;
+                    }
+                }
+            } catch (error) {
+                console.log('Failed to fetch vending data:', error);
+            }
+        }
+        
+        // Simulate random purchases
+        async function simulateVendingPurchase() {
+            if (Math.random() < 0.1) { // 10% chance every check
+                try {
+                    const products = ['p001', 'p002', 'p003', 'p004', 'p005', 'p006', 'p007', 'p008'];
+                    const randomProduct = products[Math.floor(Math.random() * products.length)];
+                    
+                    const response = await fetch('/api/vending-machine/purchase', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            product_id: randomProduct,
+                            quantity: Math.floor(Math.random() * 2) + 1
+                        })
+                    });
+                    
+                    if (response.ok) {
+                        animateVendingPurchase();
+                        fetchVendingData(); // Update display
+                    }
+                } catch (error) {
+                    console.log('Purchase simulation failed:', error);
+                }
+            }
+        }
+
+        // API Integration
+        async function checkForAPIUpdates() {
+            try {
+                const response = await fetch('/api/screen/status');
+                if (response.ok) {
+                    const data = await response.json();
+                    
+                    // Update connection status
+                    if (!apiConnected) {
+                        apiConnected = true;
+                        updateAPIStatus(true);
+                    }
+                    
+                    // Check if there's new content
+                    if (data.lastUpdate !== lastApiUpdateTime) {
+                        lastApiUpdateTime = data.lastUpdate;
+                        
+                        // Update LED display
+                        if (data.text) {
+                            currentDisplayText = data.text;
+                            currentDisplaySubtext = data.subtext || '';
+                            updateLEDDisplay(currentDisplayText, currentDisplaySubtext);
+                        }
+                        
+                        if (data.imageUrl) {
+                            updateLEDDisplay('', '', data.imageUrl);
+                        }
+                        
+                        // Update vehicle controls if provided
+                        if (data.speed !== undefined) {
+                            speed = data.speed / 100;
+                            document.getElementById('speedSlider').value = data.speed;
+                            document.getElementById('speedValue').textContent = data.speed;
+                        }
+                        
+                        if (data.paused !== undefined) {
+                            isPaused = data.paused;
+                        }
+                        
+                        if (data.location !== undefined) {
+                            // Update location in path
+                            const locations = ['central', 'east', 'tech', 'south', 'west', 'north'];
+                            const index = locations.indexOf(data.location.toLowerCase());
+                            if (index !== -1) {
+                                pathProgress = index / locations.length;
+                            }
+                        }
+                        
+                        // Update last update time
+                        document.getElementById('lastApiUpdate').textContent = new Date().toLocaleTimeString();
+                    }
+                }
+            } catch (error) {
+                if (apiConnected) {
+                    apiConnected = false;
+                    updateAPIStatus(false);
+                }
+            }
+        }
+
+        async function checkVehicleStatus() {
+            if (!apiConnected) return;
+            
+            try {
+                const response = await fetch('/api/vehicle/status');
+                if (response.ok) {
+                    const data = await response.json();
+                    // Send current vehicle status to server
+                    await fetch('/api/vehicle/status', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            location: document.getElementById('currentLocation').textContent,
+                            speed: speed * 100,
+                            paused: isPaused,
+                            view: currentView
+                        })
+                    });
+                }
+            } catch (error) {
+                console.log('Vehicle status update failed');
+            }
+        }
+
+        function updateAPIStatus(connected) {
+            const statusDot = document.getElementById('apiStatusDot');
+            const statusText = document.getElementById('apiStatusText');
+            const apiStatus = document.getElementById('apiStatus');
+            
+            if (connected) {
+                statusDot.classList.add('connected');
+                statusText.textContent = 'API: Connected';
+                apiStatus.textContent = 'Connected';
+                apiStatus.style.color = '#4caf50';
+            } else {
+                statusDot.classList.remove('connected');
+                statusText.textContent = 'API: Disconnected';
+                apiStatus.textContent = 'Disconnected';
+                apiStatus.style.color = '#ff4444';
+            }
+        }
+
+        // Demo mode - simulate updates when no API server
+        function runDemoMode() {
+            const demoMessages = [
+                { text: '🎉 Special Offer!\nBuy 2 Get 1 Free', subtext: 'Limited Time Only!' },
+                { text: '🍕 Fresh Pizza\n🌮 Tacos 🍔 Burgers', subtext: 'Order Now!' },
+                { text: '📍 Next Stop:\nCentral Plaza', subtext: 'ETA: 5 minutes' },
+                { text: '🚗 Autonomous Delivery\nZero Emissions', subtext: 'Eco-Friendly Service' },
+                { text: '⭐ Rate Us!\nScan QR Code', subtext: 'Your feedback matters' }
+            ];
+            
+            let messageIndex = 0;
+            setInterval(() => {
+                if (!apiConnected) {
+                    const message = demoMessages[messageIndex];
+                    updateLEDDisplay(message.text, message.subtext);
+                    messageIndex = (messageIndex + 1) % demoMessages.length;
+                }
+            }, 8000);
+        }
+
+        // Initialize scene
+        window.addEventListener('load', () => {
+            init();
+            
+            // Start API polling
+            setInterval(checkForAPIUpdates, 2000);
+            setInterval(checkVehicleStatus, 5000);
+            
+            // Vending machine updates
+            setInterval(fetchVendingData, 5000);
+            setInterval(simulateVendingPurchase, 10000);
+            
+            // Initial vending data fetch
+            fetchVendingData();
+            
+            // Start demo mode
+            setTimeout(runDemoMode, 3000);
+        });
+
+        // Initialize button states
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('toggleBuildings').classList.add('active');
+            document.getElementById('togglePath').classList.add('active');
+        });
+    </script>
+</body>
+</html>

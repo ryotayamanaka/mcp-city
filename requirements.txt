@@ -1,0 +1,10 @@
+agno>=1.8.1
+ddgs>=4.0.0
+fastapi>=0.116.1
+google-genai>=1.29.0
+mcp[cli]>=1.13.1
+pydantic>=2.11.7
+requests>=2.31.0
+sqlalchemy>=2.0.42
+uvicorn[standard]>=0.24.0
+yfinance>=0.2.0

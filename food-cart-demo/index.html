@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autonomous Food Cart - IoT Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .demo-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 30px;
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.2em;
+        }
+
+        .cart-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .cart-visual {
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+            position: relative;
+        }
+
+        .cart {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .cart-image {
+            width: 90%;
+            height: auto;
+            max-height: 100%;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .promotional-screen {
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 300px;
+            height: 200px;
+            background: #000;
+            border-radius: 10px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 3px solid #333;
+            z-index: 10;
+        }
+
+        .screen-header {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #00ff00;
+            font-size: 12px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .screen-content {
+            color: white;
+            text-align: center;
+            width: 100%;
+        }
+
+        .screen-text {
+            font-size: 1.1em;
+            line-height: 1.3;
+            margin-bottom: 15px;
+        }
+
+        .screen-image {
+            max-width: 100%;
+            max-height: 140px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .status-panel {
+            margin-top: 30px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 5px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .status-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .status-label {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .status-value {
+            color: #28a745;
+        }
+
+        .api-info {
+            margin-top: 20px;
+            background: #e9ecef;
+            border-radius: 10px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        .api-endpoint {
+            background: #333;
+            color: #00ff00;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+
+        @media (max-width: 768px) {
+            .cart-container {
+                flex-direction: column;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <div class="header">
+            <h1>🤖 Autonomous e-Palette</h1>
+            <p>IoT Device Simulation - AI Agent Controlled Promotional Screen</p>
+        </div>
+
+        <div class="cart-container">
+            <div class="cart-visual">
+                <div class="cart">
+                    <img src="img/ePalette001.jpg" alt="e-Palette Vehicle" class="cart-image">
+                    <div class="promotional-screen">
+                        <div class="screen-header">PROMOTIONAL DISPLAY</div>
+                        <div class="screen-content">
+                            <div class="screen-text" id="screenText">
+                                Welcome to our Autonomous Food Cart!<br>
+                                🍕 Fresh Pizza • 🌮 Tacos • 🍔 Burgers<br>
+                                AI-Controlled Display Ready
+                            </div>
+                            <img class="screen-image" id="screenImage" alt="Promotional content">
+                        </div>
+                    </div>
+                </div>
+                <h3 style="margin-top: 30px; color: #333;">Autonomous e-Palette v2.0</h3>
+            </div>
+        </div>
+
+        <div class="status-panel">
+            <h3 style="margin-bottom: 15px; color: #333;">Cart Status</h3>
+            <div class="status-item">
+                <span class="status-label">System Status:</span>
+                <span class="status-value">ONLINE</span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">Location:</span>
+                <span class="status-value">Downtown Plaza</span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">Screen Status:</span>
+                <span class="status-value" id="screenStatus">READY</span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">Last Update:</span>
+                <span class="status-value" id="lastUpdate">Never</span>
+            </div>
+        </div>
+
+        <div class="api-info">
+            <h4 style="margin-bottom: 10px; color: #333;">API Control Endpoints:</h4>
+            <div class="api-endpoint">POST /api/screen/update-text</div>
+            <div class="api-endpoint">POST /api/screen/update-image</div>
+            <div style="margin-top: 10px; color: #666;">
+                Use these endpoints to control the promotional screen via AI Agent tools
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Poll for screen updates
+        let lastUpdateTime = null;
+
+        async function checkForUpdates() {
+            try {
+                const response = await fetch('/api/screen/status');
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.lastUpdate !== lastUpdateTime) {
+                        updateScreen(data);
+                        lastUpdateTime = data.lastUpdate;
+                    }
+                }
+            } catch (error) {
+                console.log('Server not running - demo mode active');
+            }
+        }
+
+        function updateScreen(data) {
+            const screenText = document.getElementById('screenText');
+            const screenImage = document.getElementById('screenImage');
+            const screenStatus = document.getElementById('screenStatus');
+            const lastUpdate = document.getElementById('lastUpdate');
+
+            if (data.text) {
+                screenText.textContent = data.text;
+                screenImage.style.display = 'none';
+            }
+
+            if (data.imageUrl) {
+                screenImage.src = data.imageUrl;
+                screenImage.style.display = 'block';
+                screenText.style.display = 'none';
+            } else {
+                screenText.style.display = 'block';
+            }
+
+            screenStatus.textContent = 'UPDATED';
+            lastUpdate.textContent = new Date().toLocaleTimeString();
+
+            // Reset status after 3 seconds
+            setTimeout(() => {
+                screenStatus.textContent = 'READY';
+            }, 3000);
+        }
+
+        // Check for updates every 2 seconds
+        setInterval(checkForUpdates, 2000);
+
+        // Demo mode - simulate some updates for demonstration
+        setTimeout(() => {
+            updateScreen({
+                text: "🎉 Special Offer!\nBuy 2 Get 1 Free Pizza\nValid Today Only!",
+                lastUpdate: Date.now()
+            });
+        }, 5000);
+    </script>
+</body>
+</html>

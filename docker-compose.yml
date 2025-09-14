@@ -1,0 +1,77 @@
+version: '3.8'
+
+services:
+  # Next.jsフロントエンド
+  agent-ui:
+    build:
+      context: ./agent-ui
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+    depends_on:
+      - python-agents
+      - food-cart-api
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  # Pythonエージェント
+  python-agents:
+    build:
+      context: .
+      dockerfile: Dockerfile.python-agents
+    ports:
+      - "8001:8000"
+    environment:
+      - PYTHONPATH=/app
+      - AGENT_STORAGE_PATH=/app/tmp
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY:-your_google_api_key_here}
+    volumes:
+      - ./tmp:/app/tmp
+      - ./food-cart-demo/mcp_servers:/app/mcp_servers
+    depends_on:
+      - food-cart-api
+      - vending-machine-mcp
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  # MCP Server for Vending Machine
+  vending-machine-mcp:
+    build:
+      context: ./food-cart-demo
+      dockerfile: Dockerfile.mcp
+    environment:
+      - PYTHONPATH=/app
+    depends_on:
+      - food-cart-api
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  # Food Cart API
+  food-cart-api:
+    build:
+      context: ./food-cart-demo
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONPATH=/app
+    volumes:
+      - ./food-cart-demo/mockdata:/app/mockdata
+      - ./food-cart-demo/img:/app/img
+    networks:
+      - app-network
+    restart: unless-stopped
+
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  tmp-data:
