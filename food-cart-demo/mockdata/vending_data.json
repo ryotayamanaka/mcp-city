@@ -4,7 +4,7 @@
       "id": "p001",
       "name": "Coca Cola",
       "price": 150,
-      "stock": 0,
+      "stock": 10,
       "category": "beverage",
       "image": "\ud83e\udd64"
     },
@@ -12,7 +12,7 @@
       "id": "p002",
       "name": "Sprite",
       "price": 150,
-      "stock": 0,
+      "stock": 1,
       "category": "beverage",
       "image": "\ud83e\udd64"
     },
@@ -20,7 +20,7 @@
       "id": "p003",
       "name": "Water",
       "price": 100,
-      "stock": 0,
+      "stock": 8,
       "category": "beverage",
       "image": "\ud83d\udca7"
     },
@@ -28,7 +28,7 @@
       "id": "p004",
       "name": "Potato Chips",
       "price": 200,
-      "stock": 0,
+      "stock": 12,
       "category": "snack",
       "image": "\ud83e\udd54"
     },
@@ -36,7 +36,7 @@
       "id": "p005",
       "name": "Chocolate Bar",
       "price": 250,
-      "stock": 0,
+      "stock": 24,
       "category": "snack",
       "image": "\ud83c\udf6b"
     },
@@ -44,7 +44,7 @@
       "id": "p006",
       "name": "Cookies",
       "price": 180,
-      "stock": 0,
+      "stock": 30,
       "category": "snack",
       "image": "\ud83c\udf6a"
     },
@@ -60,7 +60,7 @@
       "id": "p008",
       "name": "Rice Ball",
       "price": 280,
-      "stock": 0,
+      "stock": 15,
       "category": "food",
       "image": "\ud83c\udf59"
     }
@@ -1585,12 +1585,20 @@
       "quantity": 1,
       "price": 150,
       "total": 150
+    },
+    {
+      "timestamp": "2025-09-15T09:59:33.071681",
+      "product_id": "p005",
+      "product_name": "Chocolate Bar",
+      "quantity": 1,
+      "price": 250,
+      "total": 250
     }
   ],
   "daily_stats": {
-    "total_sales": 109,
-    "total_revenue": 32210,
+    "total_sales": 110,
+    "total_revenue": 32460,
     "best_seller": "Rice Ball",
-    "last_update": "2025-09-02T12:24:06.026452"
+    "last_update": "2025-09-15T09:59:33.071752"
   }
 }

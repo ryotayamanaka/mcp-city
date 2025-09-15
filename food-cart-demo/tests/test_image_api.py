@@ -1,70 +1,70 @@
 #!/usr/bin/env python3
 """
-测试脚本：验证 e-Palette 屏幕图片更新功能
+Test script: Verify ePalette display image update functionality
 """
 
 import requests
 import time
 import json
 
-# API 基础 URL
+# API base URL
 BASE_URL = "http://localhost:8000"
 
 def test_image_update():
-    """测试图片更新功能"""
+    """Test image update functionality"""
     print("=" * 60)
-    print("🧪 测试 e-Palette 屏幕图片更新功能")
+    print("🧪 Testing ePalette Display Image Update Functionality")
     print("=" * 60)
     
-    # 测试图片 URL 列表
+    # Test image URL list
     test_images = [
-        # 使用一些公开的测试图片
+        # Using some public test images
         "https://via.placeholder.com/512x128/FF0000/FFFFFF?text=Red+Test+Image",
         "https://via.placeholder.com/512x128/00FF00/000000?text=Green+Test+Image",
         "https://via.placeholder.com/512x128/0000FF/FFFFFF?text=Blue+Test+Image",
-        "https://picsum.photos/512/128",  # 随机图片
-        "/img/ePalette001.jpg"  # 本地图片
+        "https://picsum.photos/512/128",  # Random image
+        "/img/ePalette001.jpg"  # Local image
     ]
     
     try:
-        # 1. 首先检查 API 健康状态
-        print("\n1️⃣ 检查 API 健康状态...")
+        # 1. First check API health status
+        print("\n1️⃣ Checking API health status...")
         response = requests.get(f"{BASE_URL}/api/health")
         if response.status_code == 200:
-            print("✅ API 服务正常运行")
+            print("✅ API service is running normally")
         else:
-            print("❌ API 服务未响应")
+            print("❌ API service is not responding")
             return
         
-        # 2. 获取当前屏幕状态
-        print("\n2️⃣ 获取当前屏幕状态...")
+        # 2. Get current display status
+        print("\n2️⃣ Getting current display status...")
         response = requests.get(f"{BASE_URL}/api/epalette/display/status")
         if response.status_code == 200:
             data = response.json()
-            print(f"当前状态: {data.get('status')}")
+            print(f"Current status: {data.get('status')}")
             if data.get('text'):
-                print(f"当前文本: {data.get('text')}")
+                print(f"Current text: {data.get('text')}")
             if data.get('imageUrl'):
-                print(f"当前图片: {data.get('imageUrl')}")
+                print(f"Current image: {data.get('imageUrl')}")
         
-        # 3. 测试文本显示
-        print("\n3️⃣ 测试文本显示...")
+        # 3. Test text display
+        print("\n3️⃣ Testing text display...")
         text_data = {
-            "text": "🎯 图片测试准备中...",
-            "subtext": "即将显示测试图片"
+            "text": "🎯 Preparing image test...",
+            "subtext": "About to display test images"
         }
         response = requests.post(f"{BASE_URL}/api/epalette/display/text", json=text_data)
         if response.status_code == 200:
-            print("✅ 文本更新成功")
+            print("✅ Text update successful")
         else:
-            print(f"❌ 文本更新失败: {response.status_code}")
+            print(f"❌ Text update failed: {response.status_code}")
         
         time.sleep(3)
         
-        # 4. 测试图片更新
-        print("\n4️⃣ 开始测试图片更新...")
+        # 4. Test image updates
+        print("\n4️⃣ Starting image update tests...")
         for i, image_url in enumerate(test_images, 1):
-            print(f"\n测试图片 {i}/{len(test_images)}: {image_url}")
+            print(f"\nTest image {i}/{len(test_images)}: {image_url}")
             
             image_data = {
                 "image_url": image_url
@@ -75,64 +75,64 @@ def test_image_update():
                 if response.status_code == 200:
                     result = response.json()
                     if result.get("success"):
-                        print(f"✅ 图片更新成功")
+                        print(f"✅ Image update successful")
                         
-                        # 验证更新
+                        # Verify update
                         status_response = requests.get(f"{BASE_URL}/api/epalette/display/status")
                         if status_response.status_code == 200:
                             status_data = status_response.json()
                             if status_data.get("imageUrl") == image_url:
-                                print(f"✅ 验证成功：图片 URL 已正确保存")
+                                print(f"✅ Verification successful: Image URL saved correctly")
                             else:
-                                print(f"⚠️ 警告：保存的 URL 不匹配")
+                                print(f"⚠️ Warning: Saved URL does not match")
                     else:
-                        print(f"❌ 图片更新失败: {result.get('message')}")
+                        print(f"❌ Image update failed: {result.get('message')}")
                 else:
-                    print(f"❌ API 请求失败: {response.status_code}")
+                    print(f"❌ API request failed: {response.status_code}")
             except Exception as e:
-                print(f"❌ 发生错误: {str(e)}")
+                print(f"❌ Error occurred: {str(e)}")
             
-            # 等待几秒再测试下一张图片
+            # Wait a few seconds before testing next image
             if i < len(test_images):
-                print(f"等待 5 秒后测试下一张图片...")
+                print(f"Waiting 5 seconds before testing next image...")
                 time.sleep(5)
         
-        # 5. 测试代理端点
-        print("\n5️⃣ 测试图片代理端点...")
+        # 5. Test image proxy endpoint
+        print("\n5️⃣ Testing image proxy endpoint...")
         proxy_test_url = "https://via.placeholder.com/150"
         try:
             response = requests.get(f"{BASE_URL}/api/proxy/image", params={"url": proxy_test_url})
             if response.status_code == 200:
-                print(f"✅ 代理端点正常工作")
+                print(f"✅ Proxy endpoint working normally")
                 print(f"   Content-Type: {response.headers.get('content-type')}")
                 print(f"   Content-Length: {len(response.content)} bytes")
             else:
-                print(f"❌ 代理端点失败: {response.status_code}")
+                print(f"❌ Proxy endpoint failed: {response.status_code}")
         except Exception as e:
-            print(f"❌ 代理端点错误: {str(e)}")
+            print(f"❌ Proxy endpoint error: {str(e)}")
         
-        # 6. 恢复默认显示
-        print("\n6️⃣ 恢复默认显示...")
+        # 6. Restore default display
+        print("\n6️⃣ Restoring default display...")
         default_text = {
             "text": "🍕 Mobile Food Service 🌮",
             "subtext": "AI-Powered · Auto Delivery"
         }
         response = requests.post(f"{BASE_URL}/api/epalette/display/text", json=default_text)
         if response.status_code == 200:
-            print("✅ 已恢复默认显示")
+            print("✅ Default display restored")
         
         print("\n" + "=" * 60)
-        print("✅ 测试完成！")
-        print("请在浏览器中访问 http://localhost:8000 查看 3D 演示")
+        print("✅ Test completed!")
+        print("Please visit http://localhost:8000 in your browser to view the 3D demo")
         print("=" * 60)
         
     except requests.exceptions.ConnectionError:
-        print("\n❌ 无法连接到服务器")
-        print("请确保服务器正在运行：")
+        print("\n❌ Cannot connect to server")
+        print("Please ensure the server is running:")
         print("  cd food-cart-demo")
         print("  python server.py")
     except Exception as e:
-        print(f"\n❌ 测试过程中发生错误: {str(e)}")
+        print(f"\n❌ Error occurred during testing: {str(e)}")
 
 if __name__ == "__main__":
     test_image_update()
