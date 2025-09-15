@@ -3,6 +3,7 @@
 
 # HTTP requests
 requests>=2.31.0
+duckdb>=0.9.0
 
 # Optional: For better JSON handling and validation
 # pydantic>=2.11.7

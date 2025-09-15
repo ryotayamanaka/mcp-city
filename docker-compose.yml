@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  # Food Cart API Server
+  food-cart-api:
+    build:
+      context: ./food-cart-demo
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONPATH=/app
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./food-cart-demo:/app
+      - ./food-cart-demo/mockdata:/app/mockdata
+      - ./food-cart-demo/img:/app/img
+    command: ["uvicorn", "server:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  # City Database Server (DuckDB)
+  city-database:
+    image: python:3.11-slim
+    container_name: mcp-city-database
+    ports:
+      - "5432:5432"  # PostgreSQL互換ポート
+      - "8080:8080"  # HTTP APIポート
+    volumes:
+      - ./city-database/data:/data:ro  # 読み取り専用でCSVデータをマウント
+      - ./city-database/database:/database  # データベースファイル用
+      - ./city-database/scripts:/scripts  # 初期化スクリプト
+    environment:
+      - DUCKDB_DATABASE=/database/city.db
+    command: >
+      sh -c "
+        echo 'Installing DuckDB...' &&
+        pip install duckdb &&
+        echo 'Initializing database with city data...' &&
+        python -c 'import duckdb; conn = duckdb.connect(\"/database/city.db\"); conn.execute(open(\"/scripts/init_database.sql\").read()); conn.close()' &&
+        echo 'Starting DuckDB server...' &&
+        python -c 'import duckdb; conn = duckdb.connect(\"/database/city.db\"); conn.execute(\"SELECT 1\"); print(\"Database ready\"); import time; time.sleep(3600)'
+      "
+    networks:
+      - app-network
+    restart: unless-stopped
+
+networks:
+  app-network:
+    driver: bridge

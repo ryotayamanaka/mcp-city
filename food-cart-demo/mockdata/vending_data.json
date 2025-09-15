@@ -4,7 +4,7 @@
       "id": "p001",
       "name": "Coca Cola",
       "price": 150,
-      "stock": 10,
+      "stock": 1,
       "category": "beverage",
       "image": "\ud83e\udd64"
     },
@@ -12,7 +12,7 @@
       "id": "p002",
       "name": "Sprite",
       "price": 150,
-      "stock": 1,
+      "stock": 0,
       "category": "beverage",
       "image": "\ud83e\udd64"
     },
@@ -20,7 +20,7 @@
       "id": "p003",
       "name": "Water",
       "price": 100,
-      "stock": 8,
+      "stock": 0,
       "category": "beverage",
       "image": "\ud83d\udca7"
     },
@@ -28,7 +28,7 @@
       "id": "p004",
       "name": "Potato Chips",
       "price": 200,
-      "stock": 12,
+      "stock": 0,
       "category": "snack",
       "image": "\ud83e\udd54"
     },
@@ -36,7 +36,7 @@
       "id": "p005",
       "name": "Chocolate Bar",
       "price": 250,
-      "stock": 24,
+      "stock": 13,
       "category": "snack",
       "image": "\ud83c\udf6b"
     },
@@ -44,7 +44,7 @@
       "id": "p006",
       "name": "Cookies",
       "price": 180,
-      "stock": 30,
+      "stock": 22,
       "category": "snack",
       "image": "\ud83c\udf6a"
     },
@@ -60,7 +60,7 @@
       "id": "p008",
       "name": "Rice Ball",
       "price": 280,
-      "stock": 15,
+      "stock": 0,
       "category": "food",
       "image": "\ud83c\udf59"
     }
@@ -1593,12 +1593,372 @@
       "quantity": 1,
       "price": 250,
       "total": 250
+    },
+    {
+      "timestamp": "2025-09-15T10:04:53.187283",
+      "product_id": "p002",
+      "product_name": "Sprite",
+      "quantity": 1,
+      "price": 150,
+      "total": 150
+    },
+    {
+      "timestamp": "2025-09-15T10:05:33.180663",
+      "product_id": "p004",
+      "product_name": "Potato Chips",
+      "quantity": 1,
+      "price": 200,
+      "total": 200
+    },
+    {
+      "timestamp": "2025-09-15T10:52:50.040597",
+      "product_id": "p004",
+      "product_name": "Potato Chips",
+      "quantity": 2,
+      "price": 200,
+      "total": 400
+    },
+    {
+      "timestamp": "2025-09-15T11:03:47.707082",
+      "product_id": "p008",
+      "product_name": "Rice Ball",
+      "quantity": 1,
+      "price": 280,
+      "total": 280
+    },
+    {
+      "timestamp": "2025-09-15T11:06:57.718992",
+      "product_id": "p001",
+      "product_name": "Coca Cola",
+      "quantity": 1,
+      "price": 150,
+      "total": 150
+    },
+    {
+      "timestamp": "2025-09-15T11:07:27.712987",
+      "product_id": "p005",
+      "product_name": "Chocolate Bar",
+      "quantity": 1,
+      "price": 250,
+      "total": 250
+    },
+    {
+      "timestamp": "2025-09-15T11:08:47.718231",
+      "product_id": "p003",
+      "product_name": "Water",
+      "quantity": 2,
+      "price": 100,
+      "total": 200
+    },
+    {
+      "timestamp": "2025-09-15T11:09:47.708319",
+      "product_id": "p003",
+      "product_name": "Water",
+      "quantity": 2,
+      "price": 100,
+      "total": 200
+    },
+    {
+      "timestamp": "2025-09-15T11:12:47.706511",
+      "product_id": "p004",
+      "product_name": "Potato Chips",
+      "quantity": 2,
+      "price": 200,
+      "total": 400
+    },
+    {
+      "timestamp": "2025-09-15T11:12:57.711026",
+      "product_id": "p008",
+      "product_name": "Rice Ball",
+      "quantity": 2,
+      "price": 280,
+      "total": 560
+    },
+    {
+      "timestamp": "2025-09-15T11:14:07.709134",
+      "product_id": "p006",
+      "product_name": "Cookies",
+      "quantity": 1,
+      "price": 180,
+      "total": 180
+    },
+    {
+      "timestamp": "2025-09-15T11:16:57.718954",
+      "product_id": "p003",
+      "product_name": "Water",
+      "quantity": 1,
+      "price": 100,
+      "total": 100
+    },
+    {
+      "timestamp": "2025-09-15T11:17:17.708237",
+      "product_id": "p008",
+      "product_name": "Rice Ball",
+      "quantity": 2,
+      "price": 280,
+      "total": 560
+    },
+    {
+      "timestamp": "2025-09-15T11:17:27.706610",
+      "product_id": "p001",
+      "product_name": "Coca Cola",
+      "quantity": 1,
+      "price": 150,
+      "total": 150
+    },
+    {
+      "timestamp": "2025-09-15T11:18:57.709689",
+      "product_id": "p008",
+      "product_name": "Rice Ball",
+      "quantity": 1,
+      "price": 280,
+      "total": 280
+    },
+    {
+      "timestamp": "2025-09-15T11:19:37.713786",
+      "product_id": "p008",
+      "product_name": "Rice Ball",
+      "quantity": 2,
+      "price": 280,
+      "total": 560
+    },
+    {
+      "timestamp": "2025-09-15T11:25:07.709698",
+      "product_id": "p001",
+      "product_name": "Coca Cola",
+      "quantity": 2,
+      "price": 150,
+      "total": 300
+    },
+    {
+      "timestamp": "2025-09-15T11:29:37.724552",
+      "product_id": "p006",
+      "product_name": "Cookies",
+      "quantity": 1,
+      "price": 180,
+      "total": 180
+    },
+    {
+      "timestamp": "2025-09-15T11:30:17.724535",
+      "product_id": "p008",
+      "product_name": "Rice Ball",
+      "quantity": 1,
+      "price": 280,
+      "total": 280
+    },
+    {
+      "timestamp": "2025-09-15T11:30:57.730561",
+      "product_id": "p004",
+      "product_name": "Potato Chips",
+      "quantity": 2,
+      "price": 200,
+      "total": 400
+    },
+    {
+      "timestamp": "2025-09-15T11:34:27.733663",
+      "product_id": "p001",
+      "product_name": "Coca Cola",
+      "quantity": 1,
+      "price": 150,
+      "total": 150
+    },
+    {
+      "timestamp": "2025-09-15T11:38:27.726543",
+      "product_id": "p005",
+      "product_name": "Chocolate Bar",
+      "quantity": 1,
+      "price": 250,
+      "total": 250
+    },
+    {
+      "timestamp": "2025-09-15T11:38:37.724286",
+      "product_id": "p005",
+      "product_name": "Chocolate Bar",
+      "quantity": 2,
+      "price": 250,
+      "total": 500
+    },
+    {
+      "timestamp": "2025-09-15T11:42:27.730407",
+      "product_id": "p003",
+      "product_name": "Water",
+      "quantity": 2,
+      "price": 100,
+      "total": 200
+    },
+    {
+      "timestamp": "2025-09-15T11:44:07.731712",
+      "product_id": "p006",
+      "product_name": "Cookies",
+      "quantity": 2,
+      "price": 180,
+      "total": 360
+    },
+    {
+      "timestamp": "2025-09-15T11:47:27.735097",
+      "product_id": "p001",
+      "product_name": "Coca Cola",
+      "quantity": 1,
+      "price": 150,
+      "total": 150
+    },
+    {
+      "timestamp": "2025-09-15T11:57:17.727509",
+      "product_id": "p006",
+      "product_name": "Cookies",
+      "quantity": 1,
+      "price": 180,
+      "total": 180
+    },
+    {
+      "timestamp": "2025-09-15T12:01:07.734706",
+      "product_id": "p004",
+      "product_name": "Potato Chips",
+      "quantity": 2,
+      "price": 200,
+      "total": 400
+    },
+    {
+      "timestamp": "2025-09-15T12:04:07.692672",
+      "product_id": "p006",
+      "product_name": "Cookies",
+      "quantity": 2,
+      "price": 180,
+      "total": 360
+    },
+    {
+      "timestamp": "2025-09-15T12:07:37.688719",
+      "product_id": "p008",
+      "product_name": "Rice Ball",
+      "quantity": 1,
+      "price": 280,
+      "total": 280
+    },
+    {
+      "timestamp": "2025-09-15T12:08:17.687319",
+      "product_id": "p008",
+      "product_name": "Rice Ball",
+      "quantity": 2,
+      "price": 280,
+      "total": 560
+    },
+    {
+      "timestamp": "2025-09-15T12:11:47.687820",
+      "product_id": "p001",
+      "product_name": "Coca Cola",
+      "quantity": 2,
+      "price": 150,
+      "total": 300
+    },
+    {
+      "timestamp": "2025-09-15T12:14:47.682004",
+      "product_id": "p001",
+      "product_name": "Coca Cola",
+      "quantity": 1,
+      "price": 150,
+      "total": 150
+    },
+    {
+      "timestamp": "2025-09-15T12:19:27.673275",
+      "product_id": "p005",
+      "product_name": "Chocolate Bar",
+      "quantity": 2,
+      "price": 250,
+      "total": 500
+    },
+    {
+      "timestamp": "2025-09-15T12:22:07.679820",
+      "product_id": "p005",
+      "product_name": "Chocolate Bar",
+      "quantity": 1,
+      "price": 250,
+      "total": 250
+    },
+    {
+      "timestamp": "2025-09-15T12:22:47.671916",
+      "product_id": "p003",
+      "product_name": "Water",
+      "quantity": 1,
+      "price": 100,
+      "total": 100
+    },
+    {
+      "timestamp": "2025-09-15T12:25:47.671880",
+      "product_id": "p004",
+      "product_name": "Potato Chips",
+      "quantity": 2,
+      "price": 200,
+      "total": 400
+    },
+    {
+      "timestamp": "2025-09-15T12:28:17.667029",
+      "product_id": "p008",
+      "product_name": "Rice Ball",
+      "quantity": 2,
+      "price": 280,
+      "total": 560
+    },
+    {
+      "timestamp": "2025-09-15T12:32:27.660780",
+      "product_id": "p005",
+      "product_name": "Chocolate Bar",
+      "quantity": 1,
+      "price": 250,
+      "total": 250
+    },
+    {
+      "timestamp": "2025-09-15T12:38:37.685610",
+      "product_id": "p008",
+      "product_name": "Rice Ball",
+      "quantity": 1,
+      "price": 280,
+      "total": 280
+    },
+    {
+      "timestamp": "2025-09-15T12:41:17.687507",
+      "product_id": "p004",
+      "product_name": "Potato Chips",
+      "quantity": 1,
+      "price": 200,
+      "total": 200
+    },
+    {
+      "timestamp": "2025-09-15T12:44:27.691067",
+      "product_id": "p005",
+      "product_name": "Chocolate Bar",
+      "quantity": 1,
+      "price": 250,
+      "total": 250
+    },
+    {
+      "timestamp": "2025-09-15T12:45:47.690554",
+      "product_id": "p005",
+      "product_name": "Chocolate Bar",
+      "quantity": 1,
+      "price": 250,
+      "total": 250
+    },
+    {
+      "timestamp": "2025-09-15T12:51:17.690325",
+      "product_id": "p006",
+      "product_name": "Cookies",
+      "quantity": 1,
+      "price": 180,
+      "total": 180
+    },
+    {
+      "timestamp": "2025-09-15T12:57:17.693743",
+      "product_id": "p005",
+      "product_name": "Chocolate Bar",
+      "quantity": 1,
+      "price": 250,
+      "total": 250
     }
   ],
   "daily_stats": {
-    "total_sales": 110,
-    "total_revenue": 32460,
+    "total_sales": 155,
+    "total_revenue": 45550,
     "best_seller": "Rice Ball",
-    "last_update": "2025-09-15T09:59:33.071752"
+    "last_update": "2025-09-15T12:57:17.693859"
   }
 }
