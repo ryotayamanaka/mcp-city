@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "vending-machine": {
+      "command": "python",
+      "args": [
+        "/Users/ryotayamanaka/git/mcp-city/standalone_mcp_server.py"
+      ],
+      "env": {}
+    }
+  }
+}

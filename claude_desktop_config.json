@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "vending-machine": {
+      "command": "docker",
+      "args": [
+        "exec",
+        "-i",
+        "mcp-city-vending-machine-mcp-1",
+        "python",
+        "mcp_servers/vending_machine_mcp.py"
+      ],
+      "env": {}
+    }
+  }
+}
