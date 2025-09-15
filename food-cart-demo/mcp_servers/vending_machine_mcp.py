@@ -112,6 +112,47 @@ def make_purchase(product_id, quantity=1):
     except Exception as e:
         return f"❌ Error making purchase: {str(e)}"
 
+def get_sales_data():
+    """Get sales data and analytics from the vending machine"""
+    try:
+        response = requests.get(f"{BASE_URL}/api/vending-machine/sales", timeout=10)
+        response.raise_for_status()
+        
+        result = response.json()
+        if result.get("success"):
+            sales_info = ["📈 **Vending Machine Sales Data:**\n"]
+            
+            # Total sales
+            total_sales = result.get("total_sales", 0)
+            sales_info.append(f"🛒 Total Sales: {total_sales} transactions")
+            
+            # Daily stats
+            daily_stats = result.get("daily_stats", {})
+            if daily_stats:
+                sales_info.append(f"📅 Daily Sales: {daily_stats.get('total_sales', 0)} transactions")
+                sales_info.append(f"💰 Daily Revenue: ¥{daily_stats.get('total_revenue', 0)}")
+                sales_info.append(f"🏆 Best Seller: {daily_stats.get('best_seller', 'N/A')}")
+                sales_info.append(f"🕐 Last Update: {daily_stats.get('last_update', 'N/A')}")
+            
+            # Recent sales
+            recent_sales = result.get("recent_sales", [])
+            if recent_sales:
+                sales_info.append(f"\n🕒 **Recent Sales (Last 5):**")
+                for sale in recent_sales[:5]:
+                    sales_info.append(
+                        f"• {sale.get('product_name', 'Unknown')} x{sale.get('quantity', 0)} "
+                        f"¥{sale.get('total', 0)} ({sale.get('timestamp', 'Unknown time')})"
+                    )
+            
+            return "\n".join(sales_info)
+        else:
+            return f"❌ Failed to get sales data: {result.get('message', 'Unknown error')}"
+            
+    except requests.exceptions.ConnectionError:
+        return "❌ Cannot connect to vending machine. Make sure the server is running on food-cart-api:8000"
+    except Exception as e:
+        return f"❌ Error getting sales data: {str(e)}"
+
 def handle_message(message):
     """Handle incoming MCP messages"""
     method = message.get("method")
@@ -170,6 +211,14 @@ def handle_message(message):
                     },
                     "required": ["product_id"],
                 }
+            },
+            {
+                "name": "get_sales_data",
+                "description": "Get sales data and analytics from the vending machine including daily stats and recent sales",
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {},
+                }
             }
         ]
         
@@ -194,6 +243,8 @@ def handle_message(message):
                 product_id = arguments.get("product_id")
                 quantity = arguments.get("quantity", 1)
                 result = make_purchase(product_id, quantity)
+            elif tool_name == "get_sales_data":
+                result = get_sales_data()
             else:
                 result = f"❌ Unknown tool: {tool_name}"
         except Exception as e:
