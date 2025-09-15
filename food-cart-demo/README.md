@@ -1,11 +1,11 @@
 # 🤖 Autonomous Food Cart IoT Demo
 
-This demo showcases how an AI agent can control IoT devices through simple API calls. The demo simulates an autonomous food cart with a promotional screen that can be controlled by an Agno AI agent.
+This demo showcases how AI agents can control IoT devices through simple API calls. The demo simulates an autonomous food cart with a promotional screen that can be controlled via MCP (Model Context Protocol) servers accessible from Claude Desktop.
 
 ## 🎯 Demo Overview
 
 - **IoT Device Simulation**: A web-based autonomous food cart with a promotional screen
-- **AI Agent Control**: Agno-powered agent with custom tools to control the screen
+- **AI Agent Control**: MCP servers accessible from Claude Desktop to control the screen
 - **API Integration**: RESTful API endpoints for device control
 - **Real-time Updates**: Live screen updates visible in the web interface
 
@@ -13,8 +13,8 @@ This demo showcases how an AI agent can control IoT devices through simple API c
 
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   Agno Agent    │───▶│   FastAPI       │───▶│   Food Cart     │
-│   (AI Control)  │    │   (IoT API)     │    │   (Web UI)      │
+│ Claude Desktop  │───▶│   FastAPI       │───▶│   Food Cart     │
+│ (MCP Client)    │    │   (IoT API)     │    │   (Web UI)      │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
 ```
 
@@ -24,8 +24,8 @@ This demo showcases how an AI agent can control IoT devices through simple API c
 food-cart-demo/
 ├── index.html              # Food cart web interface
 ├── server.py               # FastAPI server with IoT API endpoints
-├── tools.py                # Custom Agno tools for screen control
-├── food_cart_agent.py      # Main agent implementation
+├── mcp_servers/            # MCP servers for external access
+│   └── vending_machine_mcp.py
 ├── requirements.txt        # Python dependencies
 └── README.md              # This file
 ```

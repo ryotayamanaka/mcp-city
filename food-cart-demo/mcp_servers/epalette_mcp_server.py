@@ -210,6 +210,10 @@ def handle_message(message):
             }
         }
 
+    elif method == "notifications/initialized":
+        # No response needed for notifications
+        return None
+
     elif method == "tools/list":
         tools_list = [
             {
@@ -303,6 +307,24 @@ def handle_message(message):
             }
         }
 
+    elif method == "prompts/list":
+        return {
+            "jsonrpc": "2.0",
+            "id": request_id,
+            "result": {
+                "prompts": []
+            }
+        }
+
+    elif method == "resources/list":
+        return {
+            "jsonrpc": "2.0",
+            "id": request_id,
+            "result": {
+                "resources": []
+            }
+        }
+
     elif method == "tools/call":
         tool_name = params.get("name")
         arguments = params.get("arguments", {})
@@ -383,7 +405,8 @@ def main():
         try:
             message = json.loads(line)
             response = handle_message(message)
-            print(json.dumps(response), flush=True)
+            if response is not None:  # Only print response if it's not None
+                print(json.dumps(response), flush=True)
         except json.JSONDecodeError as e:
             print(f"Invalid JSON: {e}", file=sys.stderr)
         except Exception as e:

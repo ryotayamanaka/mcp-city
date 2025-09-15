@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  # MCP Server for Vending Machine
+  vending-machine-mcp:
+    build:
+      context: ./food-cart-demo
+      dockerfile: Dockerfile.mcp
+    environment:
+      - PYTHONPATH=/app
+      - PYTHONUNBUFFERED=1
+    depends_on:
+      - food-cart-api
+    networks:
+      - app-network
+    restart: unless-stopped
+    # MCPサーバーは標準入出力を使用するため、ポート公開は不要
+
+  # MCP Server for ePalette
+  epalette-mcp:
+    build:
+      context: ./food-cart-demo
+      dockerfile: Dockerfile.mcp
+    environment:
+      - PYTHONPATH=/app
+      - PYTHONUNBUFFERED=1
+    depends_on:
+      - food-cart-api
+    networks:
+      - app-network
+    restart: unless-stopped
+    # MCPサーバーは標準入出力を使用するため、ポート公開は不要
+
+  # Food Cart API
+  food-cart-api:
+    build:
+      context: ./food-cart-demo
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONPATH=/app
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./food-cart-demo:/app
+      - ./food-cart-demo/mockdata:/app/mockdata
+      - ./food-cart-demo/img:/app/img
+    command: ["uvicorn", "server:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+    networks:
+      - app-network
+    restart: unless-stopped
+
+networks:
+  app-network:
+    driver: bridge

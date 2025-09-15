@@ -1,13 +1,16 @@
 {
   "mcpServers": {
     "vending-machine": {
-      "command": "docker",
+      "command": "python3",
       "args": [
-        "exec",
-        "-i",
-        "mcp-city-vending-machine-mcp-1",
-        "python",
-        "mcp_servers/vending_machine_mcp.py"
+              "/Users/ryotayamanaka/git/mcp-city/food-cart-demo/mcp_servers/vending_machine_mcp_server.py"
+      ],
+      "env": {}
+    },
+    "epalette": {
+      "command": "python3",
+      "args": [
+        "/Users/ryotayamanaka/git/mcp-city/food-cart-demo/mcp_servers/epalette_mcp_server.py"
       ],
       "env": {}
     }

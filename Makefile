@@ -5,12 +5,14 @@
 # デフォルトターゲット
 help:
 	@echo "利用可能なコマンド:"
-	@echo "  make build    - 全サービスのイメージをビルド"
-	@echo "  make up       - 本番環境でサービスを起動"
-	@echo "  make down     - 全サービスを停止・削除"
-	@echo "  make dev      - 開発環境でサービスを起動"
-	@echo "  make logs     - 全サービスのログを表示"
+	@echo "  make api-up   - APIサーバーのみ起動（推奨）"
+	@echo "  make api-down - APIサーバー停止"
+	@echo "  make logs     - APIサーバーのログを表示"
 	@echo "  make clean    - 未使用のDockerリソースをクリーンアップ"
+	@echo ""
+	@echo "MCPサーバーは別途起動してください:"
+	@echo "  python3 food-cart-demo/mcp_servers/vending_machine_mcp_server.py"
+	@echo "  python3 food-cart-demo/mcp_servers/epalette_mcp_server.py"
 
 # 全サービスのイメージをビルド
 build:
@@ -24,7 +26,15 @@ up:
 down:
 	docker-compose down
 
-# 開発環境でサービスを起動
+# APIサーバーのみ起動（推奨）
+api-up:
+	docker-compose -f docker-compose.api.yml up -d
+
+# APIサーバー停止
+api-down:
+	docker-compose -f docker-compose.api.yml down
+
+# 開発環境でサービスを起動（非推奨）
 dev:
 	docker-compose -f docker-compose.dev.yml up -d
 

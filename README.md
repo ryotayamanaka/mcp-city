@@ -1,134 +1,205 @@
-# Bootcamp AI Main
+# 🏙️ MCP City
 
-AIエージェントとフロントエンドUIを含む統合アプリケーションです。
+**街のシミュレーションとMCPサーバーの世界観を表現するプロジェクト**
+
+MCP Cityは、街をシミュレーションしたUIと、その街に存在する様々なデバイスにAIエージェントからアクセスするためのMCP（Model Context Protocol）サーバーを提供します。各デバイスは独自のMCPサーバーを持ち、Claude DesktopなどのAIエージェントが街のデバイスと自然にやり取りできる世界を実現します。
+
+## 🌟 コンセプト
+
+### 街のシミュレーション
+MCP Cityは、現実の街のように様々なデバイスが存在する仮想の街をシミュレーションします。各デバイスは独自の機能とAPIを持ち、街の一部として統合されています。
+
+### MCPサーバーの世界観
+各デバイスは独自のMCPサーバーを持ち、AIエージェントが自然言語でデバイスとやり取りできる世界を実現します。これにより、AIエージェントは街の住民のようにデバイスを操作できます。
+
+### 現在のデバイス
+- **ePalette**: 自動運転の移動販売車両
+- **自動販売機**: 飲み物や軽食を提供する販売機
+
+### 将来の拡張
+街にはさらに多くのデバイスが追加される予定です。各デバイスは独自のMCPサーバーを持ち、AIエージェントとの自然な対話を可能にします。
 
 ## 🚀 クイックスタート
 
 ### 前提条件
 
-- Docker
-- Docker Compose
-- Make（オプション）
+- Docker & Docker Compose（街のシミュレーション用）
+- Python 3.8+（MCPサーバー用）
+- Claude Desktop（AIエージェント）
 
-### Dockerを使用した起動
+### アーキテクチャ
 
-#### 1. 開発環境での起動
+**街のシミュレーション**: Docker（環境の一貫性のため）
+**MCPサーバー**: スタンドアロン（安定性とデバッグの容易さのため）
+
+#### 1. 街のシミュレーション起動（Docker）
 
 ```bash
-# 開発環境でサービスを起動
-make dev
+# 街のAPIサーバーを起動
+make api-up
 
 # または直接実行
-docker-compose -f docker-compose.dev.yml up -d
+docker-compose -f docker-compose.api.yml up -d
 ```
 
-#### 2. 本番環境での起動
+#### 2. デバイスのMCPサーバー起動（スタンドアロン）
 
 ```bash
-# 全サービスのイメージをビルド
-make build
+# 自動販売機のMCPサーバー
+python3 food-cart-demo/mcp_servers/vending_machine_mcp_server.py
 
-# 本番環境でサービスを起動
-make up
-
-# または直接実行
-docker-compose up -d
+# ePaletteのMCPサーバー（別ターミナル）
+python3 food-cart-demo/mcp_servers/epalette_mcp_server.py
 ```
 
-#### 3. サービスの停止
+#### 3. Claude Desktop設定
+
+`claude_desktop_config.json`をClaude Desktopの設定ディレクトリにコピーして、AIエージェントとして街のデバイスと対話できるようにします。
+
+**設定ファイルの使い方**:
+- すべてのデバイスが含まれています
+- 特定のデバイスのみを使用したい場合は、不要なMCPサーバーの設定をコメントアウトしてください
+- 例：自動販売機のみ使用する場合
+  ```json
+  {
+    "mcpServers": {
+      "vending-machine": { ... },
+      // "epalette": { ... }  // コメントアウト
+    }
+  }
+  ```
+
+#### 4. サービスの停止
 
 ```bash
-# 開発環境の停止
-make dev-down
+# 街のシミュレーション停止
+make api-down
 
-# 本番環境の停止
-make down
+# MCPサーバーの停止
+# Ctrl+C で各サーバーを停止
 ```
 
 ## 📁 プロジェクト構成
 
 ```
 /
-├── agent-ui/              # Next.jsフロントエンド
-├── agents/                # モジュール化されたPythonエージェント
-├── food-cart-demo/        # FastAPIバックエンド
-│   └── mcp_servers/       # MCPサーバー（自動販売機ツール）
-├── docker-compose.yml     # 本番環境用
-├── docker-compose.dev.yml # 開発環境用
-└── Makefile              # 便利なコマンド集
+├── food-cart-demo/                    # 街のシミュレーション（FastAPI）
+│   ├── server.py                      # 街のAPIサーバー
+│   ├── index.html                     # 街のUI（3D表示）
+│   ├── mcp_servers/                   # 各デバイスのMCPサーバー
+│   │   ├── vending_machine_mcp_server.py   # 自動販売機のMCPサーバー
+│   │   └── epalette_mcp_server.py    # ePaletteのMCPサーバー
+│   └── mockdata/                      # 街のデータ
+├── claude_desktop_config.json         # Claude Desktop設定ファイル
+├── docker-compose.api.yml             # 街のシミュレーション用
+├── requirements-mcp.txt               # MCPサーバー用依存関係
+├── SETUP.md                          # 詳細セットアップガイド
+└── Makefile                          # 便利なコマンド集
 ```
 
-## 🌐 サービス一覧
+## 🌐 街の構成
 
-| サービス | ポート | 説明 |
-|---------|--------|------|
-| agent-ui | 3000 | Next.jsフロントエンド |
-| python-agents | 8001 | Pythonエージェント（agno） |
-| food-cart-api | 8000 | Food Cart API（FastAPI） |
-| vending-machine-mcp | - | MCPサーバー（自動販売機ツール） |
+### 街のシミュレーション
+| サービス | ポート | 説明 | 実行方法 |
+|---------|--------|------|----------|
+| city-api | 8000 | 街のAPIサーバー（FastAPI） | Docker |
+
+### 街のデバイス（MCPサーバー）
+| デバイス | MCPサーバー | 説明 | 実行方法 |
+|---------|-------------|------|----------|
+| 自動販売機 | vending_machine_mcp_server.py | 飲み物・軽食の販売 | スタンドアロン |
+| ePalette | epalette_mcp_server.py | 自動運転移動販売車両 | スタンドアロン |
+
+## 🤖 AIエージェントとの統合
+
+### Claude Desktop
+このプロジェクトはClaude DesktopをメインのAIエージェントとして使用します。Claude Desktopは街の住民のように、自然言語で街のデバイスと対話できます。
+
+### 街のデバイスとの対話
+
+**自動販売機**:
+- 「自動販売機の商品一覧を教えて」
+- 「在庫状況を確認して」
+- 「コーラを2本購入して」
+- 「売上データを教えて」
+
+**ePalette**:
+- 「ePaletteの状態を教えて」
+- 「ディスプレイに『営業中』と表示して」
+- 「車両の速度を30km/hに設定して」
+- 「車両を一時停止して」
+
+### 将来のAIエージェント
+Claude Desktop以外のAIエージェントも、MCPプロトコルをサポートしていれば街のデバイスと対話できます。
 
 ## 🛠️ 利用可能なコマンド
 
 ```bash
 make help      # 利用可能なコマンドを表示
-make build     # 全サービスのイメージをビルド
-make up        # 本番環境でサービスを起動
-make dev       # 開発環境でサービスを起動
-make logs      # 全サービスのログを表示
+make api-up    # APIサーバーのみ起動
+make api-down  # APIサーバー停止
+make logs      # APIサーバーのログを表示
 make clean     # 未使用のDockerリソースをクリーンアップ
+```
+
+## 🔧 Claude Desktop設定
+
+Claude DesktopでMCPサーバーを使用するには、以下の設定ファイルを使用してください：
+
+```json
+{
+  "mcpServers": {
+    "vending-machine": {
+      "command": "python3",
+      "args": ["/path/to/food-cart-demo/mcp_servers/standalone_mcp_server.py"],
+      "env": {}
+    },
+    "epalette": {
+      "command": "python3",
+      "args": ["/path/to/food-cart-demo/mcp_servers/epalette_mcp_server.py"],
+      "env": {}
+    }
+  }
+}
 ```
 
 ## 🔧 開発
 
-### 開発環境での特徴
+### 街のシミュレーション開発
 
-- ホットリロード対応
-- ソースコードの変更が即座に反映
-- デバッグしやすい設定
+街のシミュレーションはDockerで管理され、新しいデバイスを追加する際は以下の手順で行います：
 
-### 本番環境での特徴
+1. **デバイスAPIの実装**: `food-cart-demo/server.py`にエンドポイントを追加
+2. **デバイスUIの実装**: `food-cart-demo/index.html`に3D表示を追加
+3. **MCPサーバーの実装**: `food-cart-demo/mcp_servers/`に新しいMCPサーバーを追加
 
-- 最適化されたビルド
-- 軽量なランタイム
-- セキュリティ強化
+### MCPサーバー開発
 
-## 📝 環境変数
+各デバイスのMCPサーバーは独立して開発・テストできます：
 
-必要に応じて`.env`ファイルを作成し、以下の環境変数を設定してください：
+- **軽量**: `requests`パッケージのみで動作
+- **デバッグ容易**: 直接実行でデバッグ可能
+- **拡張性**: 新しいデバイス用のMCPサーバーを簡単に追加
 
-```bash
-GOOGLE_API_KEY=your_google_api_key_here
-NEXT_PUBLIC_API_URL=http://localhost:8000
-```
+### トラブルシューティング
 
-## 🐛 トラブルシューティング
-
-### よくある問題
-
-1. **ポートが既に使用されている**
+1. **街のシミュレーションが起動しない**
    ```bash
-   # 使用中のポートを確認
-   lsof -i :3000
+   docker-compose logs food-cart-api
    ```
 
-2. **Dockerイメージのビルドエラー**
+2. **MCPサーバーが接続できない**
    ```bash
-   # キャッシュをクリアして再ビルド
-   make clean
-   make build
+   # 街のAPIサーバーが起動しているか確認
+   curl http://localhost:8000/api/vending-machine/products
    ```
 
-3. **サービスのログ確認**
+3. **ポートが使用中**
    ```bash
-   # 特定のサービスのログを表示
-   make logs-ui
-   make logs-python
-   make logs-api
+   lsof -i :8000
    ```
 
 ## 📚 詳細ドキュメント
 
-各サービスの詳細については、以下のディレクトリを参照してください：
-
-- `agent-ui/README.md` - フロントエンドの詳細
-- `food-cart-demo/README.md` - Food Cart APIの詳細
+- `SETUP.md` - 詳細なセットアップガイド
+- `food-cart-demo/README.md` - 街のシミュレーションの詳細
