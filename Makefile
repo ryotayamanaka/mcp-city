@@ -17,8 +17,8 @@ help:
 	@echo "  make clean       - 未使用のDockerリソースをクリーンアップ"
 	@echo ""
 	@echo "MCPサーバーは別途起動してください:"
-	@echo "  python3 food-cart-demo/mcp_servers/vending_machine_mcp_server.py"
-	@echo "  python3 food-cart-demo/mcp_servers/epalette_mcp_server.py"
+	@echo "  python3 city-devices/mcp_servers/vending_machine_mcp_server.py"
+	@echo "  python3 city-devices/mcp_servers/epalette_mcp_server.py"
 	@echo "  python3 city-database/mcp_servers/city_database_client_mcp_server.py"
 
 # 全サービスを起動
@@ -31,11 +31,11 @@ down:
 
 # APIサーバーのみ起動
 api-up:
-	docker-compose up -d food-cart-api
+	docker-compose up -d city-devices-api
 
 # APIサーバーのみ停止
 api-down:
-	docker-compose stop food-cart-api
+	docker-compose stop city-devices-api
 
 # データベースのみ起動
 db-up:
@@ -51,7 +51,7 @@ logs:
 
 # APIサーバーのログを表示
 logs-api:
-	docker-compose logs -f food-cart-api
+	docker-compose logs -f city-devices-api
 
 # データベースのログを表示
 logs-db:

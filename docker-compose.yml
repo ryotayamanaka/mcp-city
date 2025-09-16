@@ -1,10 +1,10 @@
 version: '3.8'
 
 services:
-  # Food Cart API Server
-  food-cart-api:
+  # City Devices API Server
+  city-devices-api:
     build:
-      context: ./food-cart-demo
+      context: ./city-devices
       dockerfile: Dockerfile
     ports:
       - "8000:8000"
@@ -12,9 +12,9 @@ services:
       - PYTHONPATH=/app
       - PYTHONUNBUFFERED=1
     volumes:
-      - ./food-cart-demo:/app
-      - ./food-cart-demo/mockdata:/app/mockdata
-      - ./food-cart-demo/img:/app/img
+      - ./city-devices:/app
+      - ./city-devices/mockdata:/app/mockdata
+      - ./city-devices/img:/app/img
     command: ["uvicorn", "server:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
     networks:
       - app-network

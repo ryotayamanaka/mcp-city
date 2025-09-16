@@ -15,6 +15,7 @@ MCP Cityは、現実の街のように様々なデバイスが存在する仮想
 ### 現在のデバイス
 - **ePalette**: 自動運転の移動販売車両
 - **自動販売機**: 飲み物や軽食を提供する販売機
+- **街のデータベース**: 住民、事業所、交通データの分析用データベース
 
 ### 将来の拡張
 街にはさらに多くのデバイスが追加される予定です。各デバイスは独自のMCPサーバーを持ち、AIエージェントとの自然な対話を可能にします。
@@ -32,29 +33,74 @@ MCP Cityは、現実の街のように様々なデバイスが存在する仮想
 **街のシミュレーション**: Docker（環境の一貫性のため）
 **MCPサーバー**: スタンドアロン（安定性とデバッグの容易さのため）
 
-#### 1. 街のシミュレーション起動（Docker）
+#### 1. プロジェクトのクローン
 
 ```bash
-# 街のAPIサーバーを起動
-make api-up
-
-# または直接実行
-docker-compose -f docker-compose.api.yml up -d
+git clone https://github.com/ryotayamanaka/mcp-city.git
+cd mcp-city
 ```
 
-#### 2. デバイスのMCPサーバー起動（スタンドアロン）
+#### 2. 環境変数の設定
+
+```bash
+# macOS/Linux
+export MCP_CITY_PATH=$(pwd)
+
+# Windows
+set MCP_CITY_PATH=%CD%
+```
+
+#### 3. 街のシミュレーション起動（Docker）
+
+```bash
+# 全サービスを起動（API + データベース）
+make up
+
+# または個別に起動
+make api-up    # APIサーバーのみ
+make db-up     # データベースのみ
+```
+
+#### 4. デバイスのMCPサーバー起動（スタンドアロン）
+
+**前提条件**: MCPサーバーには`requests`パッケージが必要です。インストールされていない場合は以下を実行してください：
+
+```bash
+pip install requests
+```
+
+**MCPサーバーの起動**:
 
 ```bash
 # 自動販売機のMCPサーバー
-python3 food-cart-demo/mcp_servers/vending_machine_mcp_server.py
+python3 city-devices/mcp_servers/vending_machine_mcp_server.py
 
 # ePaletteのMCPサーバー（別ターミナル）
-python3 food-cart-demo/mcp_servers/epalette_mcp_server.py
+python3 city-devices/mcp_servers/epalette_mcp_server.py
+
+# 街のデータベースMCPサーバー（別ターミナル）
+python3 city-database/mcp_servers/city_database_client_mcp_server.py
 ```
 
-#### 3. Claude Desktop設定
+#### 5. Claude Desktop設定
 
-`claude_desktop_config.json`をClaude Desktopの設定ディレクトリにコピーして、AIエージェントとして街のデバイスと対話できるようにします。
+**macOS**:
+```bash
+# 設定ディレクトリを作成
+mkdir -p ~/Library/Application\ Support/Claude
+
+# 設定ファイルをコピー
+cp claude_desktop_config.json ~/Library/Application\ Support/Claude/claude_desktop_config.json
+```
+
+**Windows**:
+```cmd
+# 設定ディレクトリを作成
+mkdir %APPDATA%\Claude
+
+# 設定ファイルをコピー
+copy claude_desktop_config.json %APPDATA%\Claude\claude_desktop_config.json
+```
 
 **設定ファイルの使い方**:
 - すべてのデバイスが含まれています
@@ -65,15 +111,24 @@ python3 food-cart-demo/mcp_servers/epalette_mcp_server.py
     "mcpServers": {
       "vending-machine": { ... },
       // "epalette": { ... }  // コメントアウト
+      // "city-database": { ... }  // コメントアウト
     }
   }
   ```
 
-#### 4. サービスの停止
+#### 6. Claude Desktop再起動
+
+設定ファイルを更新した後、Claude Desktopを完全に再起動してください。
+
+#### 7. サービスの停止
 
 ```bash
-# 街のシミュレーション停止
-make api-down
+# 全サービス停止
+make down
+
+# 個別停止
+make api-down  # APIサーバー停止
+make db-down   # データベース停止
 
 # MCPサーバーの停止
 # Ctrl+C で各サーバーを停止
@@ -83,17 +138,27 @@ make api-down
 
 ```
 /
-├── food-cart-demo/                    # 街のシミュレーション（FastAPI）
+├── city-devices/                      # 街のデバイス（FastAPI）
 │   ├── server.py                      # 街のAPIサーバー
 │   ├── index.html                     # 街のUI（3D表示）
+│   ├── index-3d.html                  # 3Dデモ
 │   ├── mcp_servers/                   # 各デバイスのMCPサーバー
 │   │   ├── vending_machine_mcp_server.py   # 自動販売機のMCPサーバー
 │   │   └── epalette_mcp_server.py    # ePaletteのMCPサーバー
 │   └── mockdata/                      # 街のデータ
+├── city-database/                     # 街のデータベース
+│   ├── data/                          # CSVデータ
+│   │   ├── residents.csv              # 住民データ
+│   │   ├── businesses.csv             # 事業所データ
+│   │   └── traffic.csv                # 交通データ
+│   ├── database/                      # DuckDBファイル
+│   │   └── city.db                    # データベースファイル
+│   ├── mcp_servers/                   # データベースMCPサーバー
+│   │   └── city_database_client_mcp_server.py
+│   └── scripts/                       # 初期化スクリプト
+│       └── init_database.sql
 ├── claude_desktop_config.json         # Claude Desktop設定ファイル
-├── docker-compose.api.yml             # 街のシミュレーション用
-├── requirements-mcp.txt               # MCPサーバー用依存関係
-├── SETUP.md                          # 詳細セットアップガイド
+├── docker-compose.yml                 # 統合Docker Compose
 └── Makefile                          # 便利なコマンド集
 ```
 
@@ -102,13 +167,15 @@ make api-down
 ### 街のシミュレーション
 | サービス | ポート | 説明 | 実行方法 |
 |---------|--------|------|----------|
-| city-api | 8000 | 街のAPIサーバー（FastAPI） | Docker |
+| city-devices-api | 8000 | 街のデバイスAPIサーバー（FastAPI） | Docker |
+| city-database | 5432, 8080 | 街のデータベース（DuckDB） | Docker |
 
 ### 街のデバイス（MCPサーバー）
 | デバイス | MCPサーバー | 説明 | 実行方法 |
 |---------|-------------|------|----------|
 | 自動販売機 | vending_machine_mcp_server.py | 飲み物・軽食の販売 | スタンドアロン |
 | ePalette | epalette_mcp_server.py | 自動運転移動販売車両 | スタンドアロン |
+| 街のデータベース | city_database_client_mcp_server.py | 住民・事業所・交通データ分析 | スタンドアロン |
 
 ## 🤖 AIエージェントとの統合
 
@@ -129,6 +196,12 @@ make api-down
 - 「車両の速度を30km/hに設定して」
 - 「車両を一時停止して」
 
+**街のデータベース**:
+- 「住民の年収分布を教えて」
+- 「事業所の売上ランキングTOP10を表示して」
+- 「渋谷通りの交通状況を分析して」
+- 「中央区の住民の平均年収を教えて」
+
 ### 将来のAIエージェント
 Claude Desktop以外のAIエージェントも、MCPプロトコルをサポートしていれば街のデバイスと対話できます。
 
@@ -136,31 +209,16 @@ Claude Desktop以外のAIエージェントも、MCPプロトコルをサポー�
 
 ```bash
 make help      # 利用可能なコマンドを表示
+make up        # 全サービス（API + データベース）を起動
+make down      # 全サービスを停止
 make api-up    # APIサーバーのみ起動
 make api-down  # APIサーバー停止
-make logs      # APIサーバーのログを表示
+make db-up     # データベースのみ起動
+make db-down   # データベース停止
+make logs      # 全サービスのログを表示
+make logs-api  # APIサーバーのログを表示
+make logs-db   # データベースのログを表示
 make clean     # 未使用のDockerリソースをクリーンアップ
-```
-
-## 🔧 Claude Desktop設定
-
-Claude DesktopでMCPサーバーを使用するには、以下の設定ファイルを使用してください：
-
-```json
-{
-  "mcpServers": {
-    "vending-machine": {
-      "command": "python3",
-      "args": ["/path/to/food-cart-demo/mcp_servers/standalone_mcp_server.py"],
-      "env": {}
-    },
-    "epalette": {
-      "command": "python3",
-      "args": ["/path/to/food-cart-demo/mcp_servers/epalette_mcp_server.py"],
-      "env": {}
-    }
-  }
-}
 ```
 
 ## 🔧 開発
@@ -169,9 +227,9 @@ Claude DesktopでMCPサーバーを使用するには、以下の設定ファイ
 
 街のシミュレーションはDockerで管理され、新しいデバイスを追加する際は以下の手順で行います：
 
-1. **デバイスAPIの実装**: `food-cart-demo/server.py`にエンドポイントを追加
-2. **デバイスUIの実装**: `food-cart-demo/index.html`に3D表示を追加
-3. **MCPサーバーの実装**: `food-cart-demo/mcp_servers/`に新しいMCPサーバーを追加
+1. **デバイスAPIの実装**: `city-devices/server.py`にエンドポイントを追加
+2. **デバイスUIの実装**: `city-devices/index.html`に3D表示を追加
+3. **MCPサーバーの実装**: `city-devices/mcp_servers/`に新しいMCPサーバーを追加
 
 ### MCPサーバー開発
 
@@ -181,25 +239,46 @@ Claude DesktopでMCPサーバーを使用するには、以下の設定ファイ
 - **デバッグ容易**: 直接実行でデバッグ可能
 - **拡張性**: 新しいデバイス用のMCPサーバーを簡単に追加
 
+### データベース開発
+
+街のデータベースはDuckDBを使用し、以下の特徴があります：
+
+- **分析特化**: SQLクエリで複雑な分析が可能
+- **メモリ内**: 高速な処理
+- **MCP統合**: Claude Desktopから直接SQLクエリを実行可能
+
 ### トラブルシューティング
 
 1. **街のシミュレーションが起動しない**
    ```bash
-   docker-compose logs food-cart-api
+   make logs-api
    ```
 
-2. **MCPサーバーが接続できない**
+2. **データベースが起動しない**
+   ```bash
+   make logs-db
+   ```
+
+3. **MCPサーバーが接続できない**
    ```bash
    # 街のAPIサーバーが起動しているか確認
    curl http://localhost:8000/api/vending-machine/products
+   
+   # データベースが起動しているか確認
+   python3 city-database/mcp_servers/city_database_client_mcp_server.py --test-connection
    ```
 
-3. **ポートが使用中**
+4. **ポートが使用中**
    ```bash
-   lsof -i :8000
+   lsof -i :8000  # APIサーバー
+   lsof -i :5432  # データベース
    ```
+
+5. **Claude DesktopでMCPサーバーが認識されない**
+   - 環境変数`MCP_CITY_PATH`が設定されているか確認
+   - 設定ファイルのパスが正しいか確認
+   - MCPサーバーが起動しているか確認
 
 ## 📚 詳細ドキュメント
 
-- `SETUP.md` - 詳細なセットアップガイド
-- `food-cart-demo/README.md` - 街のシミュレーションの詳細
+- `city-devices/README.md` - 街のデバイスの詳細
