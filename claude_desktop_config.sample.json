@@ -1,0 +1,31 @@
+{
+  "mcpServers": {
+    "vending-machine": {
+      "command": "python3",
+      "args": [
+        "/path/to/your/mcp-city/city-devices/mcp_servers/vending_machine_mcp_server.py"
+      ],
+      "env": {
+        "MCP_CITY_PATH": "/path/to/your/mcp-city"
+      }
+    },
+    "epalette": {
+      "command": "python3",
+      "args": [
+        "/path/to/your/mcp-city/city-devices/mcp_servers/epalette_mcp_server.py"
+      ],
+      "env": {
+        "MCP_CITY_PATH": "/path/to/your/mcp-city"
+      }
+    },
+    "city-database": {
+      "command": "python3",
+      "args": [
+        "/path/to/your/mcp-city/city-database/mcp_servers/city_database_client_mcp_server.py"
+      ],
+      "env": {
+        "MCP_CITY_PATH": "/path/to/your/mcp-city"
+      }
+    }
+  }
+}

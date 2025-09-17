@@ -84,13 +84,18 @@ python3 city-database/mcp_servers/city_database_client_mcp_server.py
 
 #### 5. Claude Desktop設定
 
+**重要**: Claude Desktopでは絶対パスを使用する必要があります。
+
 **macOS**:
 ```bash
 # 設定ディレクトリを作成
 mkdir -p ~/Library/Application\ Support/Claude
 
-# 設定ファイルをコピー
-cp claude_desktop_config.json ~/Library/Application\ Support/Claude/claude_desktop_config.json
+# サンプル設定ファイルをコピー
+cp claude_desktop_config.sample.json ~/Library/Application\ Support/Claude/claude_desktop_config.json
+
+# パスを実際の環境に合わせて編集
+# /path/to/your/mcp-city を実際のパスに変更してください
 ```
 
 **Windows**:
@@ -98,8 +103,11 @@ cp claude_desktop_config.json ~/Library/Application\ Support/Claude/claude_deskt
 # 設定ディレクトリを作成
 mkdir %APPDATA%\Claude
 
-# 設定ファイルをコピー
-copy claude_desktop_config.json %APPDATA%\Claude\claude_desktop_config.json
+# サンプル設定ファイルをコピー
+copy claude_desktop_config.sample.json %APPDATA%\Claude\claude_desktop_config.json
+
+# パスを実際の環境に合わせて編集
+# /path/to/your/mcp-city を実際のパスに変更してください
 ```
 
 **設定ファイルの使い方**:
@@ -157,7 +165,7 @@ make db-down   # データベース停止
 │   │   └── city_database_client_mcp_server.py
 │   └── scripts/                       # 初期化スクリプト
 │       └── init_database.sql
-├── claude_desktop_config.json         # Claude Desktop設定ファイル
+├── claude_desktop_config.sample.json  # Claude Desktop設定サンプルファイル
 ├── docker-compose.yml                 # 統合Docker Compose
 └── Makefile                          # 便利なコマンド集
 ```

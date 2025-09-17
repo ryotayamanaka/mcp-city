@@ -36,7 +36,7 @@
       "id": "p005",
       "name": "Chocolate Bar",
       "price": 250,
-      "stock": 10,
+      "stock": 9,
       "category": "snack",
       "image": "\ud83c\udf6b"
     },
@@ -2185,12 +2185,20 @@
       "quantity": 1,
       "price": 100,
       "total": 100
+    },
+    {
+      "timestamp": "2025-09-17T11:56:01.798214",
+      "product_id": "p005",
+      "product_name": "Chocolate Bar",
+      "quantity": 1,
+      "price": 250,
+      "total": 250
     }
   ],
   "daily_stats": {
-    "total_sales": 184,
-    "total_revenue": 52500,
+    "total_sales": 185,
+    "total_revenue": 52750,
     "best_seller": "Rice Ball",
-    "last_update": "2025-09-16T02:54:03.609887"
+    "last_update": "2025-09-17T11:56:01.798237"
   }
 }
