@@ -5,27 +5,21 @@
       "args": [
         "${MCP_CITY_PATH}/city-devices/mcp_servers/vending_machine_mcp_server.py"
       ],
-      "env": {
-        "MCP_CITY_PATH": "/Users/ryotayamanaka/git/mcp-city"
-      }
+      "env": {}
     },
     "epalette": {
       "command": "python3",
       "args": [
         "${MCP_CITY_PATH}/city-devices/mcp_servers/epalette_mcp_server.py"
       ],
-      "env": {
-        "MCP_CITY_PATH": "/Users/ryotayamanaka/git/mcp-city"
-      }
+      "env": {}
     },
     "city-database": {
       "command": "python3",
       "args": [
         "${MCP_CITY_PATH}/city-database/mcp_servers/city_database_client_mcp_server.py"
       ],
-      "env": {
-        "MCP_CITY_PATH": "/Users/ryotayamanaka/git/mcp-city"
-      }
+      "env": {}
     }
   }
 }

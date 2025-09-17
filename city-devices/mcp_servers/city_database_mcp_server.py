@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-City Database Client MCP Server
-Connects to DuckDB server with MCP extension
+City Database MCP Server
+Provides SQL access to city data through MCP protocol
 """
 
 import json
@@ -10,14 +10,36 @@ import duckdb
 import argparse
 from pathlib import Path
 
-class CityDatabaseClientMCP:
-    def __init__(self, db_path="/Users/ryotayamanaka/git/mcp-city/city-database/database/city.db"):
-        """Initialize the city database client MCP server"""
-        self.db_path = db_path
-        self.conn = duckdb.connect(db_path)
+class CityDatabaseMCP:
+    def __init__(self):
+        """Initialize the city database MCP server"""
+        self.conn = duckdb.connect(':memory:')
+        self.load_data()
+    
+    def load_data(self):
+        """Load CSV data into the database"""
+        data_dir = Path(__file__).parent.parent / "data"
+        
+        # Load residents data
+        self.conn.execute(f"""
+            CREATE TABLE residents AS 
+            SELECT * FROM '{data_dir}/residents.csv'
+        """)
+        
+        # Load businesses data
+        self.conn.execute(f"""
+            CREATE TABLE businesses AS 
+            SELECT * FROM '{data_dir}/businesses.csv'
+        """)
+        
+        # Load traffic data
+        self.conn.execute(f"""
+            CREATE TABLE traffic AS 
+            SELECT * FROM '{data_dir}/traffic.csv'
+        """)
     
     def execute_sql(self, query):
-        """Execute SQL query directly on DuckDB file"""
+        """Execute SQL query and return results"""
         try:
             result = self.conn.execute(query).fetchall()
             columns = [desc[0] for desc in self.conn.description]
@@ -36,7 +58,7 @@ class CityDatabaseClientMCP:
         except Exception as e:
             return {
                 "success": False,
-                "error": f"Query execution error: {str(e)}",
+                "error": str(e),
                 "data": [],
                 "row_count": 0,
                 "columns": []
@@ -45,36 +67,20 @@ class CityDatabaseClientMCP:
     def get_table_info(self):
         """Get information about all tables"""
         try:
-            # Get table list
-            tables_query = "SHOW TABLES"
-            tables_result = self.execute_sql(tables_query)
-            
-            if not tables_result["success"]:
-                return tables_result
+            result = self.conn.execute("SHOW TABLES").fetchall()
+            tables = [row[0] for row in result]
             
             table_info = {}
-            for table_row in tables_result["data"]:
-                table_name = table_row[0]  # First column is table name
-                
+            for table in tables:
                 # Get column information
-                columns_query = f"DESCRIBE {table_name}"
-                columns_result = self.execute_sql(columns_query)
-                
-                if columns_result["success"]:
-                    columns = [{"name": row[0], "type": row[1]} for row in columns_result["data"]]
-                else:
-                    columns = []
+                columns_result = self.conn.execute(f"DESCRIBE {table}").fetchall()
+                columns = [{"name": row[0], "type": row[1]} for row in columns_result]
                 
                 # Get row count
-                count_query = f"SELECT COUNT(*) FROM {table_name}"
-                count_result = self.execute_sql(count_query)
+                count_result = self.conn.execute(f"SELECT COUNT(*) FROM {table}").fetchall()
+                row_count = count_result[0][0] if count_result else 0
                 
-                if count_result["success"] and count_result["data"]:
-                    row_count = count_result["data"][0][0]
-                else:
-                    row_count = 0
-                
-                table_info[table_name] = {
+                table_info[table] = {
                     "columns": columns,
                     "row_count": row_count
                 }
@@ -89,14 +95,6 @@ class CityDatabaseClientMCP:
                 "error": str(e),
                 "tables": {}
             }
-    
-    def test_connection(self):
-        """Test connection to DuckDB database"""
-        try:
-            result = self.execute_sql("SELECT 'Connection successful' as status")
-            return result["success"]
-        except Exception:
-            return False
 
 def handle_message(message):
     """Handle incoming MCP messages"""
@@ -114,7 +112,7 @@ def handle_message(message):
                     "tools": {}
                 },
                 "serverInfo": {
-                    "name": "CityDatabaseClientMCP",
+                    "name": "CityDatabaseMCP",
                     "version": "1.0.0"
                 }
             }
@@ -128,7 +126,7 @@ def handle_message(message):
         tools_list = [
             {
                 "name": "execute_sql",
-                "description": "Execute SQL query on city database via DuckDB MCP server",
+                "description": "Execute SQL query on city database",
                 "inputSchema": {
                     "type": "object",
                     "properties": {
@@ -166,14 +164,6 @@ def handle_message(message):
                     },
                     "required": ["table"]
                 }
-            },
-            {
-                "name": "test_connection",
-                "description": "Test connection to DuckDB database",
-                "inputSchema": {
-                    "type": "object",
-                    "properties": {}
-                }
             }
         ]
         
@@ -207,8 +197,8 @@ def handle_message(message):
         tool_name = params.get("name")
         arguments = params.get("arguments", {})
         
-        # Initialize database client
-        db = CityDatabaseClientMCP()
+        # Initialize database connection
+        db = CityDatabaseMCP()
         
         try:
             if tool_name == "execute_sql":
@@ -299,26 +289,6 @@ def handle_message(message):
                     }
                 }
             
-            elif tool_name == "test_connection":
-                success = db.test_connection()
-                if success:
-                    response_text = "✅ Connection to DuckDB database successful"
-                else:
-                    response_text = "❌ Connection to DuckDB database failed"
-                
-                return {
-                    "jsonrpc": "2.0",
-                    "id": request_id,
-                    "result": {
-                        "content": [
-                            {
-                                "type": "text",
-                                "text": response_text
-                            }
-                        ]
-                    }
-                }
-            
             else:
                 result = f"❌ Unknown tool: {tool_name}"
         except Exception as e:
@@ -349,25 +319,27 @@ def handle_message(message):
 
 def main():
     """Main function to run the MCP server"""
-    parser = argparse.ArgumentParser(description="City Database Client MCP Server")
-    parser.add_argument("--test-connection", action="store_true", help="Test connection to DuckDB server")
-    parser.add_argument("--db-path", default="/Users/ryotayamanaka/git/mcp-city/city-database/database/city.db", help="DuckDB database file path")
+    parser = argparse.ArgumentParser(description="City Database MCP Server")
+    parser.add_argument("--check-data", action="store_true", help="Check if data files are available")
     args = parser.parse_args()
     
-    if args.test_connection:
+    if args.check_data:
         try:
-            db = CityDatabaseClientMCP(args.db_path)
-            if db.test_connection():
-                print("✅ Connection to DuckDB database successful")
+            db = CityDatabaseMCP()
+            result = db.get_table_info()
+            if result["success"]:
+                print("✅ City database data loaded successfully")
+                for table_name, info in result["tables"].items():
+                    print(f"  - {table_name}: {info['row_count']} rows")
                 return 0
             else:
-                print("❌ Connection to DuckDB database failed")
+                print(f"❌ Error loading data: {result['error']}")
                 return 1
         except Exception as e:
             print(f"❌ Error: {e}")
             return 1
     
-    print(f"Starting CityDatabaseClientMCP server...", file=sys.stderr)
+    print(f"Starting CityDatabaseMCP server...", file=sys.stderr)
     
     for line in sys.stdin:
         line = line.strip()

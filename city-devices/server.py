@@ -564,9 +564,8 @@ async def serve_2d_demo():
 # Mount static files (for any additional assets)
 if os.path.exists("img"):
     app.mount("/img", StaticFiles(directory="img"), name="img")
-# Legacy static path removed (food-cart-demo). If needed, mount from local 'static' directory.
-if os.path.exists("static"):
-    app.mount("/static", StaticFiles(directory="static"), name="static")
+if os.path.exists("food-cart-demo/static"):
+    app.mount("/static", StaticFiles(directory="food-cart-demo/static"), name="static")
 
 if __name__ == "__main__":
     print("🚀 Starting e-Palette IoT Demo Server...")

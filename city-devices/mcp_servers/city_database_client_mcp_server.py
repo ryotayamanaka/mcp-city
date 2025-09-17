@@ -11,7 +11,7 @@ import argparse
 from pathlib import Path
 
 class CityDatabaseClientMCP:
-    def __init__(self, db_path="/Users/ryotayamanaka/git/mcp-city/city-database/database/city.db"):
+    def __init__(self, db_path="/Users/ryotayamanaka/git/mcp-city/food-cart-demo/database/city.db"):
         """Initialize the city database client MCP server"""
         self.db_path = db_path
         self.conn = duckdb.connect(db_path)
@@ -351,7 +351,7 @@ def main():
     """Main function to run the MCP server"""
     parser = argparse.ArgumentParser(description="City Database Client MCP Server")
     parser.add_argument("--test-connection", action="store_true", help="Test connection to DuckDB server")
-    parser.add_argument("--db-path", default="/Users/ryotayamanaka/git/mcp-city/city-database/database/city.db", help="DuckDB database file path")
+    parser.add_argument("--db-path", default="/Users/ryotayamanaka/git/mcp-city/food-cart-demo/database/city.db", help="DuckDB database file path")
     args = parser.parse_args()
     
     if args.test_connection:

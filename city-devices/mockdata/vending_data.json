@@ -4,7 +4,7 @@
       "id": "p001",
       "name": "Coca Cola",
       "price": 150,
-      "stock": 3,
+      "stock": 10,
       "category": "beverage",
       "image": "\ud83e\udd64"
     },
@@ -12,7 +12,7 @@
       "id": "p002",
       "name": "Sprite",
       "price": 150,
-      "stock": 0,
+      "stock": 6,
       "category": "beverage",
       "image": "\ud83e\udd64"
     },
@@ -20,7 +20,7 @@
       "id": "p003",
       "name": "Water",
       "price": 100,
-      "stock": 0,
+      "stock": 10,
       "category": "beverage",
       "image": "\ud83d\udca7"
     },
@@ -36,7 +36,7 @@
       "id": "p005",
       "name": "Chocolate Bar",
       "price": 250,
-      "stock": 0,
+      "stock": 10,
       "category": "snack",
       "image": "\ud83c\udf6b"
     },
@@ -44,7 +44,7 @@
       "id": "p006",
       "name": "Cookies",
       "price": 180,
-      "stock": 0,
+      "stock": 8,
       "category": "snack",
       "image": "\ud83c\udf6a"
     },
@@ -2185,244 +2185,12 @@
       "quantity": 1,
       "price": 100,
       "total": 100
-    },
-    {
-      "timestamp": "2025-09-16T02:55:23.609442",
-      "product_id": "p005",
-      "product_name": "Chocolate Bar",
-      "quantity": 2,
-      "price": 250,
-      "total": 500
-    },
-    {
-      "timestamp": "2025-09-17T07:08:01.216237",
-      "product_id": "p006",
-      "product_name": "Cookies",
-      "quantity": 1,
-      "price": 180,
-      "total": 180
-    },
-    {
-      "timestamp": "2025-09-17T07:09:11.103136",
-      "product_id": "p001",
-      "product_name": "Coca Cola",
-      "quantity": 2,
-      "price": 150,
-      "total": 300
-    },
-    {
-      "timestamp": "2025-09-17T07:11:08.215161",
-      "product_id": "p002",
-      "product_name": "Sprite",
-      "quantity": 1,
-      "price": 150,
-      "total": 150
-    },
-    {
-      "timestamp": "2025-09-17T07:11:17.760842",
-      "product_id": "p006",
-      "product_name": "Cookies",
-      "quantity": 1,
-      "price": 180,
-      "total": 180
-    },
-    {
-      "timestamp": "2025-09-17T07:13:47.757975",
-      "product_id": "p005",
-      "product_name": "Chocolate Bar",
-      "quantity": 2,
-      "price": 250,
-      "total": 500
-    },
-    {
-      "timestamp": "2025-09-17T07:17:47.762348",
-      "product_id": "p005",
-      "product_name": "Chocolate Bar",
-      "quantity": 1,
-      "price": 250,
-      "total": 250
-    },
-    {
-      "timestamp": "2025-09-17T07:30:02.217086",
-      "product_id": "p001",
-      "product_name": "Coca Cola",
-      "quantity": 1,
-      "price": 150,
-      "total": 150
-    },
-    {
-      "timestamp": "2025-09-17T07:35:01.021072",
-      "product_id": "p005",
-      "product_name": "Chocolate Bar",
-      "quantity": 1,
-      "price": 250,
-      "total": 250
-    },
-    {
-      "timestamp": "2025-09-17T07:35:27.727042",
-      "product_id": "p005",
-      "product_name": "Chocolate Bar",
-      "quantity": 1,
-      "price": 250,
-      "total": 250
-    },
-    {
-      "timestamp": "2025-09-17T07:45:02.240953",
-      "product_id": "p006",
-      "product_name": "Cookies",
-      "quantity": 1,
-      "price": 180,
-      "total": 180
-    },
-    {
-      "timestamp": "2025-09-17T08:01:27.711756",
-      "product_id": "p006",
-      "product_name": "Cookies",
-      "quantity": 2,
-      "price": 180,
-      "total": 360
-    },
-    {
-      "timestamp": "2025-09-17T08:02:07.718777",
-      "product_id": "p002",
-      "product_name": "Sprite",
-      "quantity": 1,
-      "price": 150,
-      "total": 150
-    },
-    {
-      "timestamp": "2025-09-17T08:03:27.708882",
-      "product_id": "p002",
-      "product_name": "Sprite",
-      "quantity": 1,
-      "price": 150,
-      "total": 150
-    },
-    {
-      "timestamp": "2025-09-17T08:03:47.708574",
-      "product_id": "p003",
-      "product_name": "Water",
-      "quantity": 2,
-      "price": 100,
-      "total": 200
-    },
-    {
-      "timestamp": "2025-09-17T08:04:17.708504",
-      "product_id": "p002",
-      "product_name": "Sprite",
-      "quantity": 1,
-      "price": 150,
-      "total": 150
-    },
-    {
-      "timestamp": "2025-09-17T08:08:37.707196",
-      "product_id": "p001",
-      "product_name": "Coca Cola",
-      "quantity": 1,
-      "price": 150,
-      "total": 150
-    },
-    {
-      "timestamp": "2025-09-17T08:10:37.703394",
-      "product_id": "p003",
-      "product_name": "Water",
-      "quantity": 2,
-      "price": 100,
-      "total": 200
-    },
-    {
-      "timestamp": "2025-09-17T08:13:07.702987",
-      "product_id": "p005",
-      "product_name": "Chocolate Bar",
-      "quantity": 2,
-      "price": 250,
-      "total": 500
-    },
-    {
-      "timestamp": "2025-09-17T08:15:47.701072",
-      "product_id": "p002",
-      "product_name": "Sprite",
-      "quantity": 2,
-      "price": 150,
-      "total": 300
-    },
-    {
-      "timestamp": "2025-09-17T08:16:17.700670",
-      "product_id": "p003",
-      "product_name": "Water",
-      "quantity": 1,
-      "price": 100,
-      "total": 100
-    },
-    {
-      "timestamp": "2025-09-17T08:18:47.704891",
-      "product_id": "p005",
-      "product_name": "Chocolate Bar",
-      "quantity": 1,
-      "price": 250,
-      "total": 250
-    },
-    {
-      "timestamp": "2025-09-17T08:21:47.696429",
-      "product_id": "p006",
-      "product_name": "Cookies",
-      "quantity": 2,
-      "price": 180,
-      "total": 360
-    },
-    {
-      "timestamp": "2025-09-17T08:32:37.811752",
-      "product_id": "p006",
-      "product_name": "Cookies",
-      "quantity": 1,
-      "price": 180,
-      "total": 180
-    },
-    {
-      "timestamp": "2025-09-17T08:33:47.812617",
-      "product_id": "p003",
-      "product_name": "Water",
-      "quantity": 2,
-      "price": 100,
-      "total": 200
-    },
-    {
-      "timestamp": "2025-09-17T09:09:02.370304",
-      "product_id": "p003",
-      "product_name": "Water",
-      "quantity": 2,
-      "price": 100,
-      "total": 200
-    },
-    {
-      "timestamp": "2025-09-17T09:22:43.417615",
-      "product_id": "p001",
-      "product_name": "Coca Cola",
-      "quantity": 1,
-      "price": 150,
-      "total": 150
-    },
-    {
-      "timestamp": "2025-09-17T11:37:01.617059",
-      "product_id": "p001",
-      "product_name": "Coca Cola",
-      "quantity": 2,
-      "price": 150,
-      "total": 300
-    },
-    {
-      "timestamp": "2025-09-17T11:40:01.775604",
-      "product_id": "p003",
-      "product_name": "Water",
-      "quantity": 1,
-      "price": 100,
-      "total": 100
     }
   ],
   "daily_stats": {
-    "total_sales": 213,
-    "total_revenue": 59390,
+    "total_sales": 184,
+    "total_revenue": 52500,
     "best_seller": "Rice Ball",
-    "last_update": "2025-09-17T11:40:01.775614"
+    "last_update": "2025-09-16T02:54:03.609887"
   }
 }
