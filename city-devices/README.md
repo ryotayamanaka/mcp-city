@@ -21,13 +21,15 @@ This demo showcases how AI agents can control IoT devices through simple API cal
 ## 📁 Project Structure
 
 ```
-food-cart-demo/
-├── index.html              # Food cart web interface
-├── server.py               # FastAPI server with IoT API endpoints
+city-devices/
+├── index.html              # City devices 2D web interface
+├── index-3d.html           # City devices 3D demo interface
+├── server.py               # FastAPI server with API endpoints
 ├── mcp_servers/            # MCP servers for external access
-│   └── vending_machine_mcp.py
+│   ├── vending_machine_mcp_server.py
+│   └── epalette_mcp_server.py
 ├── requirements.txt        # Python dependencies
-└── README.md              # This file
+└── README.md               # This file
 ```
 
 ## 🚀 Quick Start
@@ -35,7 +37,7 @@ food-cart-demo/
 ### 0. setup enviroment
 
 ```bash
-cd food-cart-demo
+cd city-devices
 uv venv --python 3.12
 source .venv/bin/activate
 ```
@@ -60,52 +62,35 @@ Open your browser and navigate to: `http://localhost:8000`
 
 You should see the autonomous food cart with its promotional screen.
 
-### 4. Run the AI Agent
+### 4. MCPサーバーの起動
 
-In a new terminal:
-
-```bash
-cd food-cart-demo
-uv venv --python 3.12
-source .venv/bin/activate
-uv pip install -r requirements.txt
-# export GOOGLE_API_KEY=xxxxxx
-export AWS_ACCESS_KEY_ID=xxxxx
-export AWS_SECRET_ACCESS_KEY=xxxxx
-export AWS_REGION=us-west-2
-python food_cart_agent.py
-```
-
-### 5. Run the Agent-UI
+MCPサーバーを起動してClaude Desktopからアクセス可能にします：
 
 ```bash
-cd agent-ui
-npm run dev
+# 自動販売機のMCPサーバー
+python3 city-devices/mcp_servers/vending_machine_mcp_server.py
+
+# ePaletteのMCPサーバー（別ターミナル）
+python3 city-devices/mcp_servers/epalette_mcp_server.py
 ```
 
 ## 🎮 Using the Demo
 
-### Agent Commands
+### MCPサーバー経由での操作
 
-Try these example commands with the AI agent:
+Claude DesktopからMCPサーバー経由でデバイスを操作できます：
 
-```
-🍕 You: Show a welcome message on the screen
-🍕 You: Display today's special offers
-🍕 You: Show an image of delicious pizza
-🍕 You: Check the current screen status
-🍕 You: Clear the screen
-🍕 You: Create an attractive lunch promotion
-```
+**自動販売機**:
+- 商品一覧の取得
+- 在庫状況の確認
+- 購入のシミュレーション
+- 売上データの分析
 
-### Available Tools
-
-The agent has access to these tools:
-
-1. **update_screen_text**: Display text messages on the promotional screen
-2. **update_screen_image**: Display images from URLs on the screen
-3. **clear_screen**: Clear the promotional screen
-4. **get_screen_status**: Check current screen content and status
+**ePalette**:
+- ディスプレイテキストの更新
+- 画像の表示
+- 車両の制御
+- 状態の確認
 
 ## 🔧 API Endpoints
 
@@ -148,29 +133,20 @@ GET /api/health
 
 ## 🎨 Customization
 
-### Modify the Food Cart Interface
+### Modify the City Devices Interface
 
-Edit `index.html` to customize:
-- Cart appearance and styling
-- Screen size and layout
-- Status panel information
-- Update polling frequency
+Edit `index.html` または `index-3d.html` でカスタマイズ:
+- デバイスの外観とスタイリング
+- 画面サイズとレイアウト
+- ステータスパネルの情報
+- 更新ポーリング頻度
 
-### Extend Agent Capabilities
+### MCPサーバーの拡張
 
-Edit `tools.py` to add new tools:
-- Location control
-- Menu management
-- Customer interaction
-- Sales analytics
-
-### Agent Personality
-
-Modify `food_cart_agent.py` instructions to change:
-- Response style
-- Promotional strategies
-- Error handling
-- Interaction patterns
+新しいMCPサーバーを追加:
+- 新しいデバイス用のMCPサーバー
+- 追加のAPIエンドポイント
+- カスタムツールの実装
 
 ## 🔍 Monitoring
 
@@ -182,21 +158,21 @@ Modify `food_cart_agent.py` instructions to change:
 ### API Documentation
 Visit `http://localhost:8000/docs` for interactive API documentation
 
-### Agent Logs
-The agent provides detailed logging for:
-- Tool usage
-- API calls
-- Error handling
-- Response generation
+### MCPサーバーログ
+MCPサーバーは詳細なログを提供:
+- ツールの使用状況
+- API呼び出し
+- エラーハンドリング
+- レスポンス生成
 
 ## 🛠️ Development
 
-### Adding New Tools
+### Adding New MCP Tools
 
-1. Create a new method in `FoodCartScreenTools` class
-2. Register the tool in the `__init__` method
-3. Add corresponding API endpoint in `server.py`
-4. Update the web interface if needed
+1. 新しいMCPサーバーを作成
+2. 必要なツールメソッドを実装
+3. 対応するAPIエンドポイントを`server.py`に追加
+4. 必要に応じてWebインターフェースを更新
 
 ### Testing API Endpoints
 
@@ -226,16 +202,17 @@ curl http://localhost:8000/api/screen/status
    - Verify API endpoints are responding
    - Check network connectivity
 
-3. **Agent not responding**
-   - Ensure Agno is properly installed
-   - Check API keys for the model provider
-   - Verify tool registration
+3. **MCPサーバーが応答しない**
+   - MCPサーバーが起動しているか確認
+   - ポート8000が利用可能か確認
+   - Claude Desktopの設定を確認
 
 ### Debug Mode
 
-Enable debug logging by setting environment variable:
+MCPサーバーのデバッグログを有効にする:
 ```bash
-export AGNO_LOG_LEVEL=DEBUG
+export PYTHONPATH=/path/to/mcp-city
+python3 -u city-devices/mcp_servers/vending_machine_mcp_server.py
 ```
 
 ## 📝 License
@@ -246,7 +223,7 @@ This demo is provided as-is for educational and demonstration purposes.
 
 Feel free to extend this demo with:
 - Additional IoT device simulations
-- More sophisticated agent behaviors
+- More sophisticated MCP servers
 - Enhanced web interface features
 - Integration with real IoT platforms
 

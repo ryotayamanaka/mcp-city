@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # City Devices API Server
   city-devices-api:
