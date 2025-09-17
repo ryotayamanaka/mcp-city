@@ -1,4 +1,4 @@
-# food-cart-demo用Dockerfile
+# city-devices用Dockerfile
 FROM python:3.11-alpine
 
 # システム依存関係をインストール

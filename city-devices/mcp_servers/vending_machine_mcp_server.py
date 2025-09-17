@@ -10,9 +10,40 @@ import requests
 import argparse
 import subprocess
 import time
+import os
 
 # Base URL for the food cart API
 BASE_URL = "http://localhost:8000"
+
+def check_required_env_vars():
+    """Check for required environment variables and display helpful error messages"""
+    missing_vars = []
+    
+    # Check MCP_CITY_PATH
+    if not os.getenv('MCP_CITY_PATH'):
+        missing_vars.append('MCP_CITY_PATH')
+    
+    # Check GOOGLE_API_KEY (optional but recommended)
+    if not os.getenv('GOOGLE_API_KEY'):
+        missing_vars.append('GOOGLE_API_KEY (optional)')
+    
+    if missing_vars:
+        print("❌ **Environment Variables Missing**", file=sys.stderr)
+        print("", file=sys.stderr)
+        print("The following environment variables are not set:", file=sys.stderr)
+        for var in missing_vars:
+            print(f"  - {var}", file=sys.stderr)
+        print("", file=sys.stderr)
+        print("**Required:**", file=sys.stderr)
+        print("  export MCP_CITY_PATH=/path/to/mcp-city", file=sys.stderr)
+        print("", file=sys.stderr)
+        print("**Optional:**", file=sys.stderr)
+        print("  export GOOGLE_API_KEY=your_google_api_key", file=sys.stderr)
+        print("", file=sys.stderr)
+        print("After setting the variables, restart Claude Desktop.", file=sys.stderr)
+        return False
+    
+    return True
 
 def get_products():
     """Get all products available in the vending machine with their prices and categories"""
@@ -300,6 +331,10 @@ def handle_message(message):
 
 def main():
     """Main function to run the MCP server"""
+    # Check environment variables first
+    if not check_required_env_vars():
+        sys.exit(1)
+    
     parser = argparse.ArgumentParser(description="Vending Machine MCP Server")
     parser.add_argument("--check-api", action="store_true", help="Check if API is available")
     args = parser.parse_args()

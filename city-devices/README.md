@@ -21,13 +21,15 @@ This demo showcases how AI agents can control IoT devices through simple API cal
 ## 📁 Project Structure
 
 ```
-food-cart-demo/
-├── index.html              # Food cart web interface
-├── server.py               # FastAPI server with IoT API endpoints
+city-devices/
+├── index.html              # City devices 2D web interface
+├── index-3d.html           # City devices 3D demo interface
+├── server.py               # FastAPI server with API endpoints
 ├── mcp_servers/            # MCP servers for external access
-│   └── vending_machine_mcp.py
+│   ├── vending_machine_mcp_server.py
+│   └── epalette_mcp_server.py
 ├── requirements.txt        # Python dependencies
-└── README.md              # This file
+└── README.md               # This file
 ```
 
 ## 🚀 Quick Start
@@ -35,7 +37,7 @@ food-cart-demo/
 ### 0. setup enviroment
 
 ```bash
-cd food-cart-demo
+cd city-devices
 uv venv --python 3.12
 source .venv/bin/activate
 ```
@@ -65,7 +67,7 @@ You should see the autonomous food cart with its promotional screen.
 In a new terminal:
 
 ```bash
-cd food-cart-demo
+cd city-devices
 uv venv --python 3.12
 source .venv/bin/activate
 uv pip install -r requirements.txt

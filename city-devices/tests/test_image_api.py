@@ -129,7 +129,7 @@ def test_image_update():
     except requests.exceptions.ConnectionError:
         print("\n❌ Cannot connect to server")
         print("Please ensure the server is running:")
-        print("  cd food-cart-demo")
+        print("  cd city-devices")
         print("  python server.py")
     except Exception as e:
         print(f"\n❌ Error occurred during testing: {str(e)}")

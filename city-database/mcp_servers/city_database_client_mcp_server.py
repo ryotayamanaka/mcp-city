@@ -8,7 +8,38 @@ import json
 import sys
 import duckdb
 import argparse
+import os
 from pathlib import Path
+
+def check_required_env_vars():
+    """Check for required environment variables and display helpful error messages"""
+    missing_vars = []
+    
+    # Check MCP_CITY_PATH
+    if not os.getenv('MCP_CITY_PATH'):
+        missing_vars.append('MCP_CITY_PATH')
+    
+    # Check GOOGLE_API_KEY (optional but recommended)
+    if not os.getenv('GOOGLE_API_KEY'):
+        missing_vars.append('GOOGLE_API_KEY (optional)')
+    
+    if missing_vars:
+        print("❌ **Environment Variables Missing**", file=sys.stderr)
+        print("", file=sys.stderr)
+        print("The following environment variables are not set:", file=sys.stderr)
+        for var in missing_vars:
+            print(f"  - {var}", file=sys.stderr)
+        print("", file=sys.stderr)
+        print("**Required:**", file=sys.stderr)
+        print("  export MCP_CITY_PATH=/path/to/mcp-city", file=sys.stderr)
+        print("", file=sys.stderr)
+        print("**Optional:**", file=sys.stderr)
+        print("  export GOOGLE_API_KEY=your_google_api_key", file=sys.stderr)
+        print("", file=sys.stderr)
+        print("After setting the variables, restart Claude Desktop.", file=sys.stderr)
+        return False
+    
+    return True
 
 class CityDatabaseClientMCP:
     def __init__(self, db_path="/Users/ryotayamanaka/git/mcp-city/city-database/database/city.db"):
@@ -349,6 +380,10 @@ def handle_message(message):
 
 def main():
     """Main function to run the MCP server"""
+    # Check environment variables first
+    if not check_required_env_vars():
+        sys.exit(1)
+    
     parser = argparse.ArgumentParser(description="City Database Client MCP Server")
     parser.add_argument("--test-connection", action="store_true", help="Test connection to DuckDB server")
     parser.add_argument("--db-path", default="/Users/ryotayamanaka/git/mcp-city/city-database/database/city.db", help="DuckDB database file path")
