@@ -126,7 +126,7 @@ class AuthDatabase:
         with sqlite3.connect(self.db_path) as conn:
             conn.row_factory = sqlite3.Row
             cursor = conn.execute("""
-                SELECT u.id, u.username, u.email, u.is_active, ak.name as key_name
+                SELECT u.id, u.username, u.email, u.is_active, u.created_at, ak.name as key_name
                 FROM users u
                 JOIN api_keys ak ON u.id = ak.user_id
                 WHERE ak.key_hash = ? 

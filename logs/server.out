@@ -148,3 +148,288 @@ INFO:     127.0.0.1:52193 - "GET /api/epalette/display/status HTTP/1.1" 403 Forb
 INFO:     127.0.0.1:52194 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
 INFO:     127.0.0.1:52229 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
 INFO:     127.0.0.1:52231 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52296 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52298 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52320 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52321 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52339 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52341 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52349 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52351 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52373 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52374 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52388 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52389 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52394 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52396 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52418 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52419 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52429 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52431 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52451 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52453 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52467 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52469 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52476 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52477 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52516 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52518 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52570 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52571 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+DEBUG: get_current_user called with credentials = scheme='Bearer' credentials='mcp_5_k6Sbh_ZVD8-8Rgn35k_ouxyE5qx0iWniytX6Q58Yo'
+DEBUG: user = {'id': 'e11157ba-b815-40c2-aded-979ac81e4c8a', 'username': 'admin', 'email': 'admin@mcp-city.local', 'is_active': 1, 'key_name': 'DB Select Verify Key'}
+DEBUG: Authentication successful
+INFO:     127.0.0.1:52608 - "GET /auth/me HTTP/1.1" 500 Internal Server Error
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/uvicorn/protocols/http/httptools_impl.py", line 426, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/uvicorn/middleware/proxy_headers.py", line 84, in __call__
+    return await self.app(scope, receive, send)
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/fastapi/applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/starlette/applications.py", line 113, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/starlette/middleware/errors.py", line 186, in __call__
+    raise exc
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/starlette/middleware/cors.py", line 85, in __call__
+    await self.app(scope, receive, send)
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/starlette/routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/starlette/routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/starlette/routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/starlette/routing.py", line 78, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/starlette/routing.py", line 75, in app
+    response = await f(request)
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/fastapi/routing.py", line 302, in app
+    raw_response = await run_endpoint_function(
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/fastapi/routing.py", line 213, in run_endpoint_function
+    return await dependant.call(**values)
+  File "/Users/ryotayamanaka/git/mcp-city/auth/routes.py", line 63, in get_current_user_info
+    return UserResponse(**current_user)
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/pydantic/main.py", line 253, in __init__
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+pydantic_core._pydantic_core.ValidationError: 1 validation error for UserResponse
+created_at
+  Field required [type=missing, input_value={'id': 'e11157ba-b815-40c... 'DB Select Verify Key'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+INFO:     127.0.0.1:52612 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52614 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52642 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52644 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52654 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52656 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52686 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52688 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52719 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52721 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52758 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52760 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52814 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52816 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52846 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52847 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52856 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52858 - "POST /api/vending-machine/purchase HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52860 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52886 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52887 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+DEBUG: get_current_user called with credentials = scheme='Bearer' credentials='mcp_k4y2ceu68n8cTA3W8jVX5c0pwXrasvyT-n3w5GQgYj0'
+DEBUG: user = {'id': 'e11157ba-b815-40c2-aded-979ac81e4c8a', 'username': 'admin', 'email': 'admin@mcp-city.local', 'is_active': 1, 'key_name': 'Stage3 Manual Key'}
+DEBUG: Authentication successful
+INFO:     127.0.0.1:52891 - "GET /auth/me HTTP/1.1" 500 Internal Server Error
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/uvicorn/protocols/http/httptools_impl.py", line 426, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/uvicorn/middleware/proxy_headers.py", line 84, in __call__
+    return await self.app(scope, receive, send)
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/fastapi/applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/starlette/applications.py", line 113, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/starlette/middleware/errors.py", line 186, in __call__
+    raise exc
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/starlette/middleware/cors.py", line 85, in __call__
+    await self.app(scope, receive, send)
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/starlette/routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/starlette/routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/starlette/routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/starlette/routing.py", line 78, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/starlette/routing.py", line 75, in app
+    response = await f(request)
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/fastapi/routing.py", line 302, in app
+    raw_response = await run_endpoint_function(
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/fastapi/routing.py", line 213, in run_endpoint_function
+    return await dependant.call(**values)
+  File "/Users/ryotayamanaka/git/mcp-city/auth/routes.py", line 63, in get_current_user_info
+    return UserResponse(**current_user)
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/pydantic/main.py", line 253, in __init__
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+pydantic_core._pydantic_core.ValidationError: 1 validation error for UserResponse
+created_at
+  Field required [type=missing, input_value={'id': 'e11157ba-b815-40c...e': 'Stage3 Manual Key'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+DEBUG: get_current_user called with credentials = scheme='Bearer' credentials='mcp_k4y2ceu68n8cTA3W8jVX5c0pwXrasvyT-n3w5GQgYj0'
+DEBUG: user = {'id': 'e11157ba-b815-40c2-aded-979ac81e4c8a', 'username': 'admin', 'email': 'admin@mcp-city.local', 'is_active': 1, 'key_name': 'Stage3 Manual Key'}
+DEBUG: Authentication successful
+INFO:     127.0.0.1:52896 - "GET /auth/me HTTP/1.1" 500 Internal Server Error
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/uvicorn/protocols/http/httptools_impl.py", line 426, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/uvicorn/middleware/proxy_headers.py", line 84, in __call__
+    return await self.app(scope, receive, send)
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/fastapi/applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/starlette/applications.py", line 113, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/starlette/middleware/errors.py", line 186, in __call__
+    raise exc
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/starlette/middleware/cors.py", line 85, in __call__
+    await self.app(scope, receive, send)
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/starlette/routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/starlette/routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/starlette/routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/starlette/routing.py", line 78, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/starlette/routing.py", line 75, in app
+    response = await f(request)
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/fastapi/routing.py", line 302, in app
+    raw_response = await run_endpoint_function(
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/fastapi/routing.py", line 213, in run_endpoint_function
+    return await dependant.call(**values)
+  File "/Users/ryotayamanaka/git/mcp-city/auth/routes.py", line 63, in get_current_user_info
+    return UserResponse(**current_user)
+  File "/Users/ryotayamanaka/Library/Python/3.9/lib/python/site-packages/pydantic/main.py", line 253, in __init__
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+pydantic_core._pydantic_core.ValidationError: 1 validation error for UserResponse
+created_at
+  Field required [type=missing, input_value={'id': 'e11157ba-b815-40c...e': 'Stage3 Manual Key'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+INFO:     127.0.0.1:52909 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52910 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+DEBUG: get_current_user called with credentials = scheme='Bearer' credentials='mcp_k4y2ceu68n8cTA3W8jVX5c0pwXrasvyT-n3w5GQgYj0'
+DEBUG: user = {'id': 'e11157ba-b815-40c2-aded-979ac81e4c8a', 'username': 'admin', 'email': 'admin@mcp-city.local', 'is_active': 1, 'key_name': 'Stage3 Manual Key'}
+DEBUG: Authentication successful
+INFO:     127.0.0.1:52912 - "GET /api/epalette/status HTTP/1.1" 200 OK
+DEBUG: get_current_user called with credentials = scheme='Bearer' credentials='mcp_k4y2ceu68n8cTA3W8jVX5c0pwXrasvyT-n3w5GQgYj0'
+DEBUG: user = {'id': 'e11157ba-b815-40c2-aded-979ac81e4c8a', 'username': 'admin', 'email': 'admin@mcp-city.local', 'is_active': 1, 'key_name': 'Stage3 Manual Key'}
+DEBUG: Authentication successful
+INFO:     127.0.0.1:52914 - "GET /api/epalette/display/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52926 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52928 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52948 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52950 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52976 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52978 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52982 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52984 - "POST /api/vending-machine/purchase HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52986 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52993 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52995 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:53038 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:53039 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:53055 - "POST /api/vending-machine/purchase HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:53057 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:53059 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:53065 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:53066 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:53071 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:53073 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:53077 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:53079 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:53093 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:53094 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:53099 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:53100 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:53112 - "POST /api/vending-machine/purchase HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:53114 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:53116 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:53131 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:53133 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:53137 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:53139 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:53163 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:53164 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:53218 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:53219 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:53251 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:53253 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:53258 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:53260 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:53267 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:53268 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:53282 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:53284 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:53297 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:53299 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:53307 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:53309 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:53313 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:53315 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:53320 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:53321 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:53334 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:53335 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:53349 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:53350 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:53371 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:53373 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:53411 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:53413 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:53436 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:53437 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:53450 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:53452 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [64122]
+INFO:     Stopping reloader process [62280]

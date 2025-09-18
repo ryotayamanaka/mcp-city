@@ -11,6 +11,7 @@ services:
       - PYTHONUNBUFFERED=1
     volumes:
       - ./city-devices:/app
+      - ./auth:/app/auth
       - ./city-devices/mockdata:/app/mockdata
       - ./city-devices/img:/app/img
     command: ["uvicorn", "server:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
@@ -23,22 +24,25 @@ services:
     image: python:3.11-slim
     container_name: mcp-city-database
     ports:
-      - "5432:5432"  # PostgreSQL互換ポート
+      - "5432:5432"  # PostgreSQL互換ポート（将来用）
       - "8080:8080"  # HTTP APIポート
     volumes:
+      - ./city-database:/app
       - ./city-database/data:/data:ro  # 読み取り専用でCSVデータをマウント
       - ./city-database/database:/database  # データベースファイル用
       - ./city-database/scripts:/scripts  # 初期化スクリプト
     environment:
       - DUCKDB_DATABASE=/database/city.db
+      - AUTH_VALIDATE_URL=http://city-devices-api:8000/auth/me
+      - PYTHONUNBUFFERED=1
     command: >
       sh -c "
-        echo 'Installing DuckDB...' &&
-        pip install duckdb &&
+        echo 'Installing dependencies...' &&
+        pip install duckdb fastapi uvicorn requests &&
         echo 'Initializing database with city data...' &&
         python -c 'import duckdb; conn = duckdb.connect(\"/database/city.db\"); conn.execute(open(\"/scripts/init_database.sql\").read()); conn.close()' &&
-        echo 'Starting DuckDB server...' &&
-        python -c 'import duckdb; conn = duckdb.connect(\"/database/city.db\"); conn.execute(\"SELECT 1\"); print(\"Database ready\"); import time; time.sleep(3600)'
+        echo 'Starting City Database HTTP API...' &&
+        cd /app && python -m uvicorn server:app --host 0.0.0.0 --port 8080
       "
     networks:
       - app-network

@@ -1,103 +1,64 @@
 #!/usr/bin/env python3
 """
-City Database Client MCP Server
-Connects to DuckDB server with MCP extension
+City Database Client MCP Server (HTTP)
+MCPクライアント（Claude Desktop等）から、APIキー付きで city-database HTTP API
+（/db/health, /db/tables, /db/select, /db/sample）を呼び出します。
 """
 
 import json
 import sys
-import duckdb
+import requests
 import argparse
 import os
-from pathlib import Path
+
+BASE_URL = os.getenv("CITY_DATABASE_API_URL", "http://localhost:8080")
+API_KEY = os.getenv("MCP_CITY_API_KEY") or os.getenv("CITY_DEVICES_API_KEY")
+
+
+def auth_headers():
+    return {"Authorization": f"Bearer {API_KEY}"} if API_KEY else {}
+
 
 class CityDatabaseClientMCP:
-    def __init__(self, db_path="/Users/ryotayamanaka/git/mcp-city/city-database/database/city.db"):
-        """Initialize the city database client MCP server"""
-        self.db_path = db_path
-        self.conn = duckdb.connect(db_path)
-        # API key placeholder (for future HTTP API integration)
-        self.api_key = os.getenv("MCP_CITY_API_KEY") or os.getenv("CITY_DEVICES_API_KEY")
-    
-    def execute_sql(self, query):
-        """Execute SQL query directly on DuckDB file"""
+    def list_tables(self):
         try:
-            result = self.conn.execute(query).fetchall()
-            columns = [desc[0] for desc in self.conn.description]
-            
-            # Convert to list of dictionaries
-            data = []
-            for row in result:
-                data.append(dict(zip(columns, row)))
-            
-            return {
-                "success": True,
-                "data": data,
-                "row_count": len(data),
-                "columns": columns
-            }
+            r = requests.get(f"{BASE_URL}/db/tables", headers=auth_headers(), timeout=10)
+            r.raise_for_status()
+            return r.json()
         except Exception as e:
-            return {
-                "success": False,
-                "error": f"Query execution error: {str(e)}",
-                "data": [],
-                "row_count": 0,
-                "columns": []
-            }
-    
-    def get_table_info(self):
-        """Get information about all tables"""
+            return {"success": False, "error": f"tables error: {e}", "tables": {}}
+
+    def select_rows(self, payload: dict):
         try:
-            # Get table list
-            tables_query = "SHOW TABLES"
-            tables_result = self.execute_sql(tables_query)
+            r = requests.post(f"{BASE_URL}/db/select", json=payload, headers=auth_headers(), timeout=20)
             
-            if not tables_result["success"]:
-                return tables_result
-            
-            table_info = {}
-            for table_row in tables_result["data"]:
-                table_name = table_row[0]  # First column is table name
-                
-                # Get column information
-                columns_query = f"DESCRIBE {table_name}"
-                columns_result = self.execute_sql(columns_query)
-                
-                if columns_result["success"]:
-                    columns = [{"name": row[0], "type": row[1]} for row in columns_result["data"]]
-                else:
-                    columns = []
-                
-                # Get row count
-                count_query = f"SELECT COUNT(*) FROM {table_name}"
-                count_result = self.execute_sql(count_query)
-                
-                if count_result["success"] and count_result["data"]:
-                    row_count = count_result["data"][0][0]
-                else:
-                    row_count = 0
-                
-                table_info[table_name] = {
-                    "columns": columns,
-                    "row_count": row_count
-                }
-            
-            return {
-                "success": True,
-                "tables": table_info
-            }
+            if r.status_code in (401, 403):
+                try:
+                    return {"success": False, "error": r.json().get("detail", "Unauthorized")}
+                except Exception:
+                    return {"success": False, "error": "Unauthorized"}
+            r.raise_for_status()
+            return r.json()
         except Exception as e:
-            return {
-                "success": False,
-                "error": str(e),
-                "tables": {}
-            }
-    
-    def test_connection(self):
-        """Test connection to DuckDB database"""
+            return {"success": False, "error": f"select error: {e}", "data": []}
+
+    def get_sample_data(self, table: str, limit: int = 10):
         try:
-            result = self.execute_sql("SELECT 'Connection successful' as status")
-            return result["success"]
+            r = requests.get(
+                f"{BASE_URL}/db/sample",
+                params={"table": table, "limit": limit},
+                headers=auth_headers(),
+                timeout=10,
+            )
+            r.raise_for_status()
+            return r.json()
+        except Exception as e:
+            return {"success": False, "error": f"sample error: {e}", "data": []}
+
+    def test_connection(self) -> bool:
+        try:
+            r = requests.get(f"{BASE_URL}/db/health", timeout=5)
+            return r.status_code == 200
         except Exception:
             return False
 
@@ -130,22 +91,29 @@ def handle_message(message):
     elif method == "tools/list":
         tools_list = [
             {
-                "name": "execute_sql",
-                "description": "Execute SQL query on city database via DuckDB MCP server",
+                "name": "list_tables",
+                "description": "List allowed tables and columns in the city database",
+                "inputSchema": {"type": "object", "properties": {}}
+            },
+            {
+                "name": "select_rows",
+                "description": "Safely select rows using whitelisted table/columns and filters",
                 "inputSchema": {
                     "type": "object",
                     "properties": {
-                        "query": {
-                            "type": "string",
-                            "description": "SQL query to execute"
-                        }
+                        "table": {"type": "string"},
+                        "columns": {"type": "array", "items": {"type": "string"}},
+                        "filters": {"type": "object"},
+                        "order_by": {"type": "array", "items": {"type": "object"}},
+                        "limit": {"type": "integer"},
+                        "offset": {"type": "integer"}
                     },
-                    "required": ["query"]
+                    "required": ["table"]
                 }
             },
             {
                 "name": "get_table_info",
-                "description": "Get information about all tables in the database",
+                "description": "Alias for list_tables (kept for compatibility)",
                 "inputSchema": {
                     "type": "object",
                     "properties": {}
@@ -214,27 +182,17 @@ def handle_message(message):
         db = CityDatabaseClientMCP()
         
         try:
-            if tool_name == "execute_sql":
-                query = arguments.get("query")
-                result = db.execute_sql(query)
-                
-                if result["success"]:
-                    response_text = f"✅ Query executed successfully\n"
-                    response_text += f"📊 Rows returned: {result['row_count']}\n"
-                    response_text += f"📋 Columns: {', '.join(result['columns'])}\n\n"
-                    
-                    if result["data"]:
-                        # Format data as table
-                        response_text += "📄 Results:\n"
-                        for i, row in enumerate(result["data"][:20]):  # Limit to 20 rows
-                            response_text += f"{i+1}. {row}\n"
-                        
-                        if len(result["data"]) > 20:
-                            response_text += f"... and {len(result['data']) - 20} more rows\n"
-                    else:
-                        response_text += "No data returned\n"
+            if tool_name == "list_tables":
+                result = db.list_tables()
+                if result.get("success"):
+                    response_text = "📊 **City Database Tables:**\n\n"
+                    for table_name, info in result.get("tables", {}).items():
+                        response_text += f"**{table_name}** ({info.get('row_count', 0)} rows)\n"
+                        for col in info.get("columns", []):
+                            response_text += f"  - {col['name']}: {col.get('type','N/A')}\n"
+                        response_text += "\n"
                 else:
-                    response_text = f"❌ SQL Error: {result['error']}"
+                    response_text = f"❌ Error: {result.get('error','unknown')}"
                 
                 return {
                     "jsonrpc": "2.0",
@@ -250,17 +208,17 @@ def handle_message(message):
                 }
             
             elif tool_name == "get_table_info":
-                result = db.get_table_info()
-                
-                if result["success"]:
+                # Backward compatible alias
+                result = db.list_tables()
+                if result.get("success"):
                     response_text = "📊 **City Database Tables:**\n\n"
-                    for table_name, info in result["tables"].items():
-                        response_text += f"**{table_name}** ({info['row_count']} rows)\n"
-                        for col in info["columns"]:
-                            response_text += f"  - {col['name']}: {col['type']}\n"
+                    for table_name, info in result.get("tables", {}).items():
+                        response_text += f"**{table_name}** ({info.get('row_count', 0)} rows)\n"
+                        for col in info.get("columns", []):
+                            response_text += f"  - {col['name']}: {col.get('type','N/A')}\n"
                         response_text += "\n"
                 else:
-                    response_text = f"❌ Error: {result['error']}"
+                    response_text = f"❌ Error: {result.get('error','unknown')}"
                 
                 return {
                     "jsonrpc": "2.0",
@@ -278,17 +236,62 @@ def handle_message(message):
             elif tool_name == "get_sample_data":
                 table = arguments.get("table")
                 limit = arguments.get("limit", 10)
-                
-                query = f"SELECT * FROM {table} LIMIT {limit}"
-                result = db.execute_sql(query)
-                
-                if result["success"]:
+                result = db.get_sample_data(table, limit)
+                if result.get("success"):
+                    rows = result.get("data", [])
                     response_text = f"📄 **Sample data from {table}:**\n\n"
-                    for i, row in enumerate(result["data"]):
+                    for i, row in enumerate(rows):
                         response_text += f"{i+1}. {row}\n"
                 else:
-                    response_text = f"❌ Error: {result['error']}"
+                    response_text = f"❌ Error: {result.get('error','unknown')}"
                 
+                return {
+                    "jsonrpc": "2.0",
+                    "id": request_id,
+                    "result": {
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": response_text
+                            }
+                        ]
+                    }
+                }
+
+            elif tool_name == "select_rows":
+                # None値を除外してペイロードを構築
+                payload = {"table": arguments.get("table")}
+                if arguments.get("columns") is not None:
+                    payload["columns"] = arguments.get("columns")
+                if arguments.get("filters") is not None:
+                    # フィルター形式を自動変換（シンプル形式 → API形式）
+                    filters = arguments.get("filters")
+                    converted_filters = {}
+                    for key, value in filters.items():
+                        if isinstance(value, dict) and "op" in value:
+                            # 既にAPI形式の場合はそのまま
+                            converted_filters[key] = value
+                        else:
+                            # シンプル形式をAPI形式に変換
+                            converted_filters[key] = {"op": "EQ", "value": value}
+                    payload["filters"] = converted_filters
+                if arguments.get("order_by") is not None:
+                    payload["order_by"] = arguments.get("order_by")
+                if arguments.get("limit") is not None:
+                    payload["limit"] = arguments.get("limit")
+                if arguments.get("offset") is not None:
+                    payload["offset"] = arguments.get("offset")
+                result = db.select_rows(payload)
+                if result.get("success"):
+                    rows = result.get("data", [])
+                    cols = result.get("columns", [])
+                    response_text = f"✅ Rows: {len(rows)}\nColumns: {', '.join(cols)}\n\n"
+                    for i, row in enumerate(rows[:20]):
+                        response_text += f"{i+1}. {row}\n"
+                    if len(rows) > 20:
+                        response_text += f"... and {len(rows)-20} more rows\n"
+                else:
+                    response_text = f"❌ Error: {result.get('error','unknown')}"
                 return {
                     "jsonrpc": "2.0",
                     "id": request_id,
