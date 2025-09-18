@@ -1,0 +1,99 @@
+INFO:     Will watch for changes in these directories: ['/Users/ryotayamanaka/git/mcp-city/city-devices']
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     Started reloader process [54840] using WatchFiles
+INFO:     Started server process [54844]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     127.0.0.1:49660 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49662 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49664 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/test-no-auth HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49679 - "GET /api/epalette/display/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49681 - "GET /api/vending-machine/sales HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:49688 - "GET /api/epalette/display/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49688 - "GET /api/epalette/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49690 - "GET /api/vending-machine/sales HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:49690 - "POST /api/epalette/status HTTP/1.1" 405 Method Not Allowed
+INFO:     127.0.0.1:49690 - "GET /api/epalette/display/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49690 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49690 - "GET /api/vending-machine/sales HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:49690 - "GET /api/epalette/display/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49690 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49690 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49690 - "GET /api/epalette/display/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49690 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49690 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49690 - "GET /api/epalette/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49692 - "GET /api/vending-machine/sales HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:49692 - "POST /api/epalette/status HTTP/1.1" 405 Method Not Allowed
+INFO:     127.0.0.1:49692 - "GET /api/epalette/display/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49692 - "GET /api/epalette/display/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49692 - "GET /api/epalette/display/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49695 - "GET /api/vending-machine/sales HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:49697 - "GET /api/epalette/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49697 - "POST /api/epalette/status HTTP/1.1" 405 Method Not Allowed
+INFO:     127.0.0.1:49697 - "GET /api/epalette/display/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49697 - "GET /api/epalette/display/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49697 - "GET /api/epalette/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49695 - "GET /api/vending-machine/sales HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:49695 - "POST /api/epalette/status HTTP/1.1" 405 Method Not Allowed
+INFO:     127.0.0.1:49695 - "GET /api/epalette/display/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49695 - "GET /api/epalette/display/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49695 - "GET /api/epalette/display/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49697 - "GET /api/epalette/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49701 - "GET /api/vending-machine/sales HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:49701 - "POST /api/epalette/status HTTP/1.1" 405 Method Not Allowed
+INFO:     127.0.0.1:49701 - "GET /api/epalette/display/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49701 - "GET /api/epalette/display/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49701 - "GET /api/epalette/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49697 - "GET /api/vending-machine/sales HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:49697 - "POST /api/epalette/status HTTP/1.1" 405 Method Not Allowed
+INFO:     127.0.0.1:49697 - "GET /api/epalette/display/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49697 - "GET /api/epalette/display/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49697 - "GET /api/epalette/display/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49704 - "GET /api/vending-machine/sales HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:49697 - "GET /api/epalette/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49697 - "POST /api/epalette/status HTTP/1.1" 405 Method Not Allowed
+INFO:     127.0.0.1:49697 - "GET /api/epalette/display/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49697 - "GET /api/epalette/display/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49697 - "GET /api/epalette/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49704 - "GET /api/vending-machine/sales HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:49704 - "POST /api/epalette/status HTTP/1.1" 405 Method Not Allowed
+INFO:     127.0.0.1:49704 - "GET /api/epalette/display/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49704 - "GET /api/epalette/display/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49704 - "GET /api/epalette/display/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49706 - "GET /api/vending-machine/sales HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:49704 - "GET /api/epalette/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49704 - "POST /api/epalette/status HTTP/1.1" 405 Method Not Allowed
+WARNING:  WatchFiles detected changes in 'server.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [54844]
+INFO:     Started server process [54901]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     127.0.0.1:49723 - "GET /api/epalette/display/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49723 - "GET /api/epalette/display/status HTTP/1.1" 200 OK
+WARNING:  WatchFiles detected changes in 'server.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [54901]
+INFO:     Started server process [54909]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     127.0.0.1:49731 - "GET /api/epalette/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49732 - "GET /api/vending-machine/sales HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:49732 - "POST /api/epalette/status HTTP/1.1" 405 Method Not Allowed
+INFO:     127.0.0.1:49732 - "GET /api/epalette/display/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49732 - "GET /api/epalette/display/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49732 - "GET /api/epalette/display/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49731 - "GET /api/epalette/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49737 - "GET /api/vending-machine/sales HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:49737 - "POST /api/epalette/status HTTP/1.1" 405 Method Not Allowed
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [54909]
+INFO:     Stopping reloader process [54840]

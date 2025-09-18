@@ -1,0 +1,16 @@
+INFO:     Will watch for changes in these directories: ['/Users/ryotayamanaka/git/mcp-city/city-devices']
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     Started reloader process [56474] using WatchFiles
+INFO:     Started server process [56481]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     127.0.0.1:50207 - "POST /api/vending-machine/purchase HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:50210 - "GET /api/epalette/display/status HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:50211 - "GET /api/vending-machine/sales HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:50213 - "GET /api/test-auth HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:50217 - "GET /api/test-auth HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:50223 - "GET /api/test-auth HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50235 - "GET /api/epalette/display/status HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:50237 - "GET /api/vending-machine/sales HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:50245 - "GET /api/epalette/display/status HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:50247 - "GET /api/vending-machine/sales HTTP/1.1" 401 Unauthorized

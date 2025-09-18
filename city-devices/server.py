@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Depends
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, Response
 from fastapi.middleware.cors import CORSMiddleware
@@ -11,7 +11,17 @@ import os
 import requests
 import random
 
+# 認証機能のインポート（簡素化のため一時停止）
+# from auth.middleware import (
+#     get_current_user, require_vending_machine_permission, 
+#     require_epalette_permission, require_city_database_permission
+# )
+# from auth.routes import router as auth_router
+
 app = FastAPI(title="e-Palette IoT API", description="API to control autonomous e-Palette promotional screen and vehicle")
+
+# 認証ルーターは一時的に無効化（最小構成のAPIキー認証を使用）
+# app.include_router(auth_router)
 
 # Add CORS middleware for browser access
 app.add_middleware(
@@ -21,6 +31,27 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# --- Minimal API Key Auth (Step 1: simplify) ---
+import secrets
+from fastapi import Header
+
+SIMPLE_API_KEY = os.getenv("CITY_DEVICES_API_KEY")
+if not SIMPLE_API_KEY:
+    SIMPLE_API_KEY = f"dev_{secrets.token_urlsafe(16)}"
+    print(f"[city-devices] Simple API key: {SIMPLE_API_KEY} (set CITY_DEVICES_API_KEY to override)")
+
+def require_api_key(authorization: Optional[str] = Header(None), x_api_key: Optional[str] = Header(None)) -> str:
+    token = None
+    if x_api_key:
+        token = x_api_key.strip()
+    elif authorization:
+        parts = authorization.split()
+        if len(parts) == 2 and parts[0].lower() == "bearer":
+            token = parts[1]
+    if token == SIMPLE_API_KEY:
+        return token
+    raise HTTPException(status_code=401, detail="無効な認証情報です")
 
 # Data models
 class ScreenTextUpdate(BaseModel):
@@ -231,7 +262,10 @@ async def epalette_update_display_text(update: ScreenTextUpdate):
         raise HTTPException(status_code=500, detail=f"Failed to update e-Palette display: {str(e)}")
 
 @app.post("/api/epalette/display/image")
-async def epalette_update_display_image(update: ScreenImageUpdate):
+async def epalette_update_display_image(
+    update: ScreenImageUpdate,
+    _token: str = Depends(require_api_key)
+):
     """Update e-Palette LED display image (unified API)"""
     try:
         screen_data["imageUrl"] = update.image_url
@@ -251,7 +285,9 @@ async def epalette_update_display_image(update: ScreenImageUpdate):
         raise HTTPException(status_code=500, detail=f"Failed to update e-Palette display: {str(e)}")
 
 @app.get("/api/epalette/display/status")
-async def epalette_get_display_status():
+async def epalette_get_display_status(
+    _token: str = Depends(require_api_key)
+):
     """Get e-Palette display status (unified API)"""
     return {
         "text": screen_data.get("text"),
@@ -262,7 +298,9 @@ async def epalette_get_display_status():
     }
 
 @app.post("/api/epalette/display/clear")
-async def epalette_clear_display():
+async def epalette_clear_display(
+    _token: str = Depends(require_api_key)
+):
     """Clear e-Palette display (unified API)"""
     try:
         screen_data["text"] = "🍕 Mobile Food Service 🌮"
@@ -359,7 +397,9 @@ async def epalette_update_status(status: VehicleStatus):
 # Vending Machine API Endpoints
 # =============================================================================
 @app.get("/api/vending-machine/products")
-async def get_vending_products():
+async def get_vending_products(
+    _token: str = Depends(require_api_key)
+):
     """Get all products available in the vending machine"""
     data = load_vending_data()
     return {
@@ -369,7 +409,9 @@ async def get_vending_products():
     }
 
 @app.get("/api/vending-machine/inventory")
-async def get_vending_inventory():
+async def get_vending_inventory(
+    _token: str = Depends(require_api_key)
+):
     """Get current inventory status"""
     data = load_vending_data()
     products = data["products"]
@@ -389,7 +431,9 @@ async def get_vending_inventory():
     }
 
 @app.get("/api/vending-machine/sales")
-async def get_vending_sales():
+async def get_vending_sales(
+    _token: str = Depends(require_api_key)
+):
     """Get sales data and statistics"""
     data = load_vending_data()
     
@@ -406,7 +450,10 @@ async def get_vending_sales():
     }
 
 @app.post("/api/vending-machine/purchase")
-async def make_purchase(purchase: PurchaseRequest):
+async def make_purchase(
+    purchase: PurchaseRequest,
+    _token: str = Depends(require_api_key)
+):
     """Simulate a purchase from the vending machine"""
     data = load_vending_data()
     
@@ -448,7 +495,9 @@ async def make_purchase(purchase: PurchaseRequest):
     }
 
 @app.get("/api/vending-machine/analytics")
-async def get_vending_analytics():
+async def get_vending_analytics(
+    _token: str = Depends(require_api_key)
+):
     """Get detailed analytics for the vending machine"""
     data = load_vending_data()
     
@@ -548,6 +597,25 @@ async def health_check():
         "status": "healthy",
         "timestamp": datetime.now().isoformat(),
         "service": "Food Cart IoT API"
+    }
+
+# 認証テスト用エンドポイント
+@app.get("/api/test-auth")
+async def test_auth(_token: str = Depends(require_api_key)):
+    """認証テスト用エンドポイント"""
+    return {
+        "message": "認証成功",
+        "user": {
+            "authorized": True
+        }
+    }
+
+@app.get("/api/test-no-auth")
+async def test_no_auth():
+    """認証不要のテストエンドポイント"""
+    return {
+        "message": "認証不要でアクセス可能",
+        "timestamp": datetime.now().isoformat()
     }
 
 # Serve the HTML files
