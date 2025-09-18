@@ -8,6 +8,7 @@ import json
 import sys
 import duckdb
 import argparse
+import os
 from pathlib import Path
 
 class CityDatabaseClientMCP:
@@ -15,6 +16,8 @@ class CityDatabaseClientMCP:
         """Initialize the city database client MCP server"""
         self.db_path = db_path
         self.conn = duckdb.connect(db_path)
+        # API key placeholder (for future HTTP API integration)
+        self.api_key = os.getenv("MCP_CITY_API_KEY") or os.getenv("CITY_DEVICES_API_KEY")
     
     def execute_sql(self, query):
         """Execute SQL query directly on DuckDB file"""
@@ -367,6 +370,7 @@ def main():
             print(f"❌ Error: {e}")
             return 1
     
+    # Note: APIキーは将来のHTTP統合用に環境変数から読み込み済み
     print(f"Starting CityDatabaseClientMCP server...", file=sys.stderr)
     
     for line in sys.stdin:

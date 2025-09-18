@@ -8,15 +8,22 @@ import json
 import sys
 import requests
 import argparse
+import os
 from datetime import datetime
 
 # Base URL for the food cart API
 BASE_URL = "http://localhost:8000"
 
+# API key from environment (set via Claude config env or shell)
+API_KEY = os.getenv("MCP_CITY_API_KEY") or os.getenv("CITY_DEVICES_API_KEY")
+
+def auth_headers():
+    return {"Authorization": f"Bearer {API_KEY}"} if API_KEY else {}
+
 def get_epalette_status():
     """Get comprehensive ePalette status including display and vehicle information"""
     try:
-        response = requests.get(f"{BASE_URL}/api/epalette/status", timeout=10)
+        response = requests.get(f"{BASE_URL}/api/epalette/status", headers=auth_headers(), timeout=10)
         response.raise_for_status()
         
         result = response.json()
@@ -57,6 +64,7 @@ def update_display_text(text, subtext=""):
         response = requests.post(
             f"{BASE_URL}/api/epalette/display/text",
             json=payload,
+            headers=auth_headers(),
             timeout=10
         )
         response.raise_for_status()
@@ -87,6 +95,7 @@ def update_display_image(image_url):
         response = requests.post(
             f"{BASE_URL}/api/epalette/display/image",
             json=payload,
+            headers=auth_headers(),
             timeout=10
         )
         response.raise_for_status()
@@ -109,7 +118,7 @@ def update_display_image(image_url):
 def clear_display():
     """Clear ePalette LED display"""
     try:
-        response = requests.post(f"{BASE_URL}/api/epalette/display/clear", timeout=10)
+        response = requests.post(f"{BASE_URL}/api/epalette/display/clear", headers=auth_headers(), timeout=10)
         response.raise_for_status()
         
         result = response.json()
@@ -141,6 +150,7 @@ def control_vehicle(speed=None, paused=None, location=None):
         response = requests.post(
             f"{BASE_URL}/api/epalette/control",
             json=payload,
+            headers=auth_headers(),
             timeout=10
         )
         response.raise_for_status()
@@ -169,7 +179,7 @@ def control_vehicle(speed=None, paused=None, location=None):
 def get_display_status():
     """Get current ePalette display status"""
     try:
-        response = requests.get(f"{BASE_URL}/api/epalette/display/status", timeout=10)
+        response = requests.get(f"{BASE_URL}/api/epalette/display/status", headers=auth_headers(), timeout=10)
         response.raise_for_status()
         
         result = response.json()
@@ -384,7 +394,7 @@ def main():
     
     if args.check_api:
         try:
-            response = requests.get(f"{BASE_URL}/api/epalette/status", timeout=5)
+            response = requests.get(f"{BASE_URL}/api/epalette/status", headers=auth_headers(), timeout=5)
             if response.status_code == 200:
                 print("✅ ePalette API is available")
                 return 0

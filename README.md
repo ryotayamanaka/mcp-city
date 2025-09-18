@@ -82,6 +82,54 @@ python3 city-devices/mcp_servers/epalette_mcp_server.py
 python3 city-database/mcp_servers/city_database_client_mcp_server.py
 ```
 
+### 認証（簡潔）
+
+- APIキー認証＋デバイス別権限（SQLite）を採用しています。
+- まずAPIサーバーを起動してください（Docker または開発用スタンドアロン）。
+
+開発用スタンドアロン起動（任意）:
+```bash
+cd city-devices
+python3 -m uvicorn server:app --host 0.0.0.0 --port 8000 --reload \
+  > ../logs/server.out 2>&1 &
+```
+
+管理者APIキーの作成（最短手順）:
+```bash
+python3 - <<'PY'
+from auth.database import auth_db
+import sqlite3
+conn = sqlite3.connect('auth/auth.db'); conn.row_factory = sqlite3.Row
+admin = conn.execute("SELECT id FROM users WHERE username='admin'").fetchone()
+if admin:
+    auth_db.set_device_permission(admin['id'], 'epalette', True, True)
+    auth_db.set_device_permission(admin['id'], 'vending_machine', True, True)
+    print(auth_db.create_api_key(admin['id'], 'CLI Generated Key', 30))
+else:
+    print('admin user not found')
+conn.close()
+PY
+```
+
+リクエスト例（AuthorizationヘッダにAPIキー）:
+```bash
+API_KEY=... # 上で発行されたキー
+# e-Palette（読み取り）
+curl -H "Authorization: Bearer $API_KEY" \
+  http://localhost:8000/api/epalette/display/status
+# e-Palette（書き込み）
+curl -H "Authorization: Bearer $API_KEY" -H 'Content-Type: application/json' \
+  -d '{"text":"OPEN","subtext":"WELCOME"}' \
+  http://localhost:8000/api/epalette/display/text
+# Vending（読み取り）
+curl -H "Authorization: Bearer $API_KEY" \
+  http://localhost:8000/api/vending-machine/products
+# Vending（購入）
+curl -H "Authorization: Bearer $API_KEY" -H 'Content-Type: application/json' \
+  -d '{"product_id":"p001","quantity":1}' \
+  http://localhost:8000/api/vending-machine/purchase
+```
+
 #### 5. Claude Desktop設定
 
 **重要**: Claude Desktopでは絶対パスを使用する必要があります。
@@ -275,6 +323,11 @@ make clean     # 未使用のDockerリソースをクリーンアップ
    # データベースが起動しているか確認
    python3 city-database/mcp_servers/city_database_client_mcp_server.py --test-connection
    ```
+
+6. **401/403 が返る**
+   - Authorization ヘッダ（Bearer APIキー）が付与されているか
+   - APIキーの権限（epalette / vending_machine の read/write）が適切か
+   - APIキーの有効期限切れでないか
 
 4. **ポートが使用中**
    ```bash

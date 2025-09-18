@@ -4,7 +4,7 @@
       "id": "p001",
       "name": "Coca Cola",
       "price": 150,
-      "stock": 2,
+      "stock": 1,
       "category": "beverage",
       "image": "\ud83e\udd64"
     },
@@ -2409,12 +2409,20 @@
       "quantity": 2,
       "price": 150,
       "total": 300
+    },
+    {
+      "timestamp": "2025-09-18T12:44:00.920540",
+      "product_id": "p001",
+      "product_name": "Coca Cola",
+      "quantity": 1,
+      "price": 150,
+      "total": 150
     }
   ],
   "daily_stats": {
-    "total_sales": 212,
-    "total_revenue": 59440,
+    "total_sales": 213,
+    "total_revenue": 59590,
     "best_seller": "Rice Ball",
-    "last_update": "2025-09-18T01:07:33.280338"
+    "last_update": "2025-09-18T12:44:00.920544"
   }
 }

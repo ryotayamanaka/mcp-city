@@ -1,46 +1,150 @@
 INFO:     Will watch for changes in these directories: ['/Users/ryotayamanaka/git/mcp-city/city-devices']
 INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
-INFO:     Started reloader process [57552] using WatchFiles
-INFO:     Started server process [57554]
+INFO:     Started reloader process [62280] using WatchFiles
+INFO:     Started server process [62284]
 INFO:     Waiting for application startup.
 INFO:     Application startup complete.
-[city-devices] Simple API key: dev_u0b8Ggq_mYSEHWDAFWacWw (set CITY_DEVICES_API_KEY to override)
-INFO:     127.0.0.1:50403 - "GET / HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50405 - "GET /docs HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50407 - "GET /api/epalette/display/status HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50409 - "POST /api/epalette/display/text HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:50411 - "GET /api/vending-machine/sales HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50413 - "POST /api/vending-machine/purchase HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:50433 - "POST /api/epalette/display/text HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50435 - "POST /api/vending-machine/purchase HTTP/1.1" 404 Not Found
+[city-devices] Simple API key: dev_bzTcyCA-uxQ_qR0iQZeugQ (set CITY_DEVICES_API_KEY to override)
+INFO:     127.0.0.1:51303 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:51305 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+DEBUG: get_current_user called with credentials = scheme='Bearer' credentials='mcp_jCaa9lFU2w3lU61xT8ChdwvN9XH35gHw7mZxuHodWdk'
+DEBUG: user = {'id': 'e11157ba-b815-40c2-aded-979ac81e4c8a', 'username': 'admin', 'email': 'admin@mcp-city.local', 'is_active': 1, 'key_name': 'Vending Stage Test Key'}
+DEBUG: Authentication successful
+INFO:     127.0.0.1:51310 - "GET /api/vending-machine/products HTTP/1.1" 200 OK
+DEBUG: get_current_user called with credentials = scheme='Bearer' credentials='mcp_jCaa9lFU2w3lU61xT8ChdwvN9XH35gHw7mZxuHodWdk'
+DEBUG: user = {'id': 'e11157ba-b815-40c2-aded-979ac81e4c8a', 'username': 'admin', 'email': 'admin@mcp-city.local', 'is_active': 1, 'key_name': 'Vending Stage Test Key'}
+DEBUG: Authentication successful
+INFO:     127.0.0.1:51312 - "GET /api/vending-machine/inventory HTTP/1.1" 200 OK
+DEBUG: get_current_user called with credentials = scheme='Bearer' credentials='mcp_jCaa9lFU2w3lU61xT8ChdwvN9XH35gHw7mZxuHodWdk'
+DEBUG: user = {'id': 'e11157ba-b815-40c2-aded-979ac81e4c8a', 'username': 'admin', 'email': 'admin@mcp-city.local', 'is_active': 1, 'key_name': 'Vending Stage Test Key'}
+DEBUG: Authentication successful
+INFO:     127.0.0.1:51314 - "GET /api/vending-machine/sales HTTP/1.1" 200 OK
+DEBUG: get_current_user called with credentials = scheme='Bearer' credentials='mcp_jCaa9lFU2w3lU61xT8ChdwvN9XH35gHw7mZxuHodWdk'
+DEBUG: user = {'id': 'e11157ba-b815-40c2-aded-979ac81e4c8a', 'username': 'admin', 'email': 'admin@mcp-city.local', 'is_active': 1, 'key_name': 'Vending Stage Test Key'}
+DEBUG: Authentication successful
+INFO:     127.0.0.1:51316 - "GET /api/vending-machine/analytics HTTP/1.1" 200 OK
+DEBUG: get_current_user called with credentials = scheme='Bearer' credentials='mcp_jCaa9lFU2w3lU61xT8ChdwvN9XH35gHw7mZxuHodWdk'
+DEBUG: user = {'id': 'e11157ba-b815-40c2-aded-979ac81e4c8a', 'username': 'admin', 'email': 'admin@mcp-city.local', 'is_active': 1, 'key_name': 'Vending Stage Test Key'}
+DEBUG: Authentication successful
+INFO:     127.0.0.1:51318 - "GET /api/vending-machine/products HTTP/1.1" 200 OK
+DEBUG: get_current_user called with credentials = scheme='Bearer' credentials='mcp_jCaa9lFU2w3lU61xT8ChdwvN9XH35gHw7mZxuHodWdk'
+DEBUG: user = {'id': 'e11157ba-b815-40c2-aded-979ac81e4c8a', 'username': 'admin', 'email': 'admin@mcp-city.local', 'is_active': 1, 'key_name': 'Vending Stage Test Key'}
+DEBUG: Authentication successful
+INFO:     127.0.0.1:51320 - "POST /api/vending-machine/purchase HTTP/1.1" 404 Not Found
+DEBUG: get_current_user called with credentials = scheme='Bearer' credentials='mcp_sYARYC_39XFckPtLvroONOiXgMcUBwgV6-Fw8KGmWZE'
+DEBUG: user = {'id': 'e11157ba-b815-40c2-aded-979ac81e4c8a', 'username': 'admin', 'email': 'admin@mcp-city.local', 'is_active': 1, 'key_name': 'Vending Purchase Test Key'}
+DEBUG: Authentication successful
+INFO:     127.0.0.1:51324 - "POST /api/vending-machine/purchase HTTP/1.1" 200 OK
 WARNING:  WatchFiles detected changes in 'server.py'. Reloading...
 INFO:     Shutting down
 INFO:     Waiting for application shutdown.
 INFO:     Application shutdown complete.
-INFO:     Finished server process [57554]
-INFO:     Started server process [57661]
+INFO:     Finished server process [62284]
+INFO:     Started server process [62463]
 INFO:     Waiting for application startup.
 INFO:     Application startup complete.
-[city-devices] Simple API key: dev_AbIjYdD4BCy38hGPr8R-hw (set CITY_DEVICES_API_KEY to override)
-INFO:     127.0.0.1:50454 - "GET /api/epalette/display/status HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50455 - "GET /api/epalette/status HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50458 - "GET /api/vending-machine/sales HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50459 - "POST /api/vending-machine/purchase HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:50459 - "POST /api/epalette/status HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:50483 - "GET /api/epalette/display/status HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50485 - "GET /api/epalette/status HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50487 - "GET /api/vending-machine/sales HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50485 - "POST /api/epalette/status HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:50520 - "GET /api/epalette/display/status HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50523 - "GET /api/epalette/status HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50524 - "GET /api/vending-machine/sales HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50524 - "POST /api/epalette/status HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:50532 - "GET /api/epalette/display/status HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50534 - "POST /api/vending-machine/purchase HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:50536 - "GET /api/epalette/status HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50538 - "GET /api/vending-machine/sales HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50538 - "POST /api/epalette/status HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:50636 - "GET /api/epalette/display/status HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50639 - "GET /api/epalette/status HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50640 - "GET /api/vending-machine/sales HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50639 - "POST /api/epalette/status HTTP/1.1" 401 Unauthorized
+[city-devices] Simple API key: dev_kLAzudmkLtO_DVbT_T_p0w (set CITY_DEVICES_API_KEY to override)
+INFO:     127.0.0.1:51339 - "POST /api/vending-machine/purchase HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:51342 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:51343 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+DEBUG: get_current_user called with credentials = scheme='Bearer' credentials='mcp_k4y2ceu68n8cTA3W8jVX5c0pwXrasvyT-n3w5GQgYj1'
+DEBUG: user = None
+DEBUG: Authentication failed
+INFO:     127.0.0.1:51351 - "GET /api/vending-machine/products HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:51355 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:51356 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+DEBUG: get_current_user called with credentials = scheme='Bearer' credentials='mcp_k4y2ceu68n8cTA3W8jVX5c0pwXrasvyT-n3w5GQgYj0'
+DEBUG: user = {'id': 'e11157ba-b815-40c2-aded-979ac81e4c8a', 'username': 'admin', 'email': 'admin@mcp-city.local', 'is_active': 1, 'key_name': 'Stage3 Manual Key'}
+DEBUG: Authentication successful
+INFO:     127.0.0.1:51358 - "GET /api/vending-machine/products HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51372 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:51373 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:51419 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:51421 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:51487 - "POST /api/vending-machine/purchase HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:51489 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:51490 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:51538 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:51540 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:51573 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:51574 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:51601 - "POST /api/vending-machine/purchase HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:51602 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:51604 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:51672 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:51674 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:51753 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:51754 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:51805 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:51807 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:51846 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:51848 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+WARNING:  WatchFiles detected changes in 'mcp_servers/epalette_mcp_server.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [62463]
+INFO:     Started server process [64074]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'mcp_servers/vending_machine_mcp_server.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [64074]
+[city-devices] Simple API key: dev_GFggN-YQkBvsYL7QxIoFxQ (set CITY_DEVICES_API_KEY to override)
+INFO:     Started server process [64097]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'mcp_servers/vending_machine_mcp_server.py', 'mcp_servers/epalette_mcp_server.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [64097]
+[city-devices] Simple API key: dev_jeQGf_zy_slVM1yPzzBuAg (set CITY_DEVICES_API_KEY to override)
+INFO:     Started server process [64122]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+[city-devices] Simple API key: dev_1kTV2A3VUhiXyMkilnFhGg (set CITY_DEVICES_API_KEY to override)
+INFO:     127.0.0.1:51883 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:51885 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:51890 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:51892 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:51914 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:51916 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:51927 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:51929 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:51934 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:51935 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:51939 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:51941 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:51966 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:51968 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:51984 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:51986 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:51988 - "GET /api/epalette/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:51990 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52019 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52021 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52052 - "POST /api/vending-machine/purchase HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52054 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52056 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+DEBUG: get_current_user called with credentials = scheme='Bearer' credentials='mcp_k4y2ceu68n8cTA3W8jVX5c0pwXrasvyT-n3w5GQgYj0'
+DEBUG: user = {'id': 'e11157ba-b815-40c2-aded-979ac81e4c8a', 'username': 'admin', 'email': 'admin@mcp-city.local', 'is_active': 1, 'key_name': 'Stage3 Manual Key'}
+DEBUG: Authentication successful
+INFO:     127.0.0.1:52058 - "GET /api/epalette/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52067 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52068 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52090 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52091 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52131 - "POST /api/vending-machine/purchase HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52133 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52134 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52140 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52142 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52185 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52187 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52193 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52194 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52229 - "GET /api/epalette/display/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:52231 - "GET /api/vending-machine/sales HTTP/1.1" 403 Forbidden

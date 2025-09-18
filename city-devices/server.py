@@ -4,6 +4,8 @@ from fastapi.responses import FileResponse, Response
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Optional, List, Dict
+import sys
+from pathlib import Path
 import uvicorn
 from datetime import datetime, timedelta
 import json
@@ -11,17 +13,21 @@ import os
 import requests
 import random
 
-# 認証機能のインポート（簡素化のため一時停止）
-# from auth.middleware import (
-#     get_current_user, require_vending_machine_permission, 
-#     require_epalette_permission, require_city_database_permission
-# )
-# from auth.routes import router as auth_router
+# リポジトリルートをモジュール検索パスに追加（city-devices配下から上位のauthを参照するため）
+ROOT_DIR = Path(__file__).resolve().parents[1]
+if str(ROOT_DIR) not in sys.path:
+    sys.path.insert(0, str(ROOT_DIR))
+
+# 認証機能のインポート（段階3: 部分的に再有効化）
+from auth.middleware import (
+    get_current_user, require_epalette_permission, require_vending_machine_permission
+)
+from auth.routes import router as auth_router
 
 app = FastAPI(title="e-Palette IoT API", description="API to control autonomous e-Palette promotional screen and vehicle")
 
-# 認証ルーターは一時的に無効化（最小構成のAPIキー認証を使用）
-# app.include_router(auth_router)
+# 認証ルーターを再有効化
+app.include_router(auth_router)
 
 # Add CORS middleware for browser access
 app.add_middleware(
@@ -241,7 +247,10 @@ async def proxy_image(url: str):
 
 # Display endpoints
 @app.post("/api/epalette/display/text")
-async def epalette_update_display_text(update: ScreenTextUpdate, _token: str = Depends(require_api_key)):
+async def epalette_update_display_text(
+    update: ScreenTextUpdate,
+    current_user: dict = Depends(require_epalette_permission("write"))
+):
     """Update e-Palette LED display text (unified API)"""
     try:
         screen_data["text"] = update.text
@@ -264,7 +273,7 @@ async def epalette_update_display_text(update: ScreenTextUpdate, _token: str = D
 @app.post("/api/epalette/display/image")
 async def epalette_update_display_image(
     update: ScreenImageUpdate,
-    _token: str = Depends(require_api_key)
+    current_user: dict = Depends(require_epalette_permission("write"))
 ):
     """Update e-Palette LED display image (unified API)"""
     try:
@@ -285,7 +294,9 @@ async def epalette_update_display_image(
         raise HTTPException(status_code=500, detail=f"Failed to update e-Palette display: {str(e)}")
 
 @app.get("/api/epalette/display/status")
-async def epalette_get_display_status():
+async def epalette_get_display_status(
+    current_user: dict = Depends(require_epalette_permission("read"))
+):
     """Get e-Palette display status (unified API)"""
     return {
         "text": screen_data.get("text"),
@@ -297,7 +308,7 @@ async def epalette_get_display_status():
 
 @app.post("/api/epalette/display/clear")
 async def epalette_clear_display(
-    _token: str = Depends(require_api_key)
+    current_user: dict = Depends(require_epalette_permission("write"))
 ):
     """Clear e-Palette display (unified API)"""
     try:
@@ -317,7 +328,7 @@ async def epalette_clear_display(
 
 # Control endpoints
 @app.post("/api/epalette/control")
-async def epalette_control_vehicle(control: VehicleControl, _token: str = Depends(require_api_key)):
+async def epalette_control_vehicle(control: VehicleControl, current_user: dict = Depends(require_epalette_permission("write"))):
     """Control e-Palette vehicle movement (unified API)"""
     try:
         if control.speed is not None:
@@ -356,7 +367,7 @@ async def epalette_control_vehicle(control: VehicleControl, _token: str = Depend
         raise HTTPException(status_code=500, detail=f"Failed to control e-Palette vehicle: {str(e)}")
 
 @app.get("/api/epalette/status")
-async def epalette_get_status():
+async def epalette_get_status(current_user: dict = Depends(require_epalette_permission("read"))):
     """Get comprehensive e-Palette status (unified API)"""
     return {
         "display": {
@@ -375,7 +386,7 @@ async def epalette_get_status():
     }
 
 @app.post("/api/epalette/status")
-async def epalette_update_status(status: VehicleStatus, _token: str = Depends(require_api_key)):
+async def epalette_update_status(status: VehicleStatus, current_user: dict = Depends(require_epalette_permission("write"))):
     """Update e-Palette vehicle status from 3D simulation (unified API)"""
     try:
         vehicle_data["location"] = status.location
@@ -395,7 +406,9 @@ async def epalette_update_status(status: VehicleStatus, _token: str = Depends(re
 # Vending Machine API Endpoints
 # =============================================================================
 @app.get("/api/vending-machine/products")
-async def get_vending_products():
+async def get_vending_products(
+    current_user: dict = Depends(require_vending_machine_permission("read"))
+):
     """Get all products available in the vending machine"""
     data = load_vending_data()
     return {
@@ -405,7 +418,9 @@ async def get_vending_products():
     }
 
 @app.get("/api/vending-machine/inventory")
-async def get_vending_inventory():
+async def get_vending_inventory(
+    current_user: dict = Depends(require_vending_machine_permission("read"))
+):
     """Get current inventory status"""
     data = load_vending_data()
     products = data["products"]
@@ -425,7 +440,9 @@ async def get_vending_inventory():
     }
 
 @app.get("/api/vending-machine/sales")
-async def get_vending_sales():
+async def get_vending_sales(
+    current_user: dict = Depends(require_vending_machine_permission("read"))
+):
     """Get sales data and statistics"""
     data = load_vending_data()
     
@@ -444,7 +461,7 @@ async def get_vending_sales():
 @app.post("/api/vending-machine/purchase")
 async def make_purchase(
     purchase: PurchaseRequest,
-    _token: str = Depends(require_api_key)
+    current_user: dict = Depends(require_vending_machine_permission("write"))
 ):
     """Simulate a purchase from the vending machine"""
     data = load_vending_data()
@@ -487,7 +504,9 @@ async def make_purchase(
     }
 
 @app.get("/api/vending-machine/analytics")
-async def get_vending_analytics():
+async def get_vending_analytics(
+    current_user: dict = Depends(require_vending_machine_permission("read"))
+):
     """Get detailed analytics for the vending machine"""
     data = load_vending_data()
     

@@ -8,16 +8,21 @@ import json
 import sys
 import requests
 import argparse
+import os
 import subprocess
 import time
 
 # Base URL for the food cart API
 BASE_URL = "http://localhost:8000"
+API_KEY = os.getenv("MCP_CITY_API_KEY") or os.getenv("CITY_DEVICES_API_KEY")
+
+def auth_headers():
+    return {"Authorization": f"Bearer {API_KEY}"} if API_KEY else {}
 
 def get_products():
     """Get all products available in the vending machine with their prices and categories"""
     try:
-        response = requests.get(f"{BASE_URL}/api/vending-machine/products", timeout=10)
+        response = requests.get(f"{BASE_URL}/api/vending-machine/products", headers=auth_headers(), timeout=10)
         response.raise_for_status()
         
         result = response.json()
@@ -48,7 +53,7 @@ def get_products():
 def get_inventory():
     """Get current inventory status of the vending machine, including low stock alerts"""
     try:
-        response = requests.get(f"{BASE_URL}/api/vending-machine/inventory", timeout=10)
+        response = requests.get(f"{BASE_URL}/api/vending-machine/inventory", headers=auth_headers(), timeout=10)
         response.raise_for_status()
         
         result = response.json()
@@ -86,6 +91,7 @@ def make_purchase(product_id, quantity=1):
         response = requests.post(
             f"{BASE_URL}/api/vending-machine/purchase",
             json={"product_id": product_id, "quantity": quantity},
+            headers=auth_headers(),
             timeout=10
         )
         
@@ -118,7 +124,7 @@ def make_purchase(product_id, quantity=1):
 def get_sales_data():
     """Get sales data and analytics from the vending machine"""
     try:
-        response = requests.get(f"{BASE_URL}/api/vending-machine/sales", timeout=10)
+        response = requests.get(f"{BASE_URL}/api/vending-machine/sales", headers=auth_headers(), timeout=10)
         response.raise_for_status()
         
         result = response.json()
@@ -306,7 +312,7 @@ def main():
     
     if args.check_api:
         try:
-            response = requests.get(f"{BASE_URL}/api/vending-machine/products", timeout=5)
+            response = requests.get(f"{BASE_URL}/api/vending-machine/products", headers=auth_headers(), timeout=5)
             if response.status_code == 200:
                 print("✅ API is available")
                 return 0
