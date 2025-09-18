@@ -1,16 +1,46 @@
 INFO:     Will watch for changes in these directories: ['/Users/ryotayamanaka/git/mcp-city/city-devices']
 INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
-INFO:     Started reloader process [56474] using WatchFiles
-INFO:     Started server process [56481]
+INFO:     Started reloader process [57552] using WatchFiles
+INFO:     Started server process [57554]
 INFO:     Waiting for application startup.
 INFO:     Application startup complete.
-INFO:     127.0.0.1:50207 - "POST /api/vending-machine/purchase HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:50210 - "GET /api/epalette/display/status HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:50211 - "GET /api/vending-machine/sales HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:50213 - "GET /api/test-auth HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:50217 - "GET /api/test-auth HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:50223 - "GET /api/test-auth HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50235 - "GET /api/epalette/display/status HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:50237 - "GET /api/vending-machine/sales HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:50245 - "GET /api/epalette/display/status HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:50247 - "GET /api/vending-machine/sales HTTP/1.1" 401 Unauthorized
+[city-devices] Simple API key: dev_u0b8Ggq_mYSEHWDAFWacWw (set CITY_DEVICES_API_KEY to override)
+INFO:     127.0.0.1:50403 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50405 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50407 - "GET /api/epalette/display/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50409 - "POST /api/epalette/display/text HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:50411 - "GET /api/vending-machine/sales HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50413 - "POST /api/vending-machine/purchase HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:50433 - "POST /api/epalette/display/text HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50435 - "POST /api/vending-machine/purchase HTTP/1.1" 404 Not Found
+WARNING:  WatchFiles detected changes in 'server.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [57554]
+INFO:     Started server process [57661]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+[city-devices] Simple API key: dev_AbIjYdD4BCy38hGPr8R-hw (set CITY_DEVICES_API_KEY to override)
+INFO:     127.0.0.1:50454 - "GET /api/epalette/display/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50455 - "GET /api/epalette/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50458 - "GET /api/vending-machine/sales HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50459 - "POST /api/vending-machine/purchase HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:50459 - "POST /api/epalette/status HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:50483 - "GET /api/epalette/display/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50485 - "GET /api/epalette/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50487 - "GET /api/vending-machine/sales HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50485 - "POST /api/epalette/status HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:50520 - "GET /api/epalette/display/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50523 - "GET /api/epalette/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50524 - "GET /api/vending-machine/sales HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50524 - "POST /api/epalette/status HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:50532 - "GET /api/epalette/display/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50534 - "POST /api/vending-machine/purchase HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:50536 - "GET /api/epalette/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50538 - "GET /api/vending-machine/sales HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50538 - "POST /api/epalette/status HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:50636 - "GET /api/epalette/display/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50639 - "GET /api/epalette/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50640 - "GET /api/vending-machine/sales HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50639 - "POST /api/epalette/status HTTP/1.1" 401 Unauthorized

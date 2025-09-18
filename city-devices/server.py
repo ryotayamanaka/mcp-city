@@ -241,7 +241,7 @@ async def proxy_image(url: str):
 
 # Display endpoints
 @app.post("/api/epalette/display/text")
-async def epalette_update_display_text(update: ScreenTextUpdate):
+async def epalette_update_display_text(update: ScreenTextUpdate, _token: str = Depends(require_api_key)):
     """Update e-Palette LED display text (unified API)"""
     try:
         screen_data["text"] = update.text
@@ -285,9 +285,7 @@ async def epalette_update_display_image(
         raise HTTPException(status_code=500, detail=f"Failed to update e-Palette display: {str(e)}")
 
 @app.get("/api/epalette/display/status")
-async def epalette_get_display_status(
-    _token: str = Depends(require_api_key)
-):
+async def epalette_get_display_status():
     """Get e-Palette display status (unified API)"""
     return {
         "text": screen_data.get("text"),
@@ -319,7 +317,7 @@ async def epalette_clear_display(
 
 # Control endpoints
 @app.post("/api/epalette/control")
-async def epalette_control_vehicle(control: VehicleControl):
+async def epalette_control_vehicle(control: VehicleControl, _token: str = Depends(require_api_key)):
     """Control e-Palette vehicle movement (unified API)"""
     try:
         if control.speed is not None:
@@ -377,7 +375,7 @@ async def epalette_get_status():
     }
 
 @app.post("/api/epalette/status")
-async def epalette_update_status(status: VehicleStatus):
+async def epalette_update_status(status: VehicleStatus, _token: str = Depends(require_api_key)):
     """Update e-Palette vehicle status from 3D simulation (unified API)"""
     try:
         vehicle_data["location"] = status.location
@@ -397,9 +395,7 @@ async def epalette_update_status(status: VehicleStatus):
 # Vending Machine API Endpoints
 # =============================================================================
 @app.get("/api/vending-machine/products")
-async def get_vending_products(
-    _token: str = Depends(require_api_key)
-):
+async def get_vending_products():
     """Get all products available in the vending machine"""
     data = load_vending_data()
     return {
@@ -409,9 +405,7 @@ async def get_vending_products(
     }
 
 @app.get("/api/vending-machine/inventory")
-async def get_vending_inventory(
-    _token: str = Depends(require_api_key)
-):
+async def get_vending_inventory():
     """Get current inventory status"""
     data = load_vending_data()
     products = data["products"]
@@ -431,9 +425,7 @@ async def get_vending_inventory(
     }
 
 @app.get("/api/vending-machine/sales")
-async def get_vending_sales(
-    _token: str = Depends(require_api_key)
-):
+async def get_vending_sales():
     """Get sales data and statistics"""
     data = load_vending_data()
     
@@ -495,9 +487,7 @@ async def make_purchase(
     }
 
 @app.get("/api/vending-machine/analytics")
-async def get_vending_analytics(
-    _token: str = Depends(require_api_key)
-):
+async def get_vending_analytics():
     """Get detailed analytics for the vending machine"""
     data = load_vending_data()
     
