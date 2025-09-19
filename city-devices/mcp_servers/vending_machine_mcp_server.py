@@ -22,28 +22,25 @@ def auth_headers():
 def get_products():
     """Get all products available in the vending machine with their prices and categories"""
     try:
-        response = requests.get(f"{BASE_URL}/api/vending-machine/products", headers=auth_headers(), timeout=10)
+        response = requests.get(f"{BASE_URL}/api/vending/products", headers=auth_headers(), timeout=10)
         response.raise_for_status()
         
         result = response.json()
-        if result.get("success"):
-            products = result.get("products", [])
-            if not products:
-                return "📦 No products available in the vending machine."
-            
-            product_list = ["🏪 **Vending Machine Products:**\n"]
-            for product in products:
-                product_list.append(
-                    f"• **{product['name']}** {product['image']}\n"
-                    f"  - Price: ¥{product['price']}\n"
-                    f"  - Stock: {product['stock']} units\n"
-                    f"  - Category: {product['category']}\n"
-                    f"  - ID: {product['id']}\n"
-                )
-            
-            return "\n".join(product_list)
-        else:
-            return f"❌ Failed to get products: {result.get('message', 'Unknown error')}"
+        products = result.get("products", [])
+        if not products:
+            return "📦 No products available in the vending machine."
+        
+        product_list = ["🏪 **Vending Machine Products:**\n"]
+        for product in products:
+            product_list.append(
+                f"• **{product['name']}** {product['image']}\n"
+                f"  - Price: ¥{product['price']}\n"
+                f"  - Stock: {product['stock']} units\n"
+                f"  - Category: {product['category']}\n"
+                f"  - ID: {product['id']}\n"
+            )
+        
+        return "\n".join(product_list)
             
     except requests.exceptions.ConnectionError:
         return "❌ Cannot connect to vending machine. Make sure the server is running on localhost:8000"
@@ -53,32 +50,51 @@ def get_products():
 def get_inventory():
     """Get current inventory status of the vending machine, including low stock alerts"""
     try:
-        response = requests.get(f"{BASE_URL}/api/vending-machine/inventory", headers=auth_headers(), timeout=10)
+        response = requests.get(f"{BASE_URL}/api/vending/inventory", headers=auth_headers(), timeout=10)
         response.raise_for_status()
         
         result = response.json()
-        if result.get("success"):
-            inventory_info = ["📊 **Vending Machine Inventory Status:**\n"]
-            inventory_info.append(f"📦 Total Items in Stock: {result.get('total_items', 0)}")
-            inventory_info.append(f"🏷️ Total Product Types: {result.get('total_products', 0)}\n")
-            
-            # Low stock alerts
-            low_stock = result.get("low_stock_products", [])
-            if low_stock:
-                inventory_info.append("⚠️ **Low Stock Alert:**")
-                for product in low_stock:
-                    inventory_info.append(f"  • {product['name']}: {product['stock']} units remaining")
-            
-            # Out of stock
-            out_of_stock = result.get("out_of_stock_products", [])
-            if out_of_stock:
-                inventory_info.append("\n🚫 **Out of Stock:**")
-                for product in out_of_stock:
-                    inventory_info.append(f"  • {product['name']}")
-            
-            return "\n".join(inventory_info)
-        else:
-            return f"❌ Failed to get inventory: {result.get('message', 'Unknown error')}"
+        inventory = result.get("inventory", {})
+        if not inventory:
+            return "📦 No inventory data available."
+        
+        inventory_info = ["📊 **Vending Machine Inventory Status:**\n"]
+        
+        total_items = sum(item['stock'] for item in inventory.values())
+        total_products = len(inventory)
+        
+        inventory_info.append(f"📦 Total Items in Stock: {total_items}")
+        inventory_info.append(f"🏷️ Total Product Types: {total_products}\n")
+        
+        # Categorize products by stock status
+        low_stock = []
+        out_of_stock = []
+        
+        for product_id, item in inventory.items():
+            if item['stock'] == 0:
+                out_of_stock.append(item)
+            elif item['stock'] <= 2:  # Low stock threshold
+                low_stock.append(item)
+        
+        # Low stock alerts
+        if low_stock:
+            inventory_info.append("⚠️ **Low Stock Alert:**")
+            for item in low_stock:
+                inventory_info.append(f"  • {item['name']}: {item['stock']} units remaining")
+        
+        # Out of stock
+        if out_of_stock:
+            inventory_info.append("\n🚫 **Out of Stock:**")
+            for item in out_of_stock:
+                inventory_info.append(f"  • {item['name']}")
+        
+        # Detailed inventory
+        inventory_info.append("\n📋 **Detailed Inventory:**")
+        for product_id, item in inventory.items():
+            status = "✅" if item['stock'] > 2 else "⚠️" if item['stock'] > 0 else "🚫"
+            inventory_info.append(f"  {status} **{item['name']}** ({item['category']}): {item['stock']} units")
+        
+        return "\n".join(inventory_info)
             
     except requests.exceptions.ConnectionError:
         return "❌ Cannot connect to vending machine. Make sure the server is running on localhost:8000"
@@ -89,7 +105,7 @@ def make_purchase(product_id, quantity=1):
     """Simulate a purchase from the vending machine"""
     try:
         response = requests.post(
-            f"{BASE_URL}/api/vending-machine/purchase",
+            f"{BASE_URL}/api/vending/purchase",
             json={"product_id": product_id, "quantity": quantity},
             headers=auth_headers(),
             timeout=10
@@ -124,38 +140,41 @@ def make_purchase(product_id, quantity=1):
 def get_sales_data():
     """Get sales data and analytics from the vending machine"""
     try:
-        response = requests.get(f"{BASE_URL}/api/vending-machine/sales", headers=auth_headers(), timeout=10)
+        response = requests.get(f"{BASE_URL}/api/vending/sales", headers=auth_headers(), timeout=10)
         response.raise_for_status()
         
         result = response.json()
-        if result.get("success"):
-            sales_info = ["📈 **Vending Machine Sales Data:**\n"]
+        sales_info = ["📈 **Vending Machine Sales Data:**\n"]
+        
+        # Daily sales data
+        daily_sales = result.get("daily_sales", {})
+        if daily_sales:
+            sales_info.append(f"📅 **Today's Sales:**")
+            sales_info.append(f"  💰 Revenue: ¥{daily_sales.get('total_revenue', 0):,}")
+            sales_info.append(f"  🛒 Transactions: {daily_sales.get('total_transactions', 0)}")
             
-            # Total sales
-            total_sales = result.get("total_sales", 0)
-            sales_info.append(f"🛒 Total Sales: {total_sales} transactions")
-            
-            # Daily stats
-            daily_stats = result.get("daily_stats", {})
-            if daily_stats:
-                sales_info.append(f"📅 Daily Sales: {daily_stats.get('total_sales', 0)} transactions")
-                sales_info.append(f"💰 Daily Revenue: ¥{daily_stats.get('total_revenue', 0)}")
-                sales_info.append(f"🏆 Best Seller: {daily_stats.get('best_seller', 'N/A')}")
-                sales_info.append(f"🕐 Last Update: {daily_stats.get('last_update', 'N/A')}")
-            
-            # Recent sales
-            recent_sales = result.get("recent_sales", [])
-            if recent_sales:
-                sales_info.append(f"\n🕒 **Recent Sales (Last 5):**")
-                for sale in recent_sales[:5]:
-                    sales_info.append(
-                        f"• {sale.get('product_name', 'Unknown')} x{sale.get('quantity', 0)} "
-                        f"¥{sale.get('total', 0)} ({sale.get('timestamp', 'Unknown time')})"
-                    )
-            
-            return "\n".join(sales_info)
-        else:
-            return f"❌ Failed to get sales data: {result.get('message', 'Unknown error')}"
+            # Popular items from daily sales
+            popular_items = daily_sales.get("popular_items", [])
+            if popular_items:
+                sales_info.append(f"\n🔥 **Popular Items Today:**")
+                for item in popular_items[:5]:  # Top 5
+                    sales_info.append(f"  • {item.get('name', 'Unknown')}: {item.get('sales_count', 0)} sold")
+        
+        # Weekly sales data if available
+        weekly_sales = result.get("weekly_sales", {})
+        if weekly_sales:
+            sales_info.append(f"\n📊 **This Week:**")
+            sales_info.append(f"  💰 Revenue: ¥{weekly_sales.get('total_revenue', 0):,}")
+            sales_info.append(f"  🛒 Transactions: {weekly_sales.get('total_transactions', 0)}")
+        
+        # Monthly sales data if available
+        monthly_sales = result.get("monthly_sales", {})
+        if monthly_sales:
+            sales_info.append(f"\n📈 **This Month:**")
+            sales_info.append(f"  💰 Revenue: ¥{monthly_sales.get('total_revenue', 0):,}")
+            sales_info.append(f"  🛒 Transactions: {monthly_sales.get('total_transactions', 0)}")
+        
+        return "\n".join(sales_info)
             
     except requests.exceptions.ConnectionError:
         return "❌ Cannot connect to vending machine. Make sure the server is running on localhost:8000"
@@ -312,7 +331,7 @@ def main():
     
     if args.check_api:
         try:
-            response = requests.get(f"{BASE_URL}/api/vending-machine/products", headers=auth_headers(), timeout=5)
+            response = requests.get(f"{BASE_URL}/api/vending/products", headers=auth_headers(), timeout=5)
             if response.status_code == 200:
                 print("✅ API is available")
                 return 0

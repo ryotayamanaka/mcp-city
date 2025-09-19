@@ -53,16 +53,17 @@ def get_epalette_status():
     except Exception as e:
         return f"❌ Error getting ePalette status: {str(e)}"
 
-def update_display_text(text, subtext=""):
+def update_display_text(text, subtext=None):
     """Update ePalette LED display text"""
     try:
         payload = {
-            "text": text,
-            "subtext": subtext
+            "text": text
         }
+        if subtext:
+            payload["subtext"] = subtext
         
         response = requests.post(
-            f"{BASE_URL}/api/epalette/display/text",
+            f"{BASE_URL}/api/epalette/screen/text",
             json=payload,
             headers=auth_headers(),
             timeout=10
@@ -89,11 +90,11 @@ def update_display_image(image_url):
     """Update ePalette LED display image"""
     try:
         payload = {
-            "imageUrl": image_url
+            "image_url": image_url
         }
         
         response = requests.post(
-            f"{BASE_URL}/api/epalette/display/image",
+            f"{BASE_URL}/api/epalette/screen/image",
             json=payload,
             headers=auth_headers(),
             timeout=10
@@ -118,7 +119,7 @@ def update_display_image(image_url):
 def clear_display():
     """Clear ePalette LED display"""
     try:
-        response = requests.post(f"{BASE_URL}/api/epalette/display/clear", headers=auth_headers(), timeout=10)
+        response = requests.delete(f"{BASE_URL}/api/epalette/screen", headers=auth_headers(), timeout=10)
         response.raise_for_status()
         
         result = response.json()
@@ -179,7 +180,7 @@ def control_vehicle(speed=None, paused=None, location=None):
 def get_display_status():
     """Get current ePalette display status"""
     try:
-        response = requests.get(f"{BASE_URL}/api/epalette/display/status", headers=auth_headers(), timeout=10)
+        response = requests.get(f"{BASE_URL}/api/epalette/screen/status", headers=auth_headers(), timeout=10)
         response.raise_for_status()
         
         result = response.json()

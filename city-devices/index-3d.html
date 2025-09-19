@@ -1490,7 +1490,7 @@
         // API Integration
         async function checkForAPIUpdates() {
             try {
-                const response = await fetch('/api/epalette/display/status');
+                const response = await fetch('/api/epalette/screen/status');
                 if (response.ok) {
                     const data = await response.json();
                     

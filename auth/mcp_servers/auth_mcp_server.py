@@ -10,8 +10,8 @@ import requests
 import argparse
 import os
 
-# 認証サービスのベースURL
-AUTH_BASE_URL = os.getenv("AUTH_VALIDATE_URL", "http://localhost:8000/auth")
+# 認証サービスのベースURL（新しい独立認証サービス）
+AUTH_BASE_URL = os.getenv("AUTH_SERVICE_URL", "http://localhost:8001/auth")
 API_KEY = os.getenv("MCP_CITY_API_KEY") or os.getenv("CITY_DEVICES_API_KEY")
 
 
@@ -23,7 +23,9 @@ class AuthMCP:
     def get_auth_info(self):
         """現在の認証ユーザー情報を取得"""
         try:
-            r = requests.get(f"{AUTH_BASE_URL}/me", headers=auth_headers(), timeout=10)
+            # auth-serviceでは /auth/auth/me パスになる
+            auth_url = AUTH_BASE_URL.replace("/auth", "") + "/auth/auth/me"
+            r = requests.get(auth_url, headers=auth_headers(), timeout=10)
             if r.status_code in (401, 403):
                 return {"success": False, "error": "認証が必要です", "authenticated": False}
             r.raise_for_status()
@@ -60,7 +62,9 @@ class AuthMCP:
     def test_auth_connection(self):
         """認証サービスへの接続テスト"""
         try:
-            r = requests.get(f"{AUTH_BASE_URL}/me", headers=auth_headers(), timeout=5)
+            # auth-serviceでは /auth/auth/me パスになる
+            auth_url = AUTH_BASE_URL.replace("/auth", "") + "/auth/auth/me"
+            r = requests.get(auth_url, headers=auth_headers(), timeout=5)
             return {
                 "success": True,
                 "status_code": r.status_code,

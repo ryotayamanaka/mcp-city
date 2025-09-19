@@ -31,20 +31,14 @@ auth_middleware = AuthMiddleware()
 
 async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)) -> Dict[str, Any]:
     """現在のユーザーを取得（認証必須）"""
-    print(f"DEBUG: get_current_user called with credentials = {credentials}")
-    
     # API Key認証を試行
     user = auth_middleware.authenticate_api_key(credentials.credentials)
-    print(f"DEBUG: user = {user}")
     if not user:
-        print("DEBUG: Authentication failed")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="無効な認証情報です",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    
-    print("DEBUG: Authentication successful")
     return user
 
 async def get_current_user_optional(credentials: Optional[HTTPAuthorizationCredentials] = Depends(security)) -> Optional[Dict[str, Any]]:

@@ -4,9 +4,9 @@
       "id": "p001",
       "name": "Coca Cola",
       "price": 150,
-      "stock": 1,
+      "stock": 0,
       "category": "beverage",
-      "image": "\ud83e\udd64"
+      "image": "🥤"
     },
     {
       "id": "p002",
@@ -14,15 +14,15 @@
       "price": 150,
       "stock": 0,
       "category": "beverage",
-      "image": "\ud83e\udd64"
+      "image": "🥤"
     },
     {
       "id": "p003",
       "name": "Water",
       "price": 100,
-      "stock": 1,
+      "stock": 0,
       "category": "beverage",
-      "image": "\ud83d\udca7"
+      "image": "💧"
     },
     {
       "id": "p004",
@@ -30,7 +30,7 @@
       "price": 200,
       "stock": 0,
       "category": "snack",
-      "image": "\ud83e\udd54"
+      "image": "🥔"
     },
     {
       "id": "p005",
@@ -38,7 +38,7 @@
       "price": 250,
       "stock": 0,
       "category": "snack",
-      "image": "\ud83c\udf6b"
+      "image": "🍫"
     },
     {
       "id": "p006",
@@ -46,7 +46,7 @@
       "price": 180,
       "stock": 0,
       "category": "snack",
-      "image": "\ud83c\udf6a"
+      "image": "🍪"
     },
     {
       "id": "p007",
@@ -54,7 +54,7 @@
       "price": 350,
       "stock": 0,
       "category": "food",
-      "image": "\ud83e\udd6a"
+      "image": "🥪"
     },
     {
       "id": "p008",
@@ -62,7 +62,7 @@
       "price": 280,
       "stock": 0,
       "category": "food",
-      "image": "\ud83c\udf59"
+      "image": "🍙"
     }
   ],
   "sales": [
