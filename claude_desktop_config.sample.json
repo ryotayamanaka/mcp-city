@@ -3,7 +3,7 @@
     "auth": {
       "command": "python3",
       "args": [
-        "/path/to/your/mcp-city/auth/mcp_servers/auth_mcp_server.py"
+        "/path/to/your/mcp-city/auth-service/auth/mcp_servers/auth_mcp_server.py"
       ],
       "env": {
         "MCP_CITY_API_KEY": "mcp_your_admin_api_key_here"

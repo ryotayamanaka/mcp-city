@@ -9,8 +9,7 @@ import sys
 from fastapi import FastAPI, HTTPException, Depends, status
 from fastapi.middleware.cors import CORSMiddleware
 
-# auth モジュールを参照するためのパス追加
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+# 同一サービス内のauth モジュールを参照
 
 from auth.routes import router as auth_router
 from auth.middleware import get_current_user
