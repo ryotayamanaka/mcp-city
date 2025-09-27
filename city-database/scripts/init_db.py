@@ -22,7 +22,7 @@ def get_data_hash():
     """CSVファイルのハッシュ値を計算してデータ変更を検出"""
     hash_obj = hashlib.md5()
     
-    csv_files = ["residents.csv", "businesses.csv", "traffic.csv"]
+    csv_files = ["residents.csv", "tenant.csv", "traffic.csv"]
     for csv_file in csv_files:
         file_path = Path(DATA_DIR) / csv_file
         if file_path.exists():
@@ -62,7 +62,7 @@ def verify_database():
         tables = conn.execute("SHOW TABLES").fetchall()
         table_names = [table[0] for table in tables]
         
-        expected_tables = ["residents", "businesses", "traffic"]
+        expected_tables = ["residents", "tenant", "traffic"]
         missing_tables = [t for t in expected_tables if t not in table_names]
         
         if missing_tables:

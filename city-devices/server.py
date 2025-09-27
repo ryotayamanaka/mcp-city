@@ -12,8 +12,12 @@ import json
 import os
 import requests
 import random
+from fastapi import HTTPException, Header, Depends
 
-app = FastAPI(title="e-Palette IoT API", description="API to control autonomous e-Palette promotional screen and vehicle")
+app = FastAPI(
+    title="City Devices API",
+    version="1.0.0"
+)
 
 # Add CORS middleware for browser access
 app.add_middleware(
@@ -75,13 +79,40 @@ vehicle_data = {
     "view": "follow"
 }
 
+# Authentication helpers
+AUTH_SERVICE_URL = os.getenv("AUTH_SERVICE_URL", "http://localhost:8001")
+
+def check_device_permission(device_type: str, action: str = "read"):
+    """デバイス権限チェックのデコレータ用関数"""
+    def permission_dependency(authorization: Optional[str] = Header(None)):
+        if not authorization or not authorization.lower().startswith("bearer "):
+            raise HTTPException(status_code=401, detail="認証が必要です")
+        
+        try:
+            # auth-serviceの権限チェックエンドポイントを呼び出し
+            resp = requests.get(
+                f"{AUTH_SERVICE_URL}/auth/auth/validate/{device_type}?action={action}",
+                headers={"Authorization": authorization},
+                timeout=5
+            )
+            if resp.status_code == 403:
+                raise HTTPException(status_code=403, detail=f"{device_type}への{action}アクセス権限がありません")
+            elif resp.status_code != 200:
+                raise HTTPException(status_code=401, detail="認証に失敗しました")
+            
+            return resp.json()
+        except requests.RequestException as e:
+            raise HTTPException(status_code=503, detail=f"認証サービスに接続できません: {e}")
+    
+    return permission_dependency
+
 # Health check endpoint
 @app.get("/api/health")
 async def health_check():
     return {
         "status": "healthy", 
         "timestamp": datetime.now().isoformat(),
-        "service": "Food Cart IoT API"
+        "service": "City Devices API"
     }
 
 # === e-Palette Screen Control ===
@@ -286,7 +317,7 @@ async def epalette_update_status(status: VehicleStatus):
 # === Vending Machine API ===
 
 @app.get("/api/vending/products")
-async def get_vending_products():
+async def get_vending_products(auth_check = Depends(check_device_permission("vending_machine", "read"))):
     """Get available products in vending machine"""
     with open('mockdata/vending_data.json', 'r', encoding='utf-8') as f:
         data = json.load(f)

@@ -62,6 +62,29 @@ async def get_current_user_info(current_user: dict = Depends(get_current_user)):
     """現在のユーザー情報を取得"""
     return UserResponse(**current_user)
 
+@router.get("/validate/{device_type}")
+async def validate_device_access(
+    device_type: str,
+    action: str = "read",
+    current_user: dict = Depends(get_current_user)
+):
+    """デバイス固有の権限チェック"""
+    # デバイス権限チェック
+    has_permission = auth_db.check_permission(current_user["id"], device_type, action)
+    
+    if not has_permission:
+        raise HTTPException(
+            status_code=403,
+            detail=f"{device_type}への{action}アクセス権限がありません"
+        )
+    
+    return {
+        "user": UserResponse(**current_user),
+        "device": device_type,
+        "action": action,
+        "authorized": True
+    }
+
 @router.post("/api-keys", response_model=ApiKeyResponse)
 async def create_api_key(
     key_data: ApiKeyCreate,

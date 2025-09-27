@@ -8,7 +8,7 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from typing import Optional, Dict, Any
 from .database import auth_db
 
-security = HTTPBearer()
+security = HTTPBearer(auto_error=False)
 
 class AuthMiddleware:
     def __init__(self):
@@ -29,8 +29,15 @@ class AuthMiddleware:
 # グローバルインスタンス
 auth_middleware = AuthMiddleware()
 
-async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)) -> Dict[str, Any]:
+async def get_current_user(credentials: Optional[HTTPAuthorizationCredentials] = Depends(security)) -> Dict[str, Any]:
     """現在のユーザーを取得（認証必須）"""
+    if not credentials:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="認証が必要です",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    
     # API Key認証を試行
     user = auth_middleware.authenticate_api_key(credentials.credentials)
     if not user:

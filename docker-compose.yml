@@ -52,7 +52,7 @@ services:
       - ./city-database/scripts:/scripts  # 初期化スクリプト
     environment:
       - DUCKDB_DATABASE=/database/city.db
-      - AUTH_VALIDATE_URL=http://auth-service:8001/auth/auth/me
+      - AUTH_VALIDATE_URL=http://auth-service:8001/auth/auth/validate/city_database
       - PYTHONUNBUFFERED=1
     command: >
       sh -c "

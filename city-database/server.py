@@ -12,7 +12,7 @@ AUTH_VALIDATE_URL = os.getenv("AUTH_VALIDATE_URL", "http://city-devices-api:8000
 # Whitelist: allowed tables and columns (expand as needed)
 ALLOWED_TABLES: Dict[str, List[str]] = {
     "residents": ["id", "name", "age", "district", "occupation", "income", "family_size"],
-    "businesses": ["id", "name", "type", "district", "revenue", "employees", "established_year"],
+    "tenant": ["id", "name", "type", "district", "revenue", "employees", "established_year"],
     "traffic": ["datetime", "location", "vehicle_count", "avg_speed", "traffic_level", "weather"],
 }
 MAX_LIMIT = 1000
