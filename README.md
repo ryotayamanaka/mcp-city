@@ -90,7 +90,7 @@ python3 city-database/mcp_servers/city_database_client_mcp_server.py
 開発用スタンドアロン起動（任意）:
 ```bash
 cd city-devices
-python3 -m uvicorn server:app --host 0.0.0.0 --port 8000 --reload \
+python3 -m uvicorn server:app --host 0.0.0.0 --port 9001 --reload \
   > ../logs/server.out 2>&1 &
 ```
 
@@ -116,18 +116,18 @@ PY
 API_KEY=... # 上で発行されたキー
 # e-Palette（読み取り）
 curl -H "Authorization: Bearer $API_KEY" \
-  http://localhost:8000/api/epalette/display/status
+  http://localhost:9001/api/epalette/display/status
 # e-Palette（書き込み）
 curl -H "Authorization: Bearer $API_KEY" -H 'Content-Type: application/json' \
   -d '{"text":"OPEN","subtext":"WELCOME"}' \
-  http://localhost:8000/api/epalette/display/text
+  http://localhost:9001/api/epalette/display/text
 # Vending（読み取り）
 curl -H "Authorization: Bearer $API_KEY" \
-  http://localhost:8000/api/vending-machine/products
+  http://localhost:9001/api/vending-machine/products
 # Vending（購入）
 curl -H "Authorization: Bearer $API_KEY" -H 'Content-Type: application/json' \
   -d '{"product_id":"p001","quantity":1}' \
-  http://localhost:8000/api/vending-machine/purchase
+  http://localhost:9001/api/vending-machine/purchase
 ```
 
 #### 5. Claude Desktop設定
@@ -223,8 +223,9 @@ make db-down   # データベース停止
 ### 街のシミュレーション
 | サービス | ポート | 説明 | 実行方法 |
 |---------|--------|------|----------|
-| city-devices-api | 8000 | 街のデバイスAPIサーバー（FastAPI） | Docker |
-| city-database | 5432, 8080 | 街のデータベース（DuckDB） | Docker |
+| auth-service | 9000 | 認証サービス（FastAPI） | Docker |
+| city-devices-api | 9001 | 街のデバイスAPIサーバー（FastAPI） | Docker |
+| city-database | 9002, 9003 | 街のデータベース（DuckDB） | Docker |
 
 ### 街のデバイス（MCPサーバー）
 | デバイス | MCPサーバー | 説明 | 実行方法 |
@@ -318,8 +319,8 @@ make clean     # 未使用のDockerリソースをクリーンアップ
 3. **MCPサーバーが接続できない**
    ```bash
    # 街のAPIサーバーが起動しているか確認
-   curl http://localhost:8000/api/vending-machine/products
-   
+   curl http://localhost:9001/api/vending-machine/products
+
    # データベースが起動しているか確認
    python3 city-database/mcp_servers/city_database_client_mcp_server.py --test-connection
    ```
@@ -331,8 +332,10 @@ make clean     # 未使用のDockerリソースをクリーンアップ
 
 4. **ポートが使用中**
    ```bash
-   lsof -i :8000  # APIサーバー
-   lsof -i :5432  # データベース
+   lsof -i :9000  # 認証サービス
+   lsof -i :9001  # APIサーバー
+   lsof -i :9002  # データベース HTTP API
+   lsof -i :9003  # データベース PostgreSQL互換
    ```
 
 5. **Claude DesktopでMCPサーバーが認識されない**

@@ -5,13 +5,13 @@ services:
       context: ./auth-service
       dockerfile: Dockerfile
     ports:
-      - "8001:8001"
+      - "9000:9000"
     environment:
       - PYTHONPATH=/app
       - PYTHONUNBUFFERED=1
     volumes:
       - ./auth-service:/app
-    command: ["uvicorn", "server:app", "--host", "0.0.0.0", "--port", "8001", "--reload"]
+    command: ["uvicorn", "server:app", "--host", "0.0.0.0", "--port", "9000", "--reload"]
     networks:
       - app-network
     restart: unless-stopped
@@ -22,16 +22,16 @@ services:
       context: ./city-devices
       dockerfile: Dockerfile
     ports:
-      - "8000:8000"
+      - "9001:9001"
     environment:
       - PYTHONPATH=/app
       - PYTHONUNBUFFERED=1
-      - AUTH_SERVICE_URL=http://auth-service:8001
+      - AUTH_SERVICE_URL=http://auth-service:9000
     volumes:
       - ./city-devices:/app
       - ./city-devices/mockdata:/app/mockdata
       - ./city-devices/img:/app/img
-    command: ["uvicorn", "server:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+    command: ["uvicorn", "server:app", "--host", "0.0.0.0", "--port", "9001", "--reload"]
     depends_on:
       - auth-service
     networks:
@@ -43,8 +43,8 @@ services:
     image: python:3.11-slim
     container_name: mcp-city-database
     ports:
-      - "5432:5432"  # PostgreSQL互換ポート（将来用）
-      - "8080:8080"  # HTTP APIポート
+      - "9003:9003"  # PostgreSQL互換ポート（将来用）
+      - "9002:9002"  # HTTP APIポート
     volumes:
       - ./city-database:/app
       - ./city-database/data:/data:ro  # 読み取り専用でCSVデータをマウント
@@ -52,7 +52,7 @@ services:
       - ./city-database/scripts:/scripts  # 初期化スクリプト
     environment:
       - DUCKDB_DATABASE=/database/city.db
-      - AUTH_VALIDATE_URL=http://auth-service:8001/auth/auth/validate/city_database
+      - AUTH_VALIDATE_URL=http://auth-service:9000/auth/auth/validate/city_database
       - PYTHONUNBUFFERED=1
     command: >
       sh -c "
@@ -61,7 +61,7 @@ services:
         echo 'Safe database initialization...' &&
         python /scripts/init_db.py &&
         echo 'Starting City Database HTTP API...' &&
-        cd /app && python -m uvicorn server:app --host 0.0.0.0 --port 8080
+        cd /app && python -m uvicorn server:app --host 0.0.0.0 --port 9002
       "
     networks:
       - app-network

@@ -7,7 +7,7 @@ import requests
 app = FastAPI(title="City Database API", description="HTTP API for city DuckDB with API-key auth via city-devices")
 
 DUCKDB_DATABASE = os.getenv("DUCKDB_DATABASE", "/database/city.db")
-AUTH_VALIDATE_URL = os.getenv("AUTH_VALIDATE_URL", "http://city-devices-api:8000/auth/me")
+AUTH_VALIDATE_URL = os.getenv("AUTH_VALIDATE_URL", "http://city-devices-api:9001/auth/me")
 
 # Whitelist: allowed tables and columns (expand as needed)
 ALLOWED_TABLES: Dict[str, List[str]] = {

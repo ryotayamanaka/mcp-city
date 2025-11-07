@@ -11,7 +11,7 @@ import requests
 import argparse
 import os
 
-BASE_URL = os.getenv("CITY_DATABASE_API_URL", "http://localhost:8080")
+BASE_URL = os.getenv("CITY_DATABASE_API_URL", "http://localhost:9002")
 API_KEY = os.getenv("MCP_CITY_API_KEY") or os.getenv("CITY_DEVICES_API_KEY")
 
 

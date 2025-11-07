@@ -13,7 +13,7 @@ import subprocess
 import time
 
 # Base URL for the food cart API
-BASE_URL = "http://localhost:8000"
+BASE_URL = "http://localhost:9001"
 API_KEY = os.getenv("MCP_CITY_API_KEY") or os.getenv("CITY_DEVICES_API_KEY")
 
 def auth_headers():

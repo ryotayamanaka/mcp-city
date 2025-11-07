@@ -12,7 +12,7 @@ import os
 from datetime import datetime
 
 # Base URL for the food cart API
-BASE_URL = "http://localhost:8000"
+BASE_URL = "http://localhost:9001"
 
 # API key from environment (set via Claude config env or shell)
 API_KEY = os.getenv("MCP_CITY_API_KEY") or os.getenv("CITY_DEVICES_API_KEY")

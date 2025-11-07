@@ -80,7 +80,7 @@ vehicle_data = {
 }
 
 # Authentication helpers
-AUTH_SERVICE_URL = os.getenv("AUTH_SERVICE_URL", "http://localhost:8001")
+AUTH_SERVICE_URL = os.getenv("AUTH_SERVICE_URL", "http://localhost:9000")
 
 def check_device_permission(device_type: str, action: str = "read"):
     """デバイス権限チェックのデコレータ用関数"""
@@ -316,28 +316,104 @@ async def epalette_update_status(status: VehicleStatus):
 
 # === Vending Machine API ===
 
+# 商品ごとの最大在庫数と補充設定
+PRODUCT_MAX_STOCK = {
+    "p001": 30,  # Coca Cola
+    "p002": 30,  # Sprite
+    "p003": 40,  # Water - 人気商品なので多め
+    "p004": 20,  # Potato Chips
+    "p005": 25,  # Chocolate Bar
+    "p006": 25,  # Cookies
+    "p007": 15,  # Sandwich - 生鮮食品なので少なめ
+    "p008": 20,  # Rice Ball - 生鮮食品なので少なめ
+}
+
+# 補充時刻（毎日この時刻に満タンに補充される）
+RESTOCK_HOURS = [6, 12, 18]  # 朝6時、昼12時、夕方18時
+
+def calculate_dynamic_stock(product_id: str, base_stock: int, sales_history: list) -> int:
+    """
+    日時に応じて動的に在庫を計算する
+
+    Args:
+        product_id: 商品ID
+        base_stock: 基本在庫数（JSONファイルの値、使用しない）
+        sales_history: 販売履歴リスト
+
+    Returns:
+        現在の在庫数
+    """
+    now = datetime.now()
+    max_stock = PRODUCT_MAX_STOCK.get(product_id, 20)
+
+    # 最後の補充時刻を計算（今日または昨日の最も近い補充時刻）
+    last_restock = None
+    for hour in reversed(RESTOCK_HOURS):
+        candidate = now.replace(hour=hour, minute=0, second=0, microsecond=0)
+        if candidate <= now:
+            last_restock = candidate
+            break
+
+    # 今日の補充時刻がまだ来ていない場合は昨日の最後の補充時刻を使用
+    if last_restock is None:
+        last_restock = (now - timedelta(days=1)).replace(
+            hour=RESTOCK_HOURS[-1], minute=0, second=0, microsecond=0
+        )
+
+    # 最後の補充以降の販売数をカウント
+    sales_since_restock = 0
+    for sale in sales_history:
+        try:
+            sale_time = datetime.fromisoformat(sale["timestamp"])
+            if sale_time >= last_restock and sale["product_id"] == product_id:
+                sales_since_restock += sale["quantity"]
+        except (KeyError, ValueError):
+            continue
+
+    # 在庫 = 最大在庫 - 最後の補充以降の販売数
+    current_stock = max(0, max_stock - sales_since_restock)
+
+    return current_stock
+
 @app.get("/api/vending/products")
 async def get_vending_products(auth_check = Depends(check_device_permission("vending_machine", "read"))):
-    """Get available products in vending machine"""
+    """Get available products in vending machine with dynamic stock calculation"""
     with open('mockdata/vending_data.json', 'r', encoding='utf-8') as f:
         data = json.load(f)
+
+    # 各商品の在庫を動的に計算
+    sales_history = data.get("sales", [])
+    for product in data["products"]:
+        product["stock"] = calculate_dynamic_stock(
+            product["id"],
+            product.get("stock", 0),
+            sales_history
+        )
+
     return {"products": data["products"]}
 
-@app.get("/api/vending/inventory") 
+@app.get("/api/vending/inventory")
 async def get_vending_inventory():
-    """Get current inventory levels"""
+    """Get current inventory levels with dynamic stock calculation"""
     with open('mockdata/vending_data.json', 'r', encoding='utf-8') as f:
         data = json.load(f)
-    
-    # Create inventory summary from products
+
+    # Create inventory summary from products with dynamic stock
+    sales_history = data.get("sales", [])
     inventory = {}
     for product in data["products"]:
+        current_stock = calculate_dynamic_stock(
+            product["id"],
+            product.get("stock", 0),
+            sales_history
+        )
         inventory[product["id"]] = {
             "name": product["name"],
-            "stock": product["stock"],
+            "stock": current_stock,
+            "max_stock": PRODUCT_MAX_STOCK.get(product["id"], 20),
             "category": product["category"]
         }
-    
+
     return {"inventory": inventory}
 
 @app.get("/api/vending/sales")
@@ -364,46 +440,76 @@ async def get_vending_sales():
     return sales_data
 
 @app.post("/api/vending/purchase")
-async def purchase_product(purchase: PurchaseRequest):
-    """Process a product purchase"""
-    # Load current inventory
+async def purchase_product(purchase: PurchaseRequest, auth_check = Depends(check_device_permission("vending_machine", "write"))):
+    """Process a product purchase with dynamic stock calculation"""
+    # Load current data
     with open('mockdata/vending_data.json', 'r', encoding='utf-8') as f:
         data = json.load(f)
-    
+
     # Find product
     product = None
     for p in data["products"]:
         if p["id"] == purchase.product_id:
             product = p
             break
-    
+
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")
-    
-    # Check and update inventory directly in products array
-    current_stock = product["stock"]
+
+    # Calculate current stock dynamically
+    sales_history = data.get("sales", [])
+    current_stock = calculate_dynamic_stock(
+        product["id"],
+        product.get("stock", 0),
+        sales_history
+    )
+
+    # Check stock availability
     if current_stock < purchase.quantity:
-        raise HTTPException(status_code=400, detail="Insufficient stock")
-    
-    # Update inventory (simulate)
-    new_stock = current_stock - purchase.quantity
-    product["stock"] = new_stock
-    
-    # Save updated inventory
+        raise HTTPException(
+            status_code=400,
+            detail=f"Insufficient stock. Available: {current_stock}, Requested: {purchase.quantity}"
+        )
+
+    total_price = product["price"] * purchase.quantity
+    timestamp = datetime.now().isoformat()
+
+    # Add sale record to sales history
+    sale_record = {
+        "timestamp": timestamp,
+        "product_id": product["id"],
+        "product_name": product["name"],
+        "quantity": purchase.quantity,
+        "price": product["price"],
+        "total": total_price
+    }
+
+    if "sales" not in data:
+        data["sales"] = []
+    data["sales"].append(sale_record)
+
+    # Save updated data (only sales history changes, not stock in products)
     with open('mockdata/vending_data.json', 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
-    
-    total_price = product["price"] * purchase.quantity
-    
+
+    # Calculate remaining stock after this purchase
+    remaining_stock = current_stock - purchase.quantity
+
     return {
         "success": True,
         "transaction_id": f"TXN{random.randint(10000, 99999)}",
-        "product": product,
+        "product": {
+            "id": product["id"],
+            "name": product["name"],
+            "price": product["price"],
+            "category": product["category"],
+            "image": product["image"]
+        },
         "quantity": purchase.quantity,
         "total_price": total_price,
         "payment_method": purchase.payment_method,
-        "remaining_stock": new_stock,
-        "timestamp": datetime.now().isoformat()
+        "remaining_stock": remaining_stock,
+        "timestamp": timestamp
     }
 
 @app.get("/api/vending/analytics")

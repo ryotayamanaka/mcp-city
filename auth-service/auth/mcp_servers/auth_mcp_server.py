@@ -11,7 +11,7 @@ import argparse
 import os
 
 # 認証サービスのベースURL（新しい独立認証サービス）
-AUTH_BASE_URL = os.getenv("AUTH_SERVICE_URL", "http://localhost:8001/auth")
+AUTH_BASE_URL = os.getenv("AUTH_SERVICE_URL", "http://localhost:9000/auth")
 API_KEY = os.getenv("MCP_CITY_API_KEY") or os.getenv("CITY_DEVICES_API_KEY")
 
 

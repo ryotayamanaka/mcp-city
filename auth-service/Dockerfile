@@ -21,10 +21,10 @@ COPY . .
 
 # ヘルスチェック
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-  CMD curl -f http://localhost:8001/health || exit 1
+  CMD curl -f http://localhost:9000/health || exit 1
 
-# ポート8001を公開
-EXPOSE 8001
+# ポート9000を公開
+EXPOSE 9000
 
 # サーバーを起動
-CMD ["uvicorn", "server:app", "--host", "0.0.0.0", "--port", "8001"]
+CMD ["uvicorn", "server:app", "--host", "0.0.0.0", "--port", "9000"]

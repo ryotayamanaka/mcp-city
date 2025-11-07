@@ -54,11 +54,11 @@ uv pip install -r requirements.txt
 python server.py
 ```
 
-The server will start on `http://localhost:8000`
+The server will start on `http://localhost:9001`
 
 ### 3. Open the Food Cart Interface
 
-Open your browser and navigate to: `http://localhost:8000`
+Open your browser and navigate to: `http://localhost:9001`
 
 You should see the autonomous food cart with its promotional screen.
 
@@ -156,7 +156,7 @@ Edit `index.html` または `index-3d.html` でカスタマイズ:
 - Visual feedback for agent actions
 
 ### API Documentation
-Visit `http://localhost:8000/docs` for interactive API documentation
+Visit `http://localhost:9001/docs` for interactive API documentation
 
 ### MCPサーバーログ
 MCPサーバーは詳細なログを提供:
@@ -180,12 +180,12 @@ Use curl or any HTTP client:
 
 ```bash
 # Update screen text
-curl -X POST http://localhost:8000/api/screen/update-text \
+curl -X POST http://localhost:9001/api/screen/update-text \
   -H "Content-Type: application/json" \
   -d '{"text": "Hello from API!"}'
 
 # Check status
-curl http://localhost:8000/api/screen/status
+curl http://localhost:9001/api/screen/status
 ```
 
 ## 🚨 Troubleshooting
@@ -193,7 +193,7 @@ curl http://localhost:8000/api/screen/status
 ### Common Issues
 
 1. **Agent can't connect to food cart**
-   - Make sure the server is running on port 8000
+   - Make sure the server is running on port 9001
    - Check if the port is available
    - Verify the base_url in tools.py
 
@@ -204,7 +204,7 @@ curl http://localhost:8000/api/screen/status
 
 3. **MCPサーバーが応答しない**
    - MCPサーバーが起動しているか確認
-   - ポート8000が利用可能か確認
+   - ポート9001が利用可能か確認
    - Claude Desktopの設定を確認
 
 ### Debug Mode

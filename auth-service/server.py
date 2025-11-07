@@ -63,7 +63,7 @@ if __name__ == "__main__":
     import uvicorn
     
     host = os.getenv("HOST", "0.0.0.0")
-    port = int(os.getenv("PORT", "8001"))
-    
+    port = int(os.getenv("PORT", "9000"))
+
     print(f"🔐 Starting Auth Service on {host}:{port}")
     uvicorn.run(app, host=host, port=port)

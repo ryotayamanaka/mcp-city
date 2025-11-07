@@ -8,7 +8,7 @@ import time
 import json
 
 # API base URL
-BASE_URL = "http://localhost:8000"
+BASE_URL = "http://localhost:9001"
 
 def test_image_update():
     """Test image update functionality"""
@@ -123,7 +123,7 @@ def test_image_update():
         
         print("\n" + "=" * 60)
         print("✅ Test completed!")
-        print("Please visit http://localhost:8000 in your browser to view the 3D demo")
+        print("Please visit http://localhost:9001 in your browser to view the 3D demo")
         print("=" * 60)
         
     except requests.exceptions.ConnectionError:
